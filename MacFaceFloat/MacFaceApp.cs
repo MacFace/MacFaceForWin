@@ -106,11 +106,11 @@ namespace MacFace.FloatApp
 
 			// ステータスウインドウ		
 			statusWindow = new Form();
-			statusWindow.ClientSize = new System.Drawing.Size(300, 211);
+			statusWindow.ClientSize = new System.Drawing.Size(310, 215);
 			statusWindow.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			statusWindow.ControlBox = false;
 			statusWindow.Icon = new Icon(asm.GetManifestResourceStream("MacFace.FloatApp.App.ico"));
-			statusWindow.Text = "Status";
+			statusWindow.Text = "ステータス";
 			statusWindow.Paint +=new PaintEventHandler(statusWindow_Paint);
 		}
 
@@ -316,42 +316,57 @@ namespace MacFace.FloatApp
 			Graphics g = e.Graphics;
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 
-			g.FillRectangle(new SolidBrush(Color.White), 0, 0, 300, 100);
-			for (int y = 0; y < 100; y += 10) 
+			g.FillRectangle(new SolidBrush(Color.White), 5, 5, 300, 100);
+			Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1F);
+			for (int y = 5; y < 105; y += 10) 
 			{
-				g.DrawLine(Pens.FloralWhite, 0, y, 300, y);
+				g.DrawLine(pen, 5, y, 305, y);
 			}
+			g.DrawRectangle(Pens.Black, 4, 4, 301, 101);
 
-			g.FillRectangle(new SolidBrush(Color.White), 0, 110, 300, 100);
+			g.FillRectangle(new SolidBrush(Color.White), 5, 110, 300, 100);
 			for (int y = 110; y < 210; y += 10) 
 			{
-				g.DrawLine(Pens.FloralWhite, 0, y, 300, y);
+				g.DrawLine(pen, 5, y, 305, y);
 			}
+			g.DrawRectangle(Pens.Black, 4, 109, 301, 101);
 
 
 			if (cpuHistoryCount >= 2) 
 			{
-				Point[] userGraph = new Point[cpuHistoryCount];
-				Point[] sysGraph = new Point[cpuHistoryCount];
+				Point[] userGraph = new Point[cpuHistoryCount+2];
+				Point[] sysGraph = new Point[cpuHistoryCount+2];
+
+				userGraph[cpuHistoryCount+0].X = 305 - cpuHistoryCount * 5;
+				userGraph[cpuHistoryCount+0].Y = 105 - 0;
+				userGraph[cpuHistoryCount+1].X = 305 - 0 * 5;
+				userGraph[cpuHistoryCount+1].Y = 105 - 0;
+
+				sysGraph[cpuHistoryCount+0].X = 305 - cpuHistoryCount * 5;
+				sysGraph[cpuHistoryCount+0].Y = 105 - 0;
+				sysGraph[cpuHistoryCount+1].X = 305 - 0 * 5;
+				sysGraph[cpuHistoryCount+1].Y = 105 - 0;
 
 				int pos = cpuHistoryHead - 1;
 				for (int i = 0; i < cpuHistoryCount; i++) 
 				{
 					if (pos < 0) pos = cpuHistory.Length - 1;
 					CPUUsage usage = cpuHistory[pos];
-					userGraph[i].X = sysGraph[i].X = 300 - i * 5;
-					userGraph[i].Y = 100 - usage.Active;
-					sysGraph[i].Y = 100 - usage.System;
-					//Console.WriteLine("" + pos + ": " + points[i]);
+					userGraph[i].X = sysGraph[i].X = 305 - i * 5;
+					userGraph[i].Y = 105 - usage.Active;
+					sysGraph[i].Y = 105 - usage.System;
 					pos--;
 				}
 
-				g.DrawLines(Pens.Red, sysGraph);
-				g.DrawLines(Pens.Blue, userGraph);
+				g.FillPolygon(new SolidBrush(Color.FromArgb(64, 0, 0, 255)), userGraph);
+				g.DrawPolygon(new Pen(Color.FromArgb(0, 0, 255), 1F), userGraph);
+				g.FillPolygon(new SolidBrush(Color.FromArgb(64, 255, 0, 0)), sysGraph);
 			}
 
 			double rate = 70.0 / (MemoryUsageCounter.TotalVisibleMemorySize * 1024);
 
+			g.SmoothingMode = SmoothingMode.None;
+			Brush brush = new SolidBrush(Color.FromArgb(180, 255, 145, 0));
 			int posu = memHistoryHead - 1;
 			for (int i = 0; i < memHistoryCount; i++) 
 			{
@@ -360,19 +375,19 @@ namespace MacFace.FloatApp
 
 				int x, y, w, h;
 
-				x = 300 - i * 5;
+				x = 305 - i * 5 - 5;
 				w = 5;
 				h = (int)(usage.Committed * rate);
 				y = 210 - h;
-				g.FillRectangle(Brushes.Blue, x, y, w, h);
+				g.FillRectangle(brush, x, y, w, h);
 
-				x = 300 - i * 5;
+				x = 305 - i * 5 - 5;
 				w = 2;
 				h = (int)(usage.Pagein);
 				y = 210 - h;
 				g.FillRectangle(Brushes.LightGray, x, y, w, h);
 
-				x = 303 - i * 5;
+				x = 308 - i * 5 - 5;
 				w = 2;
 				h = (int)(usage.Pageout);
 				y = 210 - h;
@@ -380,7 +395,7 @@ namespace MacFace.FloatApp
 
 				posu--;
 			}
-			g.DrawLine(Pens.Red, 0, 210-70, 300, 210-70);
+			g.DrawLine(Pens.Red, 5, 210-70, 305, 210-70);
 		}
 	}
 }
