@@ -30,7 +30,8 @@ namespace MacFace.FloatApp
 		private FaceDef _currentFaceDef;
 		private Configuration _config;
 		
-		Int32 prevUsage;
+		int prevUsage;
+		int prevMarkers;
 		PerformanceCounter cpuCount;
 		PerformanceCounter pageoutCount;
 		PerformanceCounter pageinCount;
@@ -42,7 +43,8 @@ namespace MacFace.FloatApp
 			this.TransparentMouseMessage = false;
 			this.MoveAtFormDrag = true;
 
-			prevUsage = -10;
+			prevUsage = -1;
+			prevMarkers = -1;
 
 			cpuCount = new PerformanceCounter();
 			cpuCount.CategoryName = "Processor";
@@ -188,7 +190,8 @@ namespace MacFace.FloatApp
 
 			_currentFaceDef = newFaceDef;
 			_facePath = _currentFaceDef.Path;
-			prevUsage = -10;
+			prevUsage = -1;
+			prevMarkers = -1;
 
 			// XVÄŠJ
 			if (_updateTimer != null) _updateTimer.Start();
@@ -213,7 +216,7 @@ namespace MacFace.FloatApp
 			if (pagein > 0) markers += FaceDef.MarkerPageIn;
 			if (pageout > 0) markers += FaceDef.MarkerPageOut;
 
-			if (prevUsage != usage) 
+			if (prevUsage != usage || prevMarkers != markers) 
 			{
 				Graphics g = this.Graphics;
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
@@ -221,7 +224,8 @@ namespace MacFace.FloatApp
 				this.Update();
 			}
 				
-			prevUsage = usage;			
+			prevUsage = usage;
+			prevMarkers = markers;
 		}
 		
 
