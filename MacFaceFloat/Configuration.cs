@@ -36,6 +36,10 @@ namespace MacFace.FloatApp
 		[Category("顔フォーム"), Description("透明度0-100の中で指定します。")]
 		public Int32 Opacity = 100;
 
+		[AutoConfigure("form.faceform.patternsize")]
+		[Category("顔フォーム"), Description("パターンの大きさ10-100の中で指定します。")]
+		public Int32 PatternSize = 100;
+
 		[AutoConfigure("form.faceform.point")]
 		[Category("顔フォーム"), Description("表示位置")]
 		public Point Location;

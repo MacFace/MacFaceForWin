@@ -30,6 +30,7 @@ namespace MacFace.FloatApp
 
 		private FaceDef _currentFaceDef;
 		private Configuration _config;
+		private float _patternSize;
 
 		private int prevPattern;
 		private FaceDef.PatternSuite prevSuite;
@@ -228,7 +229,7 @@ namespace MacFace.FloatApp
 			{
 				Graphics g = this.Graphics;
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
-				_currentFaceDef.DrawPatternImage(g, suite, pattern, markers);
+				_currentFaceDef.DrawPatternImage(g, suite, pattern, markers, _patternSize);
 				this.Update();
 			}
 				
@@ -236,7 +237,12 @@ namespace MacFace.FloatApp
 			prevSuite   = suite;
 			prevMarkers = markers;
 		}
-		
+
+		public float PatternSize
+		{
+			get { return _patternSize; }
+			set { _patternSize = value; }
+		}
 
 		//
 		// ‹N“®
@@ -310,6 +316,7 @@ namespace MacFace.FloatApp
 		private void ApplyConfiguration()
 		{
 			this.Opacity = (float)_config.Opacity / 100;
+			this.PatternSize = (float)_config.PatternSize / 100;
 			this.Location = _config.Location;
 			this.TransparentMouseMessage = _config.TransparentMouseMessage;
 		}

@@ -208,6 +208,31 @@ namespace MacFace
 			}
 		}
 
+		public void DrawPatternImage(Graphics g, PatternSuite suite, int no, int markers, float rate)
+		{
+			Part[] pattern = _patternSuites[(int)suite][no];
+			foreach (Part part in pattern)
+			{
+				g.DrawImage(part.Image,
+					part.Point.X * rate, part.Point.Y * rate,
+					part.Image.Size.Width * rate, part.Image.Size.Height * rate);
+			}
+
+			if (markers != 0)
+			{
+				for (int i = 0; i < 8; i++)
+				{
+					if ((markers & (1 << i)) != 0)
+					{
+						Part part = _markers[i];
+						g.DrawImage(part.Image,
+							part.Point.X * rate, part.Point.Y * rate,
+							part.Image.Size.Width * rate, part.Image.Size.Height * rate);
+					}
+				}
+			}
+		}
+
 		public void DrawPatternImage(Graphics g, PatternSuite suite, int no, int markers)
 		{
 			Part[] pattern = _patternSuites[(int)suite][no];

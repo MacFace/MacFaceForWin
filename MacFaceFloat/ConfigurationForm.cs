@@ -37,6 +37,8 @@ namespace MacFace.FloatApp
 		private System.Windows.Forms.CheckBox checkMouseMessage;
 		private System.Windows.Forms.ImageList imageListConfigTreeIcon;
 		private System.Windows.Forms.Label label5;
+		private TrackBar trackBarPatternSize;
+		private Label label6;
 		private System.ComponentModel.IContainer components;
 
 		public ConfigurationForm(MainForm mainForm)
@@ -74,7 +76,9 @@ namespace MacFace.FloatApp
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ConfigurationForm));
+			System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("全般", 1, 1);
+			System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("顔パターン");
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigurationForm));
 			this.treeCategory = new System.Windows.Forms.TreeView();
 			this.imageListConfigTreeIcon = new System.Windows.Forms.ImageList(this.components);
 			this.buttonCancel = new System.Windows.Forms.Button();
@@ -82,55 +86,66 @@ namespace MacFace.FloatApp
 			this.buttonOK = new System.Windows.Forms.Button();
 			this.labelTitle = new System.Windows.Forms.Label();
 			this.panelContainer = new System.Windows.Forms.Panel();
+			this.panelAppearance = new System.Windows.Forms.Panel();
+			this.label5 = new System.Windows.Forms.Label();
+			this.checkMouseMessage = new System.Windows.Forms.CheckBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.label1 = new System.Windows.Forms.Label();
+			this.trackBarOpacity = new System.Windows.Forms.TrackBar();
 			this.panelFacePatternList = new System.Windows.Forms.Panel();
 			this.label4 = new System.Windows.Forms.Label();
 			this.linkWebSite = new System.Windows.Forms.LinkLabel();
 			this.buttonBrowse = new System.Windows.Forms.Button();
 			this.listViewFaces = new System.Windows.Forms.ListView();
 			this.imageListFacePreviews = new System.Windows.Forms.ImageList(this.components);
-			this.panelAppearance = new System.Windows.Forms.Panel();
-			this.checkMouseMessage = new System.Windows.Forms.CheckBox();
-			this.label3 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label1 = new System.Windows.Forms.Label();
-			this.trackBarOpacity = new System.Windows.Forms.TrackBar();
 			this.toolTipPreviewDetail = new System.Windows.Forms.ToolTip(this.components);
-			this.label5 = new System.Windows.Forms.Label();
+			this.trackBarPatternSize = new System.Windows.Forms.TrackBar();
+			this.label6 = new System.Windows.Forms.Label();
 			this.panelContainer.SuspendLayout();
-			this.panelFacePatternList.SuspendLayout();
 			this.panelAppearance.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarOpacity)).BeginInit();
+			this.panelFacePatternList.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.trackBarPatternSize)).BeginInit();
 			this.SuspendLayout();
-			// 
-			// treeCategory
-			// 
-			this.treeCategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left)));
+// 
+// treeCategory
+// 
+			this.treeCategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)));
 			this.treeCategory.FullRowSelect = true;
 			this.treeCategory.HideSelection = false;
 			this.treeCategory.HotTracking = true;
 			this.treeCategory.ImageList = this.imageListConfigTreeIcon;
 			this.treeCategory.Location = new System.Drawing.Point(0, 0);
 			this.treeCategory.Name = "treeCategory";
+			treeNode3.ImageIndex = 1;
+			treeNode3.Name = "";
+			treeNode3.SelectedImageIndex = 1;
+			treeNode3.Text = "全般";
+			treeNode4.Name = "";
+			treeNode4.Text = "顔パターン";
 			this.treeCategory.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-																					 new System.Windows.Forms.TreeNode("全般", 1, 1),
-																					 new System.Windows.Forms.TreeNode("顔パターン")});
+            treeNode3,
+            treeNode4});
 			this.treeCategory.ShowLines = false;
 			this.treeCategory.ShowPlusMinus = false;
 			this.treeCategory.ShowRootLines = false;
 			this.treeCategory.Size = new System.Drawing.Size(101, 296);
 			this.treeCategory.TabIndex = 0;
 			this.treeCategory.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeCategory_AfterSelect);
-			// 
-			// imageListConfigTreeIcon
-			// 
+// 
+// imageListConfigTreeIcon
+// 
 			this.imageListConfigTreeIcon.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
 			this.imageListConfigTreeIcon.ImageSize = new System.Drawing.Size(32, 32);
 			this.imageListConfigTreeIcon.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListConfigTreeIcon.ImageStream")));
 			this.imageListConfigTreeIcon.TransparentColor = System.Drawing.Color.Transparent;
-			// 
-			// buttonCancel
-			// 
+			this.imageListConfigTreeIcon.Images.SetKeyName(0, "");
+			this.imageListConfigTreeIcon.Images.SetKeyName(1, "");
+// 
+// buttonCancel
+// 
 			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.buttonCancel.Location = new System.Drawing.Point(303, 267);
@@ -138,9 +153,9 @@ namespace MacFace.FloatApp
 			this.buttonCancel.Size = new System.Drawing.Size(87, 21);
 			this.buttonCancel.TabIndex = 1;
 			this.buttonCancel.Text = "キャンセル";
-			// 
-			// buttonApply
-			// 
+// 
+// buttonApply
+// 
 			this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonApply.Enabled = false;
 			this.buttonApply.Location = new System.Drawing.Point(397, 267);
@@ -148,9 +163,9 @@ namespace MacFace.FloatApp
 			this.buttonApply.Size = new System.Drawing.Size(87, 21);
 			this.buttonApply.TabIndex = 2;
 			this.buttonApply.Text = "適用(&A)";
-			// 
-			// buttonOK
-			// 
+// 
+// buttonOK
+// 
 			this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.buttonOK.Location = new System.Drawing.Point(208, 267);
@@ -159,13 +174,13 @@ namespace MacFace.FloatApp
 			this.buttonOK.TabIndex = 3;
 			this.buttonOK.Text = "OK";
 			this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-			// 
-			// labelTitle
-			// 
-			this.labelTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
+// 
+// labelTitle
+// 
+			this.labelTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.labelTitle.BackColor = System.Drawing.SystemColors.ActiveCaption;
-			this.labelTitle.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((System.Byte)(128)));
+			this.labelTitle.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
 			this.labelTitle.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
 			this.labelTitle.Location = new System.Drawing.Point(107, 5);
 			this.labelTitle.Name = "labelTitle";
@@ -173,81 +188,23 @@ namespace MacFace.FloatApp
 			this.labelTitle.TabIndex = 4;
 			this.labelTitle.Text = "全般";
 			this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-			// 
-			// panelContainer
-			// 
-			this.panelContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
+// 
+// panelContainer
+// 
+			this.panelContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.panelContainer.Controls.Add(this.panelAppearance);
 			this.panelContainer.Controls.Add(this.panelFacePatternList);
 			this.panelContainer.Location = new System.Drawing.Point(106, 38);
 			this.panelContainer.Name = "panelContainer";
 			this.panelContainer.Size = new System.Drawing.Size(380, 218);
 			this.panelContainer.TabIndex = 5;
-			// 
-			// panelFacePatternList
-			// 
-			this.panelFacePatternList.Controls.Add(this.label4);
-			this.panelFacePatternList.Controls.Add(this.linkWebSite);
-			this.panelFacePatternList.Controls.Add(this.buttonBrowse);
-			this.panelFacePatternList.Controls.Add(this.listViewFaces);
-			this.panelFacePatternList.Location = new System.Drawing.Point(2, 1);
-			this.panelFacePatternList.Name = "panelFacePatternList";
-			this.panelFacePatternList.Size = new System.Drawing.Size(367, 213);
-			this.panelFacePatternList.TabIndex = 7;
-			// 
-			// label4
-			// 
-			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.label4.Location = new System.Drawing.Point(4, 165);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(63, 17);
-			this.label4.TabIndex = 3;
-			this.label4.Text = "ウェブサイト:";
-			// 
-			// linkWebSite
-			// 
-			this.linkWebSite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.linkWebSite.Location = new System.Drawing.Point(67, 165);
-			this.linkWebSite.Name = "linkWebSite";
-			this.linkWebSite.Size = new System.Drawing.Size(388, 16);
-			this.linkWebSite.TabIndex = 2;
-			this.linkWebSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkWebSite_LinkClicked);
-			// 
-			// buttonBrowse
-			// 
-			this.buttonBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonBrowse.Location = new System.Drawing.Point(267, 187);
-			this.buttonBrowse.Name = "buttonBrowse";
-			this.buttonBrowse.Size = new System.Drawing.Size(95, 24);
-			this.buttonBrowse.TabIndex = 1;
-			this.buttonBrowse.Text = "参照(&B)...";
-			this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
-			// 
-			// listViewFaces
-			// 
-			this.listViewFaces.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.listViewFaces.LargeImageList = this.imageListFacePreviews;
-			this.listViewFaces.Location = new System.Drawing.Point(0, 0);
-			this.listViewFaces.Name = "listViewFaces";
-			this.listViewFaces.Size = new System.Drawing.Size(367, 161);
-			this.listViewFaces.TabIndex = 0;
-			this.listViewFaces.DoubleClick += new System.EventHandler(this.listViewFaces_DoubleClick);
-			this.listViewFaces.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listViewFaces_MouseMove);
-			this.listViewFaces.SelectedIndexChanged += new System.EventHandler(this.listViewFaces_SelectedIndexChanged);
-			// 
-			// imageListFacePreviews
-			// 
-			this.imageListFacePreviews.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-			this.imageListFacePreviews.ImageSize = new System.Drawing.Size(128, 128);
-			this.imageListFacePreviews.TransparentColor = System.Drawing.Color.Transparent;
-			// 
-			// panelAppearance
-			// 
+// 
+// panelAppearance
+// 
+			this.panelAppearance.Controls.Add(this.label6);
+			this.panelAppearance.Controls.Add(this.trackBarPatternSize);
 			this.panelAppearance.Controls.Add(this.label5);
 			this.panelAppearance.Controls.Add(this.checkMouseMessage);
 			this.panelAppearance.Controls.Add(this.label3);
@@ -256,64 +213,157 @@ namespace MacFace.FloatApp
 			this.panelAppearance.Controls.Add(this.trackBarOpacity);
 			this.panelAppearance.Location = new System.Drawing.Point(4, 3);
 			this.panelAppearance.Name = "panelAppearance";
-			this.panelAppearance.Size = new System.Drawing.Size(366, 194);
+			this.panelAppearance.Size = new System.Drawing.Size(366, 208);
 			this.panelAppearance.TabIndex = 0;
-			// 
-			// checkMouseMessage
-			// 
-			this.checkMouseMessage.Location = new System.Drawing.Point(5, 115);
+// 
+// label5
+// 
+			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.label5.Location = new System.Drawing.Point(311, 55);
+			this.label5.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(42, 11);
+			this.label5.TabIndex = 5;
+			this.label5.Text = "不透明";
+// 
+// checkMouseMessage
+// 
+			this.checkMouseMessage.Location = new System.Drawing.Point(5, 188);
 			this.checkMouseMessage.Name = "checkMouseMessage";
-			this.checkMouseMessage.Size = new System.Drawing.Size(400, 16);
+			this.checkMouseMessage.Size = new System.Drawing.Size(355, 11);
 			this.checkMouseMessage.TabIndex = 4;
 			this.checkMouseMessage.Text = "マウスの動作を背面のウィンドウへ伝える(&T)";
-			// 
-			// label3
-			// 
+// 
+// label3
+// 
 			this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.label3.Location = new System.Drawing.Point(524, 73);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(45, 11);
 			this.label3.TabIndex = 3;
 			this.label3.Text = "不透明";
-			// 
-			// label2
-			// 
-			this.label2.Location = new System.Drawing.Point(19, 67);
+// 
+// label2
+// 
+			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.label2.Location = new System.Drawing.Point(15, 55);
+			this.label2.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(31, 11);
 			this.label2.TabIndex = 2;
 			this.label2.Text = "透明";
-			// 
-			// label1
-			// 
+// 
+// label1
+// 
 			this.label1.Location = new System.Drawing.Point(2, 5);
+			this.label1.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(196, 18);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "透明度:";
-			// 
-			// trackBarOpacity
-			// 
-			this.trackBarOpacity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
+// 
+// trackBarOpacity
+// 
+			this.trackBarOpacity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarOpacity.LargeChange = 10;
 			this.trackBarOpacity.Location = new System.Drawing.Point(15, 24);
+			this.trackBarOpacity.Margin = new System.Windows.Forms.Padding(3, 1, 3, 1);
 			this.trackBarOpacity.Maximum = 100;
 			this.trackBarOpacity.Name = "trackBarOpacity";
-			this.trackBarOpacity.Size = new System.Drawing.Size(338, 37);
+			this.trackBarOpacity.Size = new System.Drawing.Size(338, 42);
 			this.trackBarOpacity.TabIndex = 0;
 			this.trackBarOpacity.TickFrequency = 10;
-			// 
-			// label5
-			// 
-			this.label5.Location = new System.Drawing.Point(309, 67);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(42, 11);
-			this.label5.TabIndex = 5;
-			this.label5.Text = "不透明";
-			// 
-			// ConfigurationForm
-			// 
+// 
+// panelFacePatternList
+// 
+			this.panelFacePatternList.Controls.Add(this.label4);
+			this.panelFacePatternList.Controls.Add(this.linkWebSite);
+			this.panelFacePatternList.Controls.Add(this.buttonBrowse);
+			this.panelFacePatternList.Controls.Add(this.listViewFaces);
+			this.panelFacePatternList.Location = new System.Drawing.Point(2, 1);
+			this.panelFacePatternList.Name = "panelFacePatternList";
+			this.panelFacePatternList.Size = new System.Drawing.Size(367, 213);
+			this.panelFacePatternList.TabIndex = 7;
+// 
+// label4
+// 
+			this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.label4.Location = new System.Drawing.Point(4, 165);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(63, 17);
+			this.label4.TabIndex = 3;
+			this.label4.Text = "ウェブサイト:";
+// 
+// linkWebSite
+// 
+			this.linkWebSite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.linkWebSite.Links.Add(new System.Windows.Forms.LinkLabel.Link(0, 0));
+			this.linkWebSite.Location = new System.Drawing.Point(67, 165);
+			this.linkWebSite.Name = "linkWebSite";
+			this.linkWebSite.Size = new System.Drawing.Size(388, 16);
+			this.linkWebSite.TabIndex = 2;
+			this.linkWebSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkWebSite_LinkClicked);
+// 
+// buttonBrowse
+// 
+			this.buttonBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.buttonBrowse.Location = new System.Drawing.Point(267, 187);
+			this.buttonBrowse.Name = "buttonBrowse";
+			this.buttonBrowse.Size = new System.Drawing.Size(95, 24);
+			this.buttonBrowse.TabIndex = 1;
+			this.buttonBrowse.Text = "参照(&B)...";
+			this.buttonBrowse.Click += new System.EventHandler(this.buttonBrowse_Click);
+// 
+// listViewFaces
+// 
+			this.listViewFaces.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+						| System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.listViewFaces.LargeImageList = this.imageListFacePreviews;
+			this.listViewFaces.Location = new System.Drawing.Point(0, 0);
+			this.listViewFaces.Name = "listViewFaces";
+			this.listViewFaces.Size = new System.Drawing.Size(367, 161);
+			this.listViewFaces.TabIndex = 0;
+			this.listViewFaces.SelectedIndexChanged += new System.EventHandler(this.listViewFaces_SelectedIndexChanged);
+			this.listViewFaces.DoubleClick += new System.EventHandler(this.listViewFaces_DoubleClick);
+			this.listViewFaces.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listViewFaces_MouseMove);
+// 
+// imageListFacePreviews
+// 
+			this.imageListFacePreviews.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+			this.imageListFacePreviews.ImageSize = new System.Drawing.Size(128, 128);
+			this.imageListFacePreviews.TransparentColor = System.Drawing.Color.Transparent;
+// 
+// trackBarPatternSize
+// 
+			this.trackBarPatternSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+						| System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBarPatternSize.LargeChange = 10;
+			this.trackBarPatternSize.Location = new System.Drawing.Point(15, 114);
+			this.trackBarPatternSize.Margin = new System.Windows.Forms.Padding(3, 2, 3, 3);
+			this.trackBarPatternSize.Maximum = 100;
+			this.trackBarPatternSize.Minimum = 10;
+			this.trackBarPatternSize.Name = "trackBarPatternSize";
+			this.trackBarPatternSize.Size = new System.Drawing.Size(338, 42);
+			this.trackBarPatternSize.TabIndex = 6;
+			this.trackBarPatternSize.TickFrequency = 10;
+			this.trackBarPatternSize.Value = 100;
+// 
+// label6
+// 
+			this.label6.Location = new System.Drawing.Point(5, 93);
+			this.label6.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(196, 18);
+			this.label6.TabIndex = 7;
+			this.label6.Text = "大きさ:";
+// 
+// ConfigurationForm
+// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
 			this.ClientSize = new System.Drawing.Size(492, 297);
 			this.Controls.Add(this.panelContainer);
@@ -327,9 +377,11 @@ namespace MacFace.FloatApp
 			this.Text = "MacFace の設定";
 			this.Load += new System.EventHandler(this.ConfigurationForm_Load);
 			this.panelContainer.ResumeLayout(false);
-			this.panelFacePatternList.ResumeLayout(false);
 			this.panelAppearance.ResumeLayout(false);
+			this.panelAppearance.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarOpacity)).EndInit();
+			this.panelFacePatternList.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.trackBarPatternSize)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -348,6 +400,7 @@ namespace MacFace.FloatApp
 
 			// 初期値をセット。
 			trackBarOpacity.Value = (int) (_mainForm.Opacity * 100);
+			trackBarPatternSize.Value = (int)(_mainForm.PatternSize * 100);
 			checkMouseMessage.Checked = Configuration.GetInstance().TransparentMouseMessage;
 		}
 
@@ -355,6 +408,7 @@ namespace MacFace.FloatApp
 		{
 			Configuration config = Configuration.GetInstance();
 			config.Opacity = trackBarOpacity.Value;
+			config.PatternSize = trackBarPatternSize.Value;
 			config.TransparentMouseMessage = checkMouseMessage.Checked;
 
 			this.Close();
@@ -500,6 +554,11 @@ namespace MacFace.FloatApp
 				System.Diagnostics.Process.Start(linkWebSite.Text);
 			} 
 			catch (Win32Exception) {}
+		}
+
+		private void label6_Click(object sender, EventArgs e)
+		{
+		
 		}
 	}
 }
