@@ -32,6 +32,7 @@ namespace MacFace.FloatApp
 		private Configuration _config;
 
 		private int prevPattern;
+		private FaceDef.PatternSuite prevSuite;
 		private int prevMarkers;
 
 		private CPUUsageCounter cpuCounter;
@@ -45,6 +46,7 @@ namespace MacFace.FloatApp
 			this.MoveAtFormDrag = true;
 
 			prevPattern = -1;
+			prevSuite   = FaceDef.PatternSuite.Normal;
 			prevMarkers = -1;
 
 			cpuCounter = new CPUUsageCounter();
@@ -207,30 +209,31 @@ namespace MacFace.FloatApp
 			MemoryUsage memUsage = memoryCounter.CurrentUsage();
 
 			int pattern = cpuUsage.Active / 10;
-			if (pattern > 10)
+
+			FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
+			if (memUsage.Available < (10 * 1024 *1024)) 
 			{
-				pattern = 10;
-			}
-			else if (pattern < 0)
+				suite = FaceDef.PatternSuite.MemoryInsufficient;
+			} 
+			else if (memUsage.Available < (30 * 1024 *1024)) 
 			{
-				pattern = 0;
+				suite = FaceDef.PatternSuite.MemoryDecline;
 			}
 
 			int markers = FaceDef.MarkerNone;
-			int pagein = memUsage.Pagein;
-			int pageout = memUsage.Pageout;
-			if (pagein > 0) markers += FaceDef.MarkerPageIn;
-			if (pageout > 0) markers += FaceDef.MarkerPageOut;
+			if (memUsage.Pagein > 0) markers += FaceDef.MarkerPageIn;
+			if (memUsage.Pageout > 0) markers += FaceDef.MarkerPageOut;
 
-			if (prevPattern != pattern || prevMarkers != markers) 
+			if (prevPattern != pattern || prevSuite != suite || prevMarkers != markers) 
 			{
 				Graphics g = this.Graphics;
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
-				_currentFaceDef.DrawPatternImage(g, FaceDef.PatternSuite.Normal, pattern, markers);
+				_currentFaceDef.DrawPatternImage(g, suite, pattern, markers);
 				this.Update();
 			}
 				
 			prevPattern = pattern;
+			prevSuite   = suite;
 			prevMarkers = markers;
 		}
 		
