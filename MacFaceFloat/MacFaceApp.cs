@@ -9,6 +9,7 @@
 using System;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Data;
 using System.IO;
 using System.Reflection;
@@ -30,6 +31,15 @@ namespace MacFace.FloatApp
 		private CPUUsageCounter cpuCounter;
 		private MemoryUsageCounter memoryCounter;
 
+		private Form statusWindow;
+
+		private CPUUsage[] cpuHistory;
+		private int cpuHistoryHead;
+		private int cpuHistoryCount;
+
+		private MemoryUsage[] memHistory;
+		private int memHistoryHead;
+		private int memHistoryCount;
 
 		[STAThread]
 		public static void Main(string[] args)
@@ -42,6 +52,14 @@ namespace MacFace.FloatApp
 		{
 			config = Configuration.GetInstance();
 			config.Load();
+
+			cpuHistory = new CPUUsage[60];
+			cpuHistoryCount = 0;
+			cpuHistoryHead = 0;
+
+			memHistory = new MemoryUsage[60];
+			memHistoryCount = 0;
+			memHistoryHead = 0;
 
 			cpuCounter = new CPUUsageCounter();
 			memoryCounter = new MemoryUsageCounter();
@@ -85,6 +103,15 @@ namespace MacFace.FloatApp
 
 			// パターンウインドウ
 			this.patternWindow = new PatternWindow();
+
+			// ステータスウインドウ		
+			statusWindow = new Form();
+			statusWindow.ClientSize = new System.Drawing.Size(300, 211);
+			statusWindow.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			statusWindow.ControlBox = false;
+			statusWindow.Icon = new Icon(asm.GetManifestResourceStream("MacFace.FloatApp.App.ico"));
+			statusWindow.Text = "Status";
+			statusWindow.Paint +=new PaintEventHandler(statusWindow_Paint);
 		}
 
 		public void StartApplication()
@@ -104,6 +131,8 @@ namespace MacFace.FloatApp
 					return;
 				}
 			}
+
+			statusWindow.Show();
 
 			patternWindow.Location = config.Location;
 			patternWindow.Opacity = (float)config.Opacity / 100;
@@ -211,6 +240,14 @@ namespace MacFace.FloatApp
 			CPUUsage cpuUsage = cpuCounter.CurrentUsage();
 			MemoryUsage memUsage = memoryCounter.CurrentUsage();
 
+			cpuHistory[cpuHistoryHead++] = cpuUsage;
+			if (cpuHistoryHead >= cpuHistory.Length) cpuHistoryHead = 0;
+			if (cpuHistoryCount < cpuHistory.Length) cpuHistoryCount++;
+
+			memHistory[memHistoryHead++] = memUsage;
+			if (memHistoryHead >= memHistory.Length) memHistoryHead = 0;
+			if (memHistoryCount < memHistory.Length) memHistoryCount++;
+
 			int pattern = cpuUsage.Active / 10;
 
 			FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
@@ -230,6 +267,8 @@ namespace MacFace.FloatApp
 			if (memUsage.Pageout > 0) markers += FaceDef.MarkerPageOut;
 
 			patternWindow.UpdatePattern(suite, pattern, markers);
+
+			statusWindow.Refresh();
 		}
 
 		/*
@@ -270,6 +309,78 @@ namespace MacFace.FloatApp
 			patternWindow.PatternSize = (float)config.PatternSize / 100;
 			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
 			patternWindow.Refresh();
+		}
+
+		private void statusWindow_Paint(object sender, PaintEventArgs e)
+		{
+			Graphics g = e.Graphics;
+			g.SmoothingMode = SmoothingMode.AntiAlias;
+
+			g.FillRectangle(new SolidBrush(Color.White), 0, 0, 300, 100);
+			for (int y = 0; y < 100; y += 10) 
+			{
+				g.DrawLine(Pens.FloralWhite, 0, y, 300, y);
+			}
+
+			g.FillRectangle(new SolidBrush(Color.White), 0, 110, 300, 100);
+			for (int y = 110; y < 210; y += 10) 
+			{
+				g.DrawLine(Pens.FloralWhite, 0, y, 300, y);
+			}
+
+
+			if (cpuHistoryCount >= 2) 
+			{
+				Point[] userGraph = new Point[cpuHistoryCount];
+				Point[] sysGraph = new Point[cpuHistoryCount];
+
+				int pos = cpuHistoryHead - 1;
+				for (int i = 0; i < cpuHistoryCount; i++) 
+				{
+					if (pos < 0) pos = cpuHistory.Length - 1;
+					CPUUsage usage = cpuHistory[pos];
+					userGraph[i].X = sysGraph[i].X = 300 - i * 5;
+					userGraph[i].Y = 100 - usage.Active;
+					sysGraph[i].Y = 100 - usage.System;
+					//Console.WriteLine("" + pos + ": " + points[i]);
+					pos--;
+				}
+
+				g.DrawLines(Pens.Red, sysGraph);
+				g.DrawLines(Pens.Blue, userGraph);
+			}
+
+			double rate = 70.0 / (MemoryUsageCounter.TotalVisibleMemorySize * 1024);
+
+			int posu = memHistoryHead - 1;
+			for (int i = 0; i < memHistoryCount; i++) 
+			{
+				if (posu < 0) posu = memHistory.Length - 1;
+				MemoryUsage usage = memHistory[posu];
+
+				int x, y, w, h;
+
+				x = 300 - i * 5;
+				w = 5;
+				h = (int)(usage.Committed * rate);
+				y = 210 - h;
+				g.FillRectangle(Brushes.Blue, x, y, w, h);
+
+				x = 300 - i * 5;
+				w = 2;
+				h = (int)(usage.Pagein);
+				y = 210 - h;
+				g.FillRectangle(Brushes.LightGray, x, y, w, h);
+
+				x = 303 - i * 5;
+				w = 2;
+				h = (int)(usage.Pageout);
+				y = 210 - h;
+				g.FillRectangle(Brushes.Black, x, y, w, h);
+
+				posu--;
+			}
+			g.DrawLine(Pens.Red, 0, 210-70, 300, 210-70);
 		}
 	}
 }
