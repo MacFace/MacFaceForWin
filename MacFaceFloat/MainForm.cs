@@ -210,13 +210,9 @@ namespace MacFace.FloatApp
 			}
 				
 			if (prevUsage/10 != usage/10) {
-				this.Graphics.Clear(Color.FromArgb(0, 0, 0, 0));
-				foreach (Part part in _currentFaceDef.Pattern(FaceDef.PatternSuite.Normal, usage/10))
-				{
-					this.Graphics.DrawImage(part.Image,
-						part.Point.X, part.Point.Y,
-						part.Image.Size.Width, part.Image.Size.Height);
-				}
+				Graphics g = this.Graphics;
+				g.Clear(Color.FromArgb(0, 0, 0, 0));
+				_currentFaceDef.DrawPattern(g, FaceDef.PatternSuite.Normal, usage/10);
 				this.Update();
 			}
 				

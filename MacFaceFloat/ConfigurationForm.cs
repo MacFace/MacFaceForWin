@@ -382,39 +382,24 @@ namespace MacFace.FloatApp
 
 		private void AddPreviewListItem(string path)
 		{
-			using (Bitmap tmpImage = new Bitmap(128, 128)) 
+			try 
 			{
-				try 
-				{
-					FaceDef faceDef = new FaceDef(path);
-					PartList partList = faceDef.Pattern(FaceDef.PatternSuite.Normal, 10);
-					
-					using (Graphics g = Graphics.FromImage(tmpImage)) 
-					{
-						g.Clear(Color.White);
-						g.DrawRectangle(new Pen(Color.LightGray), 0, 0, 127, 127);
-						foreach (Part part in partList) 
-						{
-							g.DrawImage(part.Image,
-								part.Point.X, part.Point.Y,
-								part.Image.Size.Width, part.Image.Size.Height);
-						}
-					}
-					imageListFacePreviews.Images.Add(tmpImage);
+				FaceDef faceDef = new FaceDef(path);
+				Image image = faceDef.PatternImage(FaceDef.PatternSuite.Normal, 10);
+				imageListFacePreviews.Images.Add(image);
 
-					ListViewItem item = listViewFaces.Items.Add(faceDef.Title, imageListFacePreviews.Images.Count-1);
-					item.SubItems.Add(path);    // 0: パス
-					item.SubItems.Add(faceDef.Author);  // 1: 製作者
-					item.SubItems.Add(faceDef.Version); // 2: バージョン
-					item.SubItems.Add(
-						(faceDef.WebSite != null ?
-						faceDef.WebSite.ToString() : "")); // 3: ウェブサイト
-				} 
-				catch (Exception ex) 
-				{
-					// TODO: Exception からもっと狭める。
-					MessageBox.Show(ex.ToString(), "MacFace for Windows", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				}
+				ListViewItem item = listViewFaces.Items.Add(faceDef.Title, imageListFacePreviews.Images.Count-1);
+				item.SubItems.Add(path);    // 0: パス
+				item.SubItems.Add(faceDef.Author);  // 1: 製作者
+				item.SubItems.Add(faceDef.Version); // 2: バージョン
+				item.SubItems.Add(
+					(faceDef.WebSite != null ?
+					faceDef.WebSite.ToString() : "")); // 3: ウェブサイト
+			} 
+			catch (Exception ex) 
+			{
+				// TODO: Exception からもっと狭める。
+				MessageBox.Show(ex.ToString(), "MacFace for Windows", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 

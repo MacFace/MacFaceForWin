@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Collections;
+using System.Drawing;
 
 namespace MacFace
 {
@@ -34,18 +35,21 @@ namespace MacFace
 		private const int PatternCols = 11;
 		private const int PatternRows = 3;
 
-		private string _path    = "";
-		private string _title   = "";
-		private string _author  = "";
-		private string _version = ""; /*Version*/
-		private Uri    _webSite = null;
+		private string _path;
+		private string _title;
+		private string _author;
+		private string _version;
+		private Uri    _webSite;
 
-		internal PartList _parts = new PartList();
-		internal PartList[][] _patternSuites;
-		internal PartList _makers = new PartList();
+		private Part[] _parts;
+		private Part[][][] _patternSuites;
+		private Part[] _makers;
 
 
-		// ctor
+		/// <summary>
+		/// コンストラクタ。
+		/// </summary>
+		/// <param name="path">顔パターンファイルのパス</param>
 		public FaceDef(string path)
 		{
 			string defFile = System.IO.Path.Combine(path, FaceDefName);
@@ -74,42 +78,34 @@ namespace MacFace
 				// throw new IOException();
 			}
 
+			_parts = new Part[partDefList.Count];
 			for (int i = 0; i < partDefList.Count; i++)
 			{
 				Hashtable partDef = partDefList[i] as Hashtable;
 				string filename = partDef["filename"] as String;
 				int x = (int)partDef["pos x"];
 				int y = (int)partDef["pos y"];
-				_parts.Add(new Part(System.IO.Path.Combine(path, filename), x, y));
+				_parts[i] = new Part(System.IO.Path.Combine(path, filename), x, y);
 			}
 
-			_patternSuites = new PartList[PatternCols][];
-			ArrayList patternDefSuites = def["pattern"] as ArrayList;
+			ArrayList suiteDefList = (ArrayList)def["pattern"];
+			_patternSuites = new Part[PatternRows][][];
 			for (int i = 0; i < PatternRows; i++) 
 			{
-				PartList[] suite = new PartList[PatternCols];
-				ArrayList patternDefList = patternDefSuites[i] as ArrayList;
+				ArrayList suiteDef = (ArrayList)suiteDefList[i];
+				Part[][] suite = new Part[PatternCols][];
 				for (int j = 0; j < PatternCols; j++) 
 				{
-					PartList pattern = new PartList();
-					foreach (int partNo in (ArrayList)patternDefList[j]) 
+					ArrayList patternDef = (ArrayList)suiteDef[j];
+					Part[] pattern = new Part[patternDef.Count];
+					for (int k = 0; k < patternDef.Count; k++) 
 					{
-						pattern.Add(_parts[partNo]);
+						pattern[k] = _parts[(int)patternDef[k]];
 					}
 					suite[j] = pattern;
 				}
 				_patternSuites[i] = suite;
 			}
-		}
-
-		public PartList Markers
-		{
-			get { return _makers; }
-		}
-
-		public PartList Parts
-		{
-			get { return _parts; }
 		}
 
 		public Uri WebSite
@@ -137,9 +133,24 @@ namespace MacFace
 			get { return _path; }
 		}
 
-		public PartList Pattern(PatternSuite suite, int no)
+		public void DrawPattern(Graphics g, PatternSuite suite, int no)
 		{
-			return _patternSuites[(int)suite][no];
+			Part[] pattern = _patternSuites[(int)suite][no];
+			foreach (Part part in pattern)
+			{
+				g.DrawImage(part.Image,
+					part.Point.X, part.Point.Y,
+					part.Image.Size.Width, part.Image.Size.Height);
+			}
+		}
+
+		public Image PatternImage(PatternSuite suite, int no)
+		{
+			Bitmap image = new Bitmap(128, 128);
+			Graphics g = Graphics.FromImage(image);
+			DrawPattern(g, suite, no);
+			g.Dispose();
+			return image;
 		}
 	}
 
