@@ -94,6 +94,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CPUUsage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "CPUUsageCounter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Face.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -104,12 +114,22 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "HostStatistics.cs"
+                    RelPath = "MemoryUsage.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MemoryUsageCounter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Part.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Pentium4UsageCounter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 using System;
 
 namespace MacFace
