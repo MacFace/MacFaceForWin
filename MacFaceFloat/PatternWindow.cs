@@ -11,7 +11,7 @@ using System.Drawing;
 
 namespace MacFace.FloatApp
 {
-	public class MainForm : Misuzilla.Windows.Forms.AlphaForm
+	public class PatternWindow : Misuzilla.Windows.Forms.AlphaForm
 	{
 		private FaceDef curFaceDef;
 		private float patternSize;
@@ -21,7 +21,7 @@ namespace MacFace.FloatApp
 		private int curMarkers;
 
 		// コンストラクタ
-		public MainForm()
+		public PatternWindow()
 		{
 			InitializeComponent();
 
@@ -40,7 +40,7 @@ namespace MacFace.FloatApp
 			this.ControlBox = false;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.Name = "MainForm";
+			this.Name = "PatternWindow";
 			this.Opacity = 0.75F;
 			this.ShowInTaskbar = false;
 			this.Text = "MacFace For Windows";

@@ -24,7 +24,7 @@ namespace MacFace.FloatApp
 		private Configuration config;
 
 		private NotifyIcon notifyIcon;
-		private MainForm patternWindow;
+		private PatternWindow patternWindow;
 		
 		private System.Windows.Forms.Timer updateTimer;
 		private CPUUsageCounter cpuCounter;
@@ -84,7 +84,7 @@ namespace MacFace.FloatApp
 			this.notifyIcon.ContextMenu = contextMenu;
 
 			// パターンウインドウ
-			this.patternWindow = new MainForm();
+			this.patternWindow = new PatternWindow();
 		}
 
 		public void StartApplication()

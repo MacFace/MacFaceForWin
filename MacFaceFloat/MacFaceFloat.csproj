@@ -148,7 +148,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MainForm.cs"
+                    RelPath = "PatternWindow.cs"
                     SubType = "Form"
                     BuildAction = "Compile"
                 />
