@@ -39,6 +39,13 @@ namespace MacFace.FloatApp
 		private int curPattern;
 		private int curMarkers;
 
+		[STAThread]
+		public static void Main(string[] args)
+		{
+			MainForm form = new MainForm();
+			form.StartApplication();
+		}
+
 		// コンストラクタ
 		public MainForm()
 		{
@@ -58,10 +65,9 @@ namespace MacFace.FloatApp
 			memoryCounter = new MemoryUsageCounter();
 
 			_updateTimer = new System.Windows.Forms.Timer();
+			_updateTimer.Tick += new EventHandler(this.CountProcessorUsage);
 			_updateTimer.Enabled = false;
 			_updateTimer.Interval = 1000;
-			_updateTimer.Tick += new EventHandler(this.CountProcessorUsage);
-			_updateTimer.Stop();
 		}
 
 		void InitializeComponent() {
@@ -116,17 +122,52 @@ namespace MacFace.FloatApp
 			this.ShowInTaskbar = false;
 			this.Text = "MacFace For Windows";
 			this.TopMost = true;
-			this.Load += new EventHandler(MainForm_Load);
-			this.Closing += new CancelEventHandler(MainForm_Closing);
 		}
-			
 
-		[STAThread]
-		public static void Main(string[] args)
+		public void StartApplication()
 		{
-			Application.Run(new MainForm());
+			// 設定
+			_config = Configuration.GetInstance();
+			_config.Load();
+
+
+			// 顔パターン読み込み
+			bool result = false;
+			if (Directory.Exists(_config.FaceDefPath))
+			{
+				result = LoadFaceDefine(_config.FaceDefPath);
+			}
+
+			if (!result)
+			{
+				if (!SelectFaceDefine(Application.StartupPath))
+				{
+					Application.Exit();
+					return;
+				}
+			}
+
+			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+
+			this.Location = _config.Location;
+			ApplyConfiguration();
+
+			_updateTimer.Start();
+			Application.Run(this);
 		}
-		
+
+		void Application_ApplicationExit(object sender, EventArgs e)
+		{
+			notifyIcon.Visible = false;
+
+			// 保存
+			_config.Opacity = (int)(this.Opacity * 100);
+			_config.FaceDefPath = (_currentFaceDef != null ? _currentFaceDef.Path : Path.Combine(Application.StartupPath, "default.mcface"));
+			_config.Location = this.Location;
+			_config.TransparentMouseMessage = this.TransparentMouseMessage;
+
+			_config.Save();
+		}
 
 		/*
 		 * 顔パターン定義フォルダ選択。
@@ -231,6 +272,15 @@ namespace MacFace.FloatApp
 			UpdatePattern(suite, pattern, markers);
 		}
 
+		private void ApplyConfiguration()
+		{
+			this.Opacity = (float)_config.Opacity / 100;
+			this.PatternSize = (float)_config.PatternSize / 100;
+			this.TransparentMouseMessage = _config.TransparentMouseMessage;
+
+			RefreshPattern();
+		}
+
 		public float PatternSize
 		{
 			get { return _patternSize; }
@@ -262,53 +312,6 @@ namespace MacFace.FloatApp
 			this.Update();
 		}
 
-		//
-		// 起動
-		//
-		public void MainForm_Load(object sender, System.EventArgs e)
-		{
-			// 設定
-			_config = Configuration.GetInstance();
-			_config.Load();
-
-
-			// 顔パターン読み込み
-			bool result = false;
-			if (Directory.Exists(_config.FaceDefPath))
-			{
-				result = LoadFaceDefine(_config.FaceDefPath);
-				ApplyConfiguration();
-				_updateTimer.Start();
-			}
-
-			if (!result)
-			{
-				if (!SelectFaceDefine(Application.StartupPath))
-				{
-					Application.Exit();
-					return;
-				}
-
-			}
-		}
-
-		// 
-		// 終了
-		//
-		private void MainForm_Closing(object sender, CancelEventArgs e)
-		{
-			notifyIcon.Visible = false;
-
-			// 保存
-			_config.Opacity = (int) (this.Opacity * 100);
-			_config.FaceDefPath = (_currentFaceDef != null ? _currentFaceDef.Path : Path.Combine(Application.StartupPath, "default.mcface"));
-			_config.Location = this.Location;
-			_config.TransparentMouseMessage = this.TransparentMouseMessage;
-
-			_config.Save();
-		}
-
-
 		/*
 		 * メニュークリックイベント
 		 */
@@ -330,16 +333,6 @@ namespace MacFace.FloatApp
 			{
 				ApplyConfiguration();
 			}
-		}
-
-		private void ApplyConfiguration()
-		{
-			this.Opacity = (float)_config.Opacity / 100;
-			this.PatternSize = (float)_config.PatternSize / 100;
-			this.Location = _config.Location;
-			this.TransparentMouseMessage = _config.TransparentMouseMessage;
-
-			RefreshPattern();
 		}
 	}
 }
