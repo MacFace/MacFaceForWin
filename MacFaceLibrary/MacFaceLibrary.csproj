@@ -104,11 +104,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FacePattern.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "HostStatistics.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -10,88 +10,58 @@ using System.Collections;
 
 namespace MacFace
 {
+
 	/// <summary>
 	/// FaceDef ÇÃäTóvÇÃê‡ñæÇ≈Ç∑ÅB
 	/// </summary>
 	public class FaceDef
 	{
-		public static readonly string FaceDefName = "faceDef.plist";
-		public static readonly int PatternCols = 11;
-		public static readonly int PatternRows = 3;
+		public enum PatternSuite
+		{
+			Normal             = 0,
+			MemoryDecline      = 1,
+			MemoryInsufficient = 2
+		}
+
+		public enum MarkerBitMask
+		{
+			None    = 0x00,
+			PageIn  = 0x01,
+			PageOut = 0x02
+		}
+
+		private const string FaceDefName = "faceDef.plist";
+		private const int PatternCols = 11;
+		private const int PatternRows = 3;
 
 		private string _path    = "";
 		private string _title   = "";
-		private string _auther  = "";
+		private string _author  = "";
 		private string _version = ""; /*Version*/
 		private Uri    _webSite = null;
 
 		internal PartList _parts = new PartList();
-		//protected int[][,] patterns;
+		internal PartList[][] _patternSuites;
 		internal PartList _makers = new PartList();
-		internal FacePattern _patterns;
 
 
 		// ctor
-		public FaceDef() {}
-
-		// properties
-		public FacePattern FacePattern
+		public FaceDef(string path)
 		{
-			get { return _patterns; }
-		}
-		public PartList Markers
-		{
-			get { return _makers; }
-		}
-		public PartList Parts
-		{
-			get { return _parts; }
-		}
-		public Uri WebSite
-		{
-			get { return _webSite; }
-			set { _webSite = value; }
-		}
-		public string /*Version*/ Version
-		{
-			get { return _version; }
-			set { _version = value; }
-		}
-		public string Author
-		{
-			get { return _auther; }
-			set { _auther = value; }
-		}
-		public string Title
-		{
-			get { return _title; }
-			set { _title = value; }
-		}
-		public string Path
-		{
-			get { return _path; }
-			set { _path = value; }
-		}
-
-		// methods
-		public static FaceDef CreateFaceDefFromFile(string path)
-		{
-			FaceDef faceDef = new FaceDef();
-
 			string defFile = System.IO.Path.Combine(path, FaceDefName);
 			Hashtable def = PropertyList.Load(defFile);
 
 			// èÓïÒ
-			faceDef.Title = (def.ContainsKey("title") ? def["title"] as string : String.Empty);
-			faceDef.Author = (def.ContainsKey("author") ? def["author"] as string : String.Empty);
-			faceDef.Version = (def.ContainsKey("version") ? def["version"] as string : String.Empty);
-			faceDef.Path = path;
+			_path = path;
+			_title = (def.ContainsKey("title") ? def["title"] as string : String.Empty);
+			_author = (def.ContainsKey("author") ? def["author"] as string : String.Empty);
+			_version = (def.ContainsKey("version") ? def["version"] as string : String.Empty);
 
 			if (def.ContainsKey("web site"))
 			{
 				try 
 				{
-					faceDef.WebSite = new Uri(def["web site"] as string);
+					_webSite = new Uri(def["web site"] as string);
 				} 
 				catch (UriFormatException) {}
 			}
@@ -102,7 +72,6 @@ namespace MacFace
 			if (partDefList == null) 
 			{
 				// throw new IOException();
-				return null;
 			}
 
 			for (int i = 0; i < partDefList.Count; i++)
@@ -111,21 +80,67 @@ namespace MacFace
 				string filename = partDef["filename"] as String;
 				int x = (int)partDef["pos x"];
 				int y = (int)partDef["pos y"];
-				faceDef.Parts.Add(new Part(System.IO.Path.Combine(path, filename), x, y));
+				_parts.Add(new Part(System.IO.Path.Combine(path, filename), x, y));
 			}
 
-			// TODO: pattern Çì«Ç›çûÇﬁÅB
-			faceDef._patterns = new FacePattern(faceDef.Parts, def["pattern"] as ArrayList);
-
-			return faceDef;
+			_patternSuites = new PartList[PatternCols][];
+			ArrayList patternDefSuites = def["pattern"] as ArrayList;
+			for (int i = 0; i < PatternRows; i++) 
+			{
+				PartList[] suite = new PartList[PatternCols];
+				ArrayList patternDefList = patternDefSuites[i] as ArrayList;
+				for (int j = 0; j < PatternCols; j++) 
+				{
+					PartList pattern = new PartList();
+					foreach (int partNo in (ArrayList)patternDefList[j]) 
+					{
+						pattern.Add(_parts[partNo]);
+					}
+					suite[j] = pattern;
+				}
+				_patternSuites[i] = suite;
+			}
 		}
-	}
 
-	public enum MarkerBitMask
-	{
-		None    = 0x0000,
-		PageIn  = 0x0001,
-		PageOut = 0x0002
+		public PartList Markers
+		{
+			get { return _makers; }
+		}
+
+		public PartList Parts
+		{
+			get { return _parts; }
+		}
+
+		public Uri WebSite
+		{
+			get { return _webSite; }
+		}
+
+		public string /*Version*/ Version
+		{
+			get { return _version; }
+		}
+
+		public string Author
+		{
+			get { return _author; }
+		}
+
+		public string Title
+		{
+			get { return _title; }
+		}
+
+		public string Path
+		{
+			get { return _path; }
+		}
+
+		public PartList Pattern(PatternSuite suite, int no)
+		{
+			return _patternSuites[(int)suite][no];
+		}
 	}
 
 	public class FaceDefFormatException : ApplicationException
