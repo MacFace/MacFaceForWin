@@ -25,19 +25,18 @@ namespace MacFace.FloatApp
 		private System.Windows.Forms.MenuItem menuItemPatternSelect;
 		private System.Windows.Forms.MenuItem menuItemConfigure;
 		private System.Windows.Forms.MenuItem menuItemExit;
-		private String _facePath;
-		private System.Windows.Forms.Timer _updateTimer;
 
-		private FaceDef _currentFaceDef;
 		private Configuration _config;
-		private float _patternSize;
 
-		private int prevPattern;
-		private FaceDef.PatternSuite prevSuite;
-		private int prevMarkers;
-
+		private System.Windows.Forms.Timer _updateTimer;
 		private CPUUsageCounter cpuCounter;
 		private MemoryUsageCounter memoryCounter;
+
+		private FaceDef _currentFaceDef;
+		private float _patternSize;
+		private FaceDef.PatternSuite curSuite;
+		private int curPattern;
+		private int curMarkers;
 
 		// コンストラクタ
 		public MainForm()
@@ -46,9 +45,9 @@ namespace MacFace.FloatApp
 			this.TransparentMouseMessage = false;
 			this.MoveAtFormDrag = true;
 
-			prevPattern = -1;
-			prevSuite   = FaceDef.PatternSuite.Normal;
-			prevMarkers = -1;
+			curSuite   = FaceDef.PatternSuite.Normal;
+			curPattern = 0;
+			curMarkers = 0;
 
 			cpuCounter = new CPUUsageCounter();
 			memoryCounter = new MemoryUsageCounter();
@@ -57,6 +56,7 @@ namespace MacFace.FloatApp
 			_updateTimer.Enabled = false;
 			_updateTimer.Interval = 1000;
 			_updateTimer.Tick += new EventHandler(this.CountProcessorUsage);
+			_updateTimer.Stop();
 		}
 
 		void InitializeComponent() {
@@ -113,7 +113,6 @@ namespace MacFace.FloatApp
 			this.TopMost = true;
 			this.Load += new EventHandler(MainForm_Load);
 			this.Closing += new CancelEventHandler(MainForm_Closing);
-			this.Move += new EventHandler(MainForm_Move);
 		}
 			
 
@@ -192,11 +191,10 @@ namespace MacFace.FloatApp
 			// 顔パターン差し替え中は更新を止めておく
 			if (_updateTimer != null) _updateTimer.Stop();
 
-			_currentFaceDef = newFaceDef;
-			_facePath = _currentFaceDef.Path;
+			this.FaceDef = newFaceDef;
+			RefreshPattern();
+
 			notifyIcon.Text = "MacFace - " + _currentFaceDef.Title;
-			prevPattern = -1;
-			prevMarkers = -1;
 
 			// 更新再開
 			if (_updateTimer != null) _updateTimer.Start();
@@ -225,23 +223,38 @@ namespace MacFace.FloatApp
 			if (memUsage.Pagein > 0) markers += FaceDef.MarkerPageIn;
 			if (memUsage.Pageout > 0) markers += FaceDef.MarkerPageOut;
 
-			if (prevPattern != pattern || prevSuite != suite || prevMarkers != markers) 
-			{
-				Graphics g = this.Graphics;
-				g.Clear(Color.FromArgb(0, 0, 0, 0));
-				_currentFaceDef.DrawPatternImage(g, suite, pattern, markers, _patternSize);
-				this.Update();
-			}
-				
-			prevPattern = pattern;
-			prevSuite   = suite;
-			prevMarkers = markers;
+			UpdatePattern(suite, pattern, markers);
 		}
 
 		public float PatternSize
 		{
 			get { return _patternSize; }
 			set { _patternSize = value; }
+		}
+
+		public FaceDef FaceDef
+		{
+			get { return _currentFaceDef; }
+			set { _currentFaceDef = value; }
+		}
+
+		public void UpdatePattern(FaceDef.PatternSuite suite, int patternNo, int markers)
+		{
+			if (curSuite != suite || curPattern != patternNo || curMarkers != markers) 
+			{
+				curSuite   = suite;
+				curPattern = patternNo;
+				curMarkers = markers;
+				RefreshPattern();
+			}
+		}
+
+		public void RefreshPattern()
+		{
+			Graphics g = this.Graphics;
+			g.Clear(Color.FromArgb(0, 0, 0, 0));
+			_currentFaceDef.DrawPatternImage(g, curSuite, curPattern, curMarkers, _patternSize);
+			this.Update();
 		}
 
 		//
@@ -253,13 +266,14 @@ namespace MacFace.FloatApp
 			_config = Configuration.GetInstance();
 			_config.Load();
 
-			ApplyConfiguration();
 
 			// 顔パターン読み込み
 			bool result = false;
 			if (Directory.Exists(_config.FaceDefPath))
 			{
 				result = LoadFaceDefine(_config.FaceDefPath);
+				ApplyConfiguration();
+				_updateTimer.Start();
 			}
 
 			if (!result)
@@ -295,7 +309,7 @@ namespace MacFace.FloatApp
 		 */
 		public void menuItemPatternSelect_Click(object sender, System.EventArgs e)
 		{
-			SelectFaceDefine(_facePath);	
+			SelectFaceDefine(FaceDef.Path);	
 		}
 
 		public void menuItemExit_Click(object sender, System.EventArgs e)
@@ -320,14 +334,7 @@ namespace MacFace.FloatApp
 			this.Location = _config.Location;
 			this.TransparentMouseMessage = _config.TransparentMouseMessage;
 
-			// 設定変更後は常に表示を更新するようにする
-			prevPattern = -1;
-			prevMarkers = -1;
-		}
-
-		private void MainForm_Move(object sender, EventArgs e)
-		{
-			_config.Location = this.Location;
+			RefreshPattern();
 		}
 	}
 }
