@@ -246,7 +246,7 @@ namespace MacFace.FloatApp
 			{
 				if (!SelectFaceDefine(Application.StartupPath))
 				{
-					this.Close();
+					Application.Exit();
 					return;
 				}
 
