@@ -118,10 +118,10 @@ namespace MacFace
 		{
 			return SelectFaceDefine(Application.StartupPath);
 		}
+
 		public bool SelectFaceDefine(string defaultPath)
 		{
 			String facePath;
-			Hashtable property;
 
 			// 更新を止める。
 			if (_updateTimer != null) 
@@ -139,20 +139,10 @@ namespace MacFace
 				if (folderBrowser.ShowDialog() == DialogResult.OK) 
 				{
 					facePath = folderBrowser.SelectedPath;
-					if (File.Exists(Path.Combine(facePath, "faceDef.plist")))
+
+					if (LoadFaceDefine(facePath)) 
 					{
-						break;
-					}
-					else
-					{
-						// ファイルがない
-						if (MessageBox.Show(
-							String.Format("指定されたフォルダに顔パターン定義XMLファイル \"faceDef.plist\" が存在しません。\n\nフォルダ:\n{0}", facePath),
-							"MacFace for Windows", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error)
-							== DialogResult.Cancel)
-						{
-							return false;
-						}
+						return true;
 					}
 				}
 				else 
@@ -161,10 +151,25 @@ namespace MacFace
 				}
 			}
 
-			// 読み込み
+		}
+
+
+		bool LoadFaceDefine(string path)
+		{
+			string plistPath = Path.Combine(path, "faceDef.plist");
+
+			if (!File.Exists(plistPath))
+			{
+				System.Windows.Forms.MessageBox.Show(
+					String.Format("指定されたフォルダに顔パターン定義XMLファイル \"faceDef.plist\" が存在しません。\n\nフォルダ:\n{0}", path),
+					"MacFace for Windows", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				return false;
+			}
+			
+			Hashtable property;
 			try 
 			{
-				property = PropertyList.Load(Path.Combine(facePath, "faceDef.plist"));
+				property = PropertyList.Load(plistPath);
 			} 
 			catch (System.IO.IOException ie) 
 			{
@@ -183,17 +188,19 @@ namespace MacFace
 				return false;
 			}
 
-			_property = property;
-			_facePath = facePath;
-			_parts = (ArrayList)_property["parts"];
+			// 顔パターン差し替え中は更新を止めておく
+			if (_updateTimer != null) _updateTimer.Stop();
 
-			// 更新開始
+			_property = property;
+			_facePath = path;
+			_parts = (ArrayList)_property["parts"];
+			prevUsage = -10;
+
+			// 更新再開
 			if (_updateTimer != null) _updateTimer.Start();
 
 			return true;
 		}
-
-
 
 		public void CountProcessorUsage(object sender, EventArgs e)
 		{
@@ -233,12 +240,23 @@ namespace MacFace
 
 		public void MainForm_Load(object sender, System.EventArgs e)
 		{
-			if (!SelectFaceDefine(Path.Combine(Application.StartupPath, "default.mcface")))
+			string faceDefPath = Path.Combine(Application.StartupPath, "default.mcface");
+			bool result = false;
+
+			if (Directory.Exists(faceDefPath))
 			{
-				Application.Exit();
-				return;
+				result = LoadFaceDefine(faceDefPath);
 			}
 
+			if (!result)
+			{
+				if (!SelectFaceDefine(Application.StartupPath))
+				{
+					Application.Exit();
+					return;
+				}
+
+			}
 		}
 
 		/*
