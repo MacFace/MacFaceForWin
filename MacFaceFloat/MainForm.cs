@@ -121,16 +121,6 @@ namespace MacFace
 
 		public bool SelectFaceDefine(string defaultPath)
 		{
-			String facePath;
-
-			// 更新を止める。
-			if (_updateTimer != null) 
-			{
-				_updateTimer.Stop();
-				Application.DoEvents();
-			}
-
-			// フォルダ選択。
 			while (true) 
 			{
 				FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
@@ -138,9 +128,7 @@ namespace MacFace
 				folderBrowser.Description = "顔パターンファイルの存在するフォルダを選択してください。";
 				if (folderBrowser.ShowDialog() == DialogResult.OK) 
 				{
-					facePath = folderBrowser.SelectedPath;
-
-					if (LoadFaceDefine(facePath)) 
+					if (LoadFaceDefine(folderBrowser.SelectedPath)) 
 					{
 						return true;
 					}
