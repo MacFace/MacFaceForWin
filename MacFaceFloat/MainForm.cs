@@ -32,8 +32,8 @@ namespace MacFace.FloatApp
 		
 		Int32 prevUsage;
 		PerformanceCounter cpuCount;
-//		PerformanceCounter pageoutCount;
-//		PerformanceCounter pageinCount;
+		PerformanceCounter pageoutCount;
+		PerformanceCounter pageinCount;
 
 		// コンストラクタ
 		public MainForm()
@@ -49,13 +49,13 @@ namespace MacFace.FloatApp
 			cpuCount.CounterName  = "% Processor Time";
 			cpuCount.InstanceName = "_Total";
 
-//			pageoutCount = new PerformanceCounter();
-//			pageoutCount.CategoryName = "Memory";
-//			pageoutCount.CounterName  = "Pages Output/sec";
-//
-//			pageinCount = new PerformanceCounter();
-//			pageinCount.CategoryName = "Memory";
-//			pageinCount.CounterName  = "Pages Input/sec";
+			pageoutCount = new PerformanceCounter();
+			pageoutCount.CategoryName = "Memory";
+			pageoutCount.CounterName  = "Pages Output/sec";
+
+			pageinCount = new PerformanceCounter();
+			pageinCount.CategoryName = "Memory";
+			pageinCount.CounterName  = "Pages Input/sec";
 
 			_updateTimer = new System.Windows.Forms.Timer();
 			_updateTimer.Enabled = false;
@@ -198,21 +198,26 @@ namespace MacFace.FloatApp
 
 		public void CountProcessorUsage(object sender, EventArgs e)
 		{
-			Int32 usage = (Int32)cpuCount.NextValue();
-//			Int32 pagein = (Int32)pageinCount.NextValue();
-//			Int32 pageout = (Int32)pageoutCount.NextValue();
+			int usage = (int)cpuCount.NextValue();
+			int pagein = (int)pageinCount.NextValue();
+			int pageout = (int)pageoutCount.NextValue();
 
-//				Console.WriteLine("Processor: {0}% (pattern: {1}) {2} {3}", usage, usage/10, pagein, pageout);
-			if (usage >= 100) {
-				usage = 100;
+			usage /= 10;
+			if (usage > 10) {
+				usage = 10;
 			} else if (usage < 0) {
 				usage = 0;
 			}
-				
-			if (prevUsage/10 != usage/10) {
+
+			int markers = FaceDef.MarkerNone;
+			if (pagein > 0) markers += FaceDef.MarkerPageIn;
+			if (pageout > 0) markers += FaceDef.MarkerPageOut;
+
+			if (prevUsage != usage) 
+			{
 				Graphics g = this.Graphics;
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
-				_currentFaceDef.DrawPatternImage(g, FaceDef.PatternSuite.Normal, usage/10, FaceDef.MarkerNone);
+				_currentFaceDef.DrawPatternImage(g, FaceDef.PatternSuite.Normal, usage, markers);
 				this.Update();
 			}
 				
