@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.IO;
 
@@ -13,7 +14,7 @@ namespace MacFace.FloatApp
 	/// </summary>
 	public class ConfigurationForm : System.Windows.Forms.Form
 	{
-		private MainForm _mainForm;
+		private MacFaceApp _app;
 		private Configuration _config;
 
 		private System.Windows.Forms.TreeView treeCategory;
@@ -41,16 +42,15 @@ namespace MacFace.FloatApp
 		private Label label6;
 		private System.ComponentModel.IContainer components;
 
-		public ConfigurationForm(MainForm mainForm)
+		public ConfigurationForm(MacFaceApp app)
 		{
 			//
 			// Windows フォーム デザイナ サポートに必要です。
 			//
 			InitializeComponent();
 
-			_mainForm = mainForm;
 			_config = Configuration.GetInstance();
-
+			_app = app;
 		}
 
 		/// <summary>
@@ -370,27 +370,27 @@ namespace MacFace.FloatApp
 
 		private void ConfigurationForm_Load(object sender, System.EventArgs e)
 		{
-			// 全般を表示。
+			// 初期値のセット
+			trackBarOpacity.Value = _config.Opacity;
+			trackBarPatternSize.Value = _config.PatternSize;
+			checkMouseMessage.Checked = _config.TransparentMouseMessage;
+
+			// 一度すべてのパネルを非表示にする
 			foreach (Panel pane in panelContainer.Controls) 
 			{
 				pane.Visible = false;
 				pane.Dock = DockStyle.Fill;
 			}
 
+			// 全般のみを可視にする
 			panelAppearance.Show();
-
-			// 初期値をセット。
-			trackBarOpacity.Value = (int) (_mainForm.Opacity * 100);
-			trackBarPatternSize.Value = (int)(_mainForm.PatternSize * 100);
-			checkMouseMessage.Checked = Configuration.GetInstance().TransparentMouseMessage;
 		}
 
 		private void buttonOK_Click(object sender, System.EventArgs e)
 		{
-			Configuration config = Configuration.GetInstance();
-			config.Opacity = trackBarOpacity.Value;
-			config.PatternSize = trackBarPatternSize.Value;
-			config.TransparentMouseMessage = checkMouseMessage.Checked;
+			_config.Opacity = trackBarOpacity.Value;
+			_config.PatternSize = trackBarPatternSize.Value;
+			_config.TransparentMouseMessage = checkMouseMessage.Checked;
 
 			this.Close();
 		}
@@ -513,7 +513,8 @@ namespace MacFace.FloatApp
 			
 			if (item != null) 
 			{
-				_mainForm.LoadFaceDefine(item.SubItems[1].Text);
+				// TODO: ここだけリアルタイムに設定内容が反映されるのは反則っぽい
+				_app.LoadFaceDefine(item.SubItems[1].Text);
 			}
 		}
 
@@ -532,7 +533,7 @@ namespace MacFace.FloatApp
 		{
 			try 
 			{
-				System.Diagnostics.Process.Start(linkWebSite.Text);
+				Process.Start(linkWebSite.Text);
 			} 
 			catch (Win32Exception) {}
 		}

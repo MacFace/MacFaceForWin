@@ -1,58 +1,29 @@
 /*
- * MainForm.cs
+ * MacFace パターンウインドウクラス
+ *
  * $Id$
- * 
- * project created on 2004/06/02 at 2:43
  * 
  */
 
 using System;
 using System.Windows.Forms;
 using System.Drawing;
-using System.Collections;
-using System.ComponentModel;
-using System.Data;
-using System.IO;
-using System.Diagnostics;
-using System.Threading;
-using System.Reflection;
 
 namespace MacFace.FloatApp
 {
 	public class MainForm : Misuzilla.Windows.Forms.AlphaForm
 	{
-		private System.Windows.Forms.NotifyIcon notifyIcon;
-		private System.Windows.Forms.ContextMenu contextMenu;
-		private System.Windows.Forms.MenuItem menuItemPatternSelect;
-		private System.Windows.Forms.MenuItem menuItemConfigure;
-		private System.Windows.Forms.MenuItem menuItemExit;
+		private FaceDef curFaceDef;
+		private float patternSize;
 
-		private Configuration _config;
-
-		private System.Windows.Forms.Timer _updateTimer;
-		private CPUUsageCounter cpuCounter;
-		private MemoryUsageCounter memoryCounter;
-
-		private FaceDef _currentFaceDef;
-		private float _patternSize;
 		private FaceDef.PatternSuite curSuite;
 		private int curPattern;
 		private int curMarkers;
-
-		[STAThread]
-		public static void Main(string[] args)
-		{
-			MainForm form = new MainForm();
-			form.StartApplication();
-		}
 
 		// コンストラクタ
 		public MainForm()
 		{
 			InitializeComponent();
-
-			Assembly asm = Assembly.GetExecutingAssembly();
-			this.notifyIcon.Icon = new Icon(asm.GetManifestResourceStream("MacFace.FloatApp.App.ico"));
 
 			this.TransparentMouseMessage = false;
 			this.MoveAtFormDrag = true;
@@ -60,60 +31,12 @@ namespace MacFace.FloatApp
 			curSuite   = FaceDef.PatternSuite.Normal;
 			curPattern = 0;
 			curMarkers = 0;
-
-			cpuCounter = new CPUUsageCounter();
-			memoryCounter = new MemoryUsageCounter();
-
-			_updateTimer = new System.Windows.Forms.Timer();
-			_updateTimer.Tick += new EventHandler(this.CountProcessorUsage);
-			_updateTimer.Enabled = false;
-			_updateTimer.Interval = 1000;
 		}
 
-		void InitializeComponent() {
-			this.notifyIcon = new System.Windows.Forms.NotifyIcon();
-			this.menuItemPatternSelect = new System.Windows.Forms.MenuItem();
-			this.menuItemConfigure = new System.Windows.Forms.MenuItem();
-			this.menuItemExit = new System.Windows.Forms.MenuItem();
-			this.contextMenu = new System.Windows.Forms.ContextMenu();
-
-			//
-			// notifyIcon
-			//
-			this.notifyIcon.Text = "MacFace";
-			this.notifyIcon.Icon = this.Icon;
-			this.notifyIcon.Visible = true;
-			this.notifyIcon.ContextMenu = this.contextMenu;
-
-			// 
-			// menuItemPatternSelect
-			// 
-			this.menuItemPatternSelect.Text = "顔パターンの選択(&S)";
-			this.menuItemPatternSelect.Click += new System.EventHandler(this.menuItemPatternSelect_Click);
-
-			// 
-			// menuItemConfigure
-			// 
-			this.menuItemConfigure.Text = "MacFace の設定(&C)...";
-			this.menuItemConfigure.Click +=new EventHandler(menuItemConfigure_Click);
-			// 
-			// menuItemExit
-			// 
-			this.menuItemExit.Index = 0;
-			this.menuItemExit.Shortcut = System.Windows.Forms.Shortcut.CtrlQ;
-			this.menuItemExit.Text = "終了(&X)";
-			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
-			// 
-			// contextMenu
-			// 
-			this.contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-						this.menuItemPatternSelect, this.menuItemConfigure, new MenuItem("-"), this.menuItemExit});
-			// 
-			// MainForm
-			// 
+		void InitializeComponent()
+		{
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
 			this.ClientSize = new System.Drawing.Size(120, 101);
-			this.ContextMenu = this.contextMenu;
 			this.ControlBox = false;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
@@ -124,173 +47,16 @@ namespace MacFace.FloatApp
 			this.TopMost = true;
 		}
 
-		public void StartApplication()
-		{
-			// 設定
-			_config = Configuration.GetInstance();
-			_config.Load();
-
-
-			// 顔パターン読み込み
-			bool result = false;
-			if (Directory.Exists(_config.FaceDefPath))
-			{
-				result = LoadFaceDefine(_config.FaceDefPath);
-			}
-
-			if (!result)
-			{
-				if (!SelectFaceDefine(Application.StartupPath))
-				{
-					Application.Exit();
-					return;
-				}
-			}
-
-			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
-
-			this.Location = _config.Location;
-			ApplyConfiguration();
-
-			_updateTimer.Start();
-			Application.Run(this);
-		}
-
-		void Application_ApplicationExit(object sender, EventArgs e)
-		{
-			notifyIcon.Visible = false;
-
-			// 保存
-			_config.Opacity = (int)(this.Opacity * 100);
-			_config.FaceDefPath = (_currentFaceDef != null ? _currentFaceDef.Path : Path.Combine(Application.StartupPath, "default.mcface"));
-			_config.Location = this.Location;
-			_config.TransparentMouseMessage = this.TransparentMouseMessage;
-
-			_config.Save();
-		}
-
-		/*
-		 * 顔パターン定義フォルダ選択。
-		 */
-		public bool SelectFaceDefine()
-		{
-			return SelectFaceDefine(Application.StartupPath);
-		}
-
-		public bool SelectFaceDefine(string defaultPath)
-		{
-			while (true) 
-			{
-				FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-				folderBrowser.SelectedPath = defaultPath;
-				folderBrowser.Description = "顔パターンファイルの存在するフォルダを選択してください。";
-				if (folderBrowser.ShowDialog() == DialogResult.OK) 
-				{
-					if (LoadFaceDefine(folderBrowser.SelectedPath)) 
-					{
-						return true;
-					}
-				}
-				else 
-				{
-					return false;
-				}
-			}
-
-		}
-
-
-		public bool LoadFaceDefine(string path)
-		{
-			FaceDef newFaceDef = null;
-			string plistPath = Path.Combine(path, "faceDef.plist");
-
-			if (!File.Exists(plistPath))
-			{
-				System.Windows.Forms.MessageBox.Show(
-					String.Format("指定されたフォルダに顔パターン定義XMLファイル \"faceDef.plist\" が存在しません。\n\nフォルダ:\n{0}", path),
-					"MacFace for Windows", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				return false;
-			}
-			
-			try 
-			{
-				newFaceDef = new MacFace.FaceDef(path);
-			} 
-			catch (System.IO.IOException ie) 
-			{
-				System.Windows.Forms.MessageBox.Show(
-					String.Format("顔パターン定義XMLファイルを読み込む際にエラーが発生しました。\n\n原因:\n{0}",
-					ie.ToString()), "MacFace for Windows", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				
-				return false;
-			}
-			catch (System.Xml.XmlException xe) 
-			{
-				System.Windows.Forms.MessageBox.Show(
-					String.Format("顔パターン定義XMLファイルを読込み中にエラーが発生しました。\n\n原因:\n{0}",
-					xe.ToString()), "MacFace for Windows", MessageBoxButtons.OK, MessageBoxIcon.Error);
-				
-				return false;
-			}
-
-			// 顔パターン差し替え中は更新を止めておく
-			if (_updateTimer != null) _updateTimer.Stop();
-
-			this.FaceDef = newFaceDef;
-			RefreshPattern();
-
-			notifyIcon.Text = "MacFace - " + _currentFaceDef.Title;
-
-			// 更新再開
-			if (_updateTimer != null) _updateTimer.Start();
-
-			return true;
-		}
-
-		public void CountProcessorUsage(object sender, EventArgs e)
-		{
-			CPUUsage cpuUsage = cpuCounter.CurrentUsage();
-			MemoryUsage memUsage = memoryCounter.CurrentUsage();
-
-			int pattern = cpuUsage.Active / 10;
-
-			FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
-			if (memUsage.Available < (10 * 1024 *1024)) 
-			{
-				suite = FaceDef.PatternSuite.MemoryInsufficient;
-			} 
-			else if (memUsage.Available < (30 * 1024 *1024)) 
-			{
-				suite = FaceDef.PatternSuite.MemoryDecline;
-			}
-
-			int markers = FaceDef.MarkerNone;
-			if (memUsage.Pagein > 0) markers += FaceDef.MarkerPageIn;
-			if (memUsage.Pageout > 0) markers += FaceDef.MarkerPageOut;
-
-			UpdatePattern(suite, pattern, markers);
-		}
-
-		private void ApplyConfiguration()
-		{
-			this.Opacity = (float)_config.Opacity / 100;
-			this.PatternSize = (float)_config.PatternSize / 100;
-			this.TransparentMouseMessage = _config.TransparentMouseMessage;
-
-			RefreshPattern();
-		}
-
 		public float PatternSize
 		{
-			get { return _patternSize; }
-			set { _patternSize = value; }
+			get { return patternSize; }
+			set { patternSize = value; }
 		}
 
 		public FaceDef FaceDef
 		{
-			get { return _currentFaceDef; }
-			set { _currentFaceDef = value; }
+			get { return curFaceDef; }
+			set { curFaceDef = value; }
 		}
 
 		public void UpdatePattern(FaceDef.PatternSuite suite, int patternNo, int markers)
@@ -308,31 +74,8 @@ namespace MacFace.FloatApp
 		{
 			Graphics g = this.Graphics;
 			g.Clear(Color.FromArgb(0, 0, 0, 0));
-			_currentFaceDef.DrawPatternImage(g, curSuite, curPattern, curMarkers, _patternSize);
+			curFaceDef.DrawPatternImage(g, curSuite, curPattern, curMarkers, patternSize);
 			this.Update();
-		}
-
-		/*
-		 * メニュークリックイベント
-		 */
-		public void menuItemPatternSelect_Click(object sender, System.EventArgs e)
-		{
-			SelectFaceDefine(FaceDef.Path);	
-		}
-
-		public void menuItemExit_Click(object sender, System.EventArgs e)
-		{
-			_updateTimer.Stop();
-			this.Close();
-		}
-
-		private void menuItemConfigure_Click(object sender, EventArgs e)
-		{
-			ConfigurationForm configForm = new ConfigurationForm(this);
-			if (configForm.ShowDialog() == DialogResult.OK) 
-			{
-				ApplyConfiguration();
-			}
 		}
 	}
 }
