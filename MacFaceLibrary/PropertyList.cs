@@ -1,3 +1,9 @@
+/*
+ * PropertyList.cs
+ * $Id$
+ * 
+ */
+
 using System;
 using System.Xml;
 using System.Collections;
@@ -10,17 +16,19 @@ namespace MacFace
 	/// </summary>
 	public class PropertyList : Hashtable
 	{
-		public static Hashtable load(string path)
+		private PropertyList() {}
+
+		public static Hashtable Load(string path)
 		{
 			XmlDocument doc = new XmlDocument();
 			XmlTextReader reader = new XmlTextReader(path);
 			reader.XmlResolver = null;
 			doc.Load(reader);
 
-			return readDictionary(doc.DocumentElement.FirstChild);
+			return ReadDictionary(doc.DocumentElement.FirstChild);
 		}
 
-		static Hashtable readDictionary(XmlNode node)
+		private static Hashtable ReadDictionary(XmlNode node)
 		{
 			XmlNodeList children = node.ChildNodes;
 			int count = children.Count;
@@ -30,7 +38,7 @@ namespace MacFace
 			for (int i = 0; i < count; i+=2) 
 			{
 				string key = children[i].InnerText;
-				object value = readValue(children[i+1]);
+				object value = ReadValue(children[i+1]);
 
 				table.Add(key,value);
 			}
@@ -38,29 +46,29 @@ namespace MacFace
 			return table;
 		}
 
-		static ArrayList readArray(XmlNode node)
+		private static ArrayList ReadArray(XmlNode node)
 		{
 			ArrayList array = new ArrayList();
 //Trace.WriteLine("#ARRAY#");
 			foreach (XmlNode child in node.ChildNodes) 
 			{
-				array.Add(readValue(child));
+				array.Add(ReadValue(child));
 			}
 //Trace.WriteLine("#/ARRAY#");
 
 			return array;
 		}
 
-		static object readValue(XmlNode node)
+		private static object ReadValue(XmlNode node)
 		{
 			object value;
 			switch (node.Name)
 			{
 				case "dict":
-					value = readDictionary(node);
+					value = ReadDictionary(node);
 					break;
 				case "array":
-					value = readArray(node);
+					value = ReadArray(node);
 					break;
 				case "string":
 					value = node.InnerText;

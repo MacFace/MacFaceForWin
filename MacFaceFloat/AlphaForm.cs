@@ -1,6 +1,6 @@
 /*
  * AlphaForm.cs
- * $Id: AlphaForm.cs,v 1.3 2003/07/10 20:07:16 Mayuki Sawatari Exp $
+ * $CVSId: AlphaForm.cs,v 1.3 2003/07/10 20:07:16 Mayuki Sawatari Exp $
  *
  * Copyright (c) 2003 Mayuki Sawatari, All rights reserved.
  *

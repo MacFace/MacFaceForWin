@@ -1,0 +1,38 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacFaceLibrary", "MacFaceLibrary\MacFaceLibrary.csproj", "{23267F41-38FE-41F6-BF08-2D8940A1E024}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacFaceFloat", "MacFaceFloat\MacFaceFloat.csproj", "{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{23267F41-38FE-41F6-BF08-2D8940A1E024} = {23267F41-38FE-41F6-BF08-2D8940A1E024}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacFaceTest", "MacFaceTest\MacFaceTest.csproj", "{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Debug.ActiveCfg = Debug|.NET
+		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Debug.Build.0 = Debug|.NET
+		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Release.ActiveCfg = Release|.NET
+		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Release.Build.0 = Release|.NET
+		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Debug.ActiveCfg = Debug|.NET
+		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Debug.Build.0 = Debug|.NET
+		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Release.ActiveCfg = Release|.NET
+		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Release.Build.0 = Release|.NET
+		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Debug.ActiveCfg = Debug|.NET
+		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Debug.Build.0 = Debug|.NET
+		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Release.ActiveCfg = Release|.NET
+		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Release.Build.0 = Release|.NET
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
