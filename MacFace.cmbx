@@ -1,0 +1,16 @@
+<Combine fileversion="1.0" name="MacFace" description="">
+  <StartMode startupentry="MacFace" single="True">
+    <Execute entry="MacFace" type="None" />
+  </StartMode>
+  <Entries>
+    <Entry filename=".\MacFace.prjx" />
+  </Entries>
+  <Configurations active="Debug">
+    <Configuration name="Release">
+      <Entry name="MacFace" configurationname="Debug" build="False" />
+    </Configuration>
+    <Configuration name="Debug">
+      <Entry name="MacFace" configurationname="Debug" build="False" />
+    </Configuration>
+  </Configurations>
+</Combine>
