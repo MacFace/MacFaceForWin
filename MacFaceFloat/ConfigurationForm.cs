@@ -19,7 +19,6 @@ namespace MacFace.FloatApp
 		private Configuration _config;
 		private System.Windows.Forms.ImageList imageListFacePreviews;
 		private System.Windows.Forms.ToolTip toolTipPreviewDetail;
-		private System.Windows.Forms.ImageList imageListConfigTreeIcon;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.CheckBox checkMouseMessage;
 		private System.Windows.Forms.Label label4;
@@ -72,7 +71,6 @@ namespace MacFace.FloatApp
 		{
 			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ConfigurationForm));
-			this.imageListConfigTreeIcon = new System.Windows.Forms.ImageList(this.components);
 			this.imageListFacePreviews = new System.Windows.Forms.ImageList(this.components);
 			this.label6 = new System.Windows.Forms.Label();
 			this.toolTipPreviewDetail = new System.Windows.Forms.ToolTip(this.components);
@@ -94,13 +92,6 @@ namespace MacFace.FloatApp
 			this.groupBox2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.trackBarPatternSize)).BeginInit();
 			this.SuspendLayout();
-			// 
-			// imageListConfigTreeIcon
-			// 
-			this.imageListConfigTreeIcon.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
-			this.imageListConfigTreeIcon.ImageSize = new System.Drawing.Size(32, 32);
-			this.imageListConfigTreeIcon.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListConfigTreeIcon.ImageStream")));
-			this.imageListConfigTreeIcon.TransparentColor = System.Drawing.Color.Transparent;
 			// 
 			// imageListFacePreviews
 			// 
@@ -205,7 +196,7 @@ namespace MacFace.FloatApp
 			this.trackBarOpacity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarOpacity.LargeChange = 10;
-			this.trackBarOpacity.Location = new System.Drawing.Point(64, 16);
+			this.trackBarOpacity.Location = new System.Drawing.Point(64, 13);
 			this.trackBarOpacity.Maximum = 100;
 			this.trackBarOpacity.Minimum = 5;
 			this.trackBarOpacity.Name = "trackBarOpacity";
@@ -252,7 +243,7 @@ namespace MacFace.FloatApp
 			this.trackBarPatternSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarPatternSize.LargeChange = 10;
-			this.trackBarPatternSize.Location = new System.Drawing.Point(64, 15);
+			this.trackBarPatternSize.Location = new System.Drawing.Point(64, 12);
 			this.trackBarPatternSize.Maximum = 100;
 			this.trackBarPatternSize.Minimum = 10;
 			this.trackBarPatternSize.Name = "trackBarPatternSize";
