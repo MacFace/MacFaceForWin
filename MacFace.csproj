@@ -1,0 +1,296 @@
+<VisualStudioProject>
+    <CSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{677BDE70-6D11-45F8-8D41-BC1D6A4CF81F}"
+    >
+        <Build>
+            <Settings
+                ApplicationIcon = ""
+                AssemblyKeyContainerName = ""
+                AssemblyName = "MacFace"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "Exe"
+                PreBuildEvent = ""
+                PostBuildEvent = "xcopy /Y $(SolutionDir)default.mcface\*.* $(TargetDir)default.mcface\"
+                RootNamespace = "MacFace"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.Xml"
+                    HintPath = "..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "AlphaForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MainForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "default.mcface\brow-down.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\brow-normal.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\brow-up.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\eye-arrow.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\eye-circle.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\eye-close.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\eye-line.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\eye-normal.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\eye-smile.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\eye-spiral.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\face-base.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\faceDef.plist"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "default.mcface\mouth-circle.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\mouth-close.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\mouth-laugh.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\mouth-open.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\mouth-smile.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\note.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\shock.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "default.mcface\sweat.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\angery-mark.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\brow-hill.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\brow-normal.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\brow-up.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-angery.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-arrow.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-circle.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-close.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-close2.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-line.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-normal.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-smile.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-spiral.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-thin.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\eye-vbar.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\face-base.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\faceDef.plist"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\mouth-circle.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\mouth-close.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\mouth-laugh.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\mouth-open.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\mouth-smile.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\note.tiff"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "kikiki-rin.mcface\shock.tiff"
+                    BuildAction = "Content"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>
+
