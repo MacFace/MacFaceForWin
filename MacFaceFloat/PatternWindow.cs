@@ -35,9 +35,10 @@ namespace MacFace.FloatApp
 
 		void InitializeComponent()
 		{
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
-			this.ClientSize = new System.Drawing.Size(120, 101);
+			this.AutoScale = false;
+			this.ClientSize = new System.Drawing.Size(128, 128);
 			this.ControlBox = false;
+			this.FormBorderStyle = FormBorderStyle.None;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.Name = "PatternWindow";
@@ -50,7 +51,11 @@ namespace MacFace.FloatApp
 		public float PatternSize
 		{
 			get { return patternSize; }
-			set { patternSize = value; }
+			set {
+				patternSize = value;
+				Width = (int)Math.Ceiling(FaceDef.ImageWidth * patternSize);
+				Height = (int)Math.Ceiling(FaceDef.ImageHeight * patternSize);
+			}
 		}
 
 		public FaceDef FaceDef
