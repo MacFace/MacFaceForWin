@@ -385,8 +385,7 @@ namespace MacFace.FloatApp
 			try 
 			{
 				FaceDef faceDef = new FaceDef(path);
-				Image image = faceDef.PatternImage(FaceDef.PatternSuite.Normal, 10);
-				imageListFacePreviews.Images.Add(image);
+				imageListFacePreviews.Images.Add(faceDef.TitleImage());
 
 				ListViewItem item = listViewFaces.Items.Add(faceDef.Title, imageListFacePreviews.Images.Count-1);
 				item.SubItems.Add(path);    // 0: ƒpƒX

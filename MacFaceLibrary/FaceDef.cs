@@ -24,16 +24,15 @@ namespace MacFace
 			MemoryInsufficient = 2
 		}
 
-		public enum MarkerBitMask
-		{
-			None    = 0x00,
-			PageIn  = 0x01,
-			PageOut = 0x02
-		}
+		public const int MarkerNone    = 0x00;
+		public const int MarkerPageIn  = 0x01;
+		public const int MarkerPageOut = 0x02;
 
 		private const string FaceDefName = "faceDef.plist";
 		private const int PatternCols = 11;
 		private const int PatternRows = 3;
+		private const int ImageWidth = 128;
+		private const int ImageHeight = 128;
 
 		private string _path;
 		private string _title;
@@ -43,7 +42,8 @@ namespace MacFace
 
 		private Part[] _parts;
 		private Part[][][] _patternSuites;
-		private Part[] _makers;
+		private Part[] _markers;
+		private Part[] _titlePattern;
 
 
 		/// <summary>
@@ -71,8 +71,8 @@ namespace MacFace
 			}
 
 
-			// Part を読み込む。
-			ArrayList partDefList = def["parts"] as ArrayList;
+			// パーツの読み込み
+			ArrayList partDefList = (ArrayList)def["parts"];
 			if (partDefList == null) 
 			{
 				// throw new IOException();
@@ -81,13 +81,14 @@ namespace MacFace
 			_parts = new Part[partDefList.Count];
 			for (int i = 0; i < partDefList.Count; i++)
 			{
-				Hashtable partDef = partDefList[i] as Hashtable;
-				string filename = partDef["filename"] as String;
+				Hashtable partDef = (Hashtable)partDefList[i];
+				string filename = (String)partDef["filename"];
 				int x = (int)partDef["pos x"];
 				int y = (int)partDef["pos y"];
 				_parts[i] = new Part(System.IO.Path.Combine(path, filename), x, y);
 			}
 
+			// パターンの読み込み
 			ArrayList suiteDefList = (ArrayList)def["pattern"];
 			_patternSuites = new Part[PatternRows][][];
 			for (int i = 0; i < PatternRows; i++) 
@@ -105,6 +106,22 @@ namespace MacFace
 					suite[j] = pattern;
 				}
 				_patternSuites[i] = suite;
+			}
+
+			// マーカーの読み込み
+			ArrayList markerDefList = (ArrayList)def["markers"];
+			_markers = new Part[markerDefList.Count];
+			for (int i = 0; i < markerDefList.Count; i++)
+			{
+				_markers[i] = _parts[(int)markerDefList[i]];
+			}
+
+			// タイトルパターンの読み込み
+			ArrayList titlePatternDef = (ArrayList)def["title pattern"];
+			_titlePattern = new Part[titlePatternDef.Count];
+			for (int i = 0; i < titlePatternDef.Count; i++) 
+			{
+				_titlePattern[i] = _parts[(int)titlePatternDef[i]];
 			}
 		}
 
@@ -133,7 +150,23 @@ namespace MacFace
 			get { return _path; }
 		}
 
-		public void DrawPattern(Graphics g, PatternSuite suite, int no)
+		public Image TitleImage()
+		{
+			Bitmap image = new Bitmap(ImageWidth, ImageHeight);
+			Graphics g = Graphics.FromImage(image);
+
+			foreach (Part part in _titlePattern)
+			{
+				g.DrawImage(part.Image,
+					part.Point.X, part.Point.Y,
+					part.Image.Size.Width, part.Image.Size.Height);
+			}
+
+			g.Dispose();
+			return image;
+		}
+
+		public void DrawPatternImage(Graphics g, PatternSuite suite, int no, int markers)
 		{
 			Part[] pattern = _patternSuites[(int)suite][no];
 			foreach (Part part in pattern)
@@ -142,13 +175,26 @@ namespace MacFace
 					part.Point.X, part.Point.Y,
 					part.Image.Size.Width, part.Image.Size.Height);
 			}
+
+			if (markers != 0) {
+				for (int i = 0; i < 8; i++)
+				{
+					if ((markers & (1 << i)) != 0)
+					{
+						Part part = _markers[i];
+						g.DrawImage(part.Image,
+							part.Point.X, part.Point.Y,
+							part.Image.Size.Width, part.Image.Size.Height);
+					}
+				}
+			}
 		}
 
-		public Image PatternImage(PatternSuite suite, int no)
+		public Image PatternImage(PatternSuite suite, int no, int markers)
 		{
-			Bitmap image = new Bitmap(128, 128);
+			Bitmap image = new Bitmap(ImageWidth, ImageHeight);
 			Graphics g = Graphics.FromImage(image);
-			DrawPattern(g, suite, no);
+			DrawPatternImage(g, suite, no, markers);
 			g.Dispose();
 			return image;
 		}

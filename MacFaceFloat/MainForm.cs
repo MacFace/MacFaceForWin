@@ -212,7 +212,7 @@ namespace MacFace.FloatApp
 			if (prevUsage/10 != usage/10) {
 				Graphics g = this.Graphics;
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
-				_currentFaceDef.DrawPattern(g, FaceDef.PatternSuite.Normal, usage/10);
+				_currentFaceDef.DrawPatternImage(g, FaceDef.PatternSuite.Normal, usage/10, FaceDef.MarkerNone);
 				this.Update();
 			}
 				
