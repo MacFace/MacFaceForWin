@@ -319,6 +319,10 @@ namespace MacFace.FloatApp
 			this.PatternSize = (float)_config.PatternSize / 100;
 			this.Location = _config.Location;
 			this.TransparentMouseMessage = _config.TransparentMouseMessage;
+
+			// 設定変更後は常に表示を更新するようにする
+			prevPattern = -1;
+			prevMarkers = -1;
 		}
 
 		private void MainForm_Move(object sender, EventArgs e)
