@@ -109,6 +109,7 @@ namespace MacFace.FloatApp
 			patternWindow.Opacity = (float)config.Opacity / 100;
 			patternWindow.PatternSize = (float)config.PatternSize / 100;
 			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
+			patternWindow.Refresh();
 
 			patternWindow.Show();
 			updateTimer.Start();
@@ -266,7 +267,6 @@ namespace MacFace.FloatApp
 			patternWindow.Opacity = (float)config.Opacity / 100;
 			patternWindow.PatternSize = (float)config.PatternSize / 100;
 			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
-
 			patternWindow.Refresh();
 		}
 	}
