@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using System.IO;
 
+
 namespace MacFace.FloatApp
 {
 	/// <summary>
@@ -385,8 +386,8 @@ namespace MacFace.FloatApp
 			{
 				try 
 				{
-					FaceDef faceDef = FaceDef.CreateFaceDefFromFile(path);
-					PartList partList = faceDef.FacePattern.GetPartList(100, PageOutFlag.Normal);
+					FaceDef faceDef = new FaceDef(path);
+					PartList partList = faceDef.Pattern(FaceDef.PatternSuite.Normal, 10);
 					
 					using (Graphics g = Graphics.FromImage(tmpImage)) 
 					{

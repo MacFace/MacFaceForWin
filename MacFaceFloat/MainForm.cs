@@ -164,7 +164,7 @@ namespace MacFace.FloatApp
 			
 			try 
 			{
-				newFaceDef = MacFace.FaceDef.CreateFaceDefFromFile(path);
+				newFaceDef = new MacFace.FaceDef(path);
 			} 
 			catch (System.IO.IOException ie) 
 			{
@@ -211,7 +211,7 @@ namespace MacFace.FloatApp
 				
 			if (prevUsage/10 != usage/10) {
 				this.Graphics.Clear(Color.FromArgb(0, 0, 0, 0));
-				foreach (Part part in _currentFaceDef.FacePattern.GetPartList(usage, PageOutFlag.Normal))
+				foreach (Part part in _currentFaceDef.Pattern(FaceDef.PatternSuite.Normal, usage/10))
 				{
 					this.Graphics.DrawImage(part.Image,
 						part.Point.X, part.Point.Y,
