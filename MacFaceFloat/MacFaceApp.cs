@@ -32,6 +32,8 @@ namespace MacFace.FloatApp
 		private MemoryUsageCounter memoryCounter;
 
 		private Form statusWindow;
+		private Bitmap cpuGraph;
+		private Bitmap memoryGraph;
 
 		private CPUUsage[] cpuHistory;
 		private int cpuHistoryHead;
@@ -104,7 +106,10 @@ namespace MacFace.FloatApp
 			// パターンウインドウ
 			this.patternWindow = new PatternWindow();
 
-			// ステータスウインドウ		
+			// ステータスウインドウ
+			cpuGraph = new Bitmap(5*60, 100);
+			memoryGraph = new Bitmap(5*60, 100);
+
 			statusWindow = new Form();
 			statusWindow.ClientSize = new System.Drawing.Size(310, 215);
 			statusWindow.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -132,6 +137,8 @@ namespace MacFace.FloatApp
 				}
 			}
 
+			drawCPUGraph();
+			drawMemoryGraph();
 			statusWindow.Show();
 
 			patternWindow.Location = config.Location;
@@ -268,6 +275,8 @@ namespace MacFace.FloatApp
 
 			patternWindow.UpdatePattern(suite, pattern, markers);
 
+			drawCPUGraph();
+			drawMemoryGraph();
 			statusWindow.Invalidate();
 		}
 
@@ -314,50 +323,51 @@ namespace MacFace.FloatApp
 		private void statusWindow_Paint(object sender, PaintEventArgs e)
 		{
 			Graphics g = e.Graphics;
-			g.SmoothingMode = SmoothingMode.AntiAlias;
 
-			g.FillRectangle(new SolidBrush(Color.White), 5, 5, 300, 100);
-			Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1F);
-			for (int y = 5; y < 105; y += 10) 
-			{
-				g.DrawLine(pen, 5, y, 305, y);
-			}
-			g.DrawLine(Pens.Gray, 5, 55, 305, 55);
-
+			g.DrawImage(cpuGraph, 5,5);
 			g.DrawRectangle(Pens.Black, 4, 4, 301, 101);
 
-			g.FillRectangle(new SolidBrush(Color.White), 5, 110, 300, 100);
-			for (int y = 210; y > 110; y -= 7) 
-			{
-				g.DrawLine(pen, 5, y, 305, y);
-			}
-			g.DrawLine(Pens.Gray, 5, 210-5*7, 305, 210-5*7);
+			g.DrawImage(memoryGraph, 5,110);
 			g.DrawRectangle(Pens.Black, 4, 109, 301, 101);
+		}
 
+		private void drawCPUGraph()
+		{
+			Graphics g = Graphics.FromImage(cpuGraph);
+
+			g.SmoothingMode = SmoothingMode.AntiAlias;
+
+			g.FillRectangle(new SolidBrush(Color.White), 0, 0, 300, 100);
+			Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1F);
+			for (int y = 0; y < 100; y += 10) 
+			{
+				g.DrawLine(pen, 0, y, 300, y);
+			}
+			g.DrawLine(Pens.Gray, 0, 50, 300, 50);
 
 			if (cpuHistoryCount >= 2) 
 			{
 				Point[] userGraph = new Point[cpuHistoryCount+2];
 				Point[] sysGraph = new Point[cpuHistoryCount+2];
 
-				userGraph[cpuHistoryCount+0].X = 305 - cpuHistoryCount * 5;
-				userGraph[cpuHistoryCount+0].Y = 105 - 0;
-				userGraph[cpuHistoryCount+1].X = 305 - 0 * 5;
-				userGraph[cpuHistoryCount+1].Y = 105 - 0;
+				userGraph[cpuHistoryCount+0].X = 300 - (cpuHistoryCount-1) * 5;
+				userGraph[cpuHistoryCount+0].Y = 100 - 0;
+				userGraph[cpuHistoryCount+1].X = 300 - 0 * 5;
+				userGraph[cpuHistoryCount+1].Y = 100 - 0;
 
-				sysGraph[cpuHistoryCount+0].X = 305 - cpuHistoryCount * 5;
-				sysGraph[cpuHistoryCount+0].Y = 105 - 0;
-				sysGraph[cpuHistoryCount+1].X = 305 - 0 * 5;
-				sysGraph[cpuHistoryCount+1].Y = 105 - 0;
+				sysGraph[cpuHistoryCount+0].X = 300 - (cpuHistoryCount-1) * 5;
+				sysGraph[cpuHistoryCount+0].Y = 100 - 0;
+				sysGraph[cpuHistoryCount+1].X = 300 - 0 * 5;
+				sysGraph[cpuHistoryCount+1].Y = 100 - 0;
 
 				int pos = cpuHistoryHead - 1;
 				for (int i = 0; i < cpuHistoryCount; i++) 
 				{
 					if (pos < 0) pos = cpuHistory.Length - 1;
 					CPUUsage usage = cpuHistory[pos];
-					userGraph[i].X = sysGraph[i].X = 305 - i * 5;
-					userGraph[i].Y = 105 - usage.Active;
-					sysGraph[i].Y = 105 - usage.System;
+					userGraph[i].X = sysGraph[i].X = 300 - i * 5;
+					userGraph[i].Y = 100 - usage.Active;
+					sysGraph[i].Y = 100 - usage.System;
 					pos--;
 				}
 
@@ -366,6 +376,21 @@ namespace MacFace.FloatApp
 				g.FillPolygon(new SolidBrush(Color.FromArgb(50, 255, 0, 0)), sysGraph);
 			}
 
+			g.Dispose();
+		}
+
+		private void drawMemoryGraph()
+		{
+			Graphics g = Graphics.FromImage(memoryGraph);
+
+			g.FillRectangle(new SolidBrush(Color.White), 0, 0, 300, 100);
+			Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1F);
+			for (int y = 100; y > 0; y -= 7) 
+			{
+				g.DrawLine(pen, 0, y, 300, y);
+			}
+			g.DrawLine(Pens.Gray, 0, 100-5*7, 300, 100-5*7);
+
 			int totalMemory = (int)MemoryUsageCounter.TotalVisibleMemorySize * 1024;
 			double rate = 70.0 / totalMemory;
 
@@ -373,48 +398,55 @@ namespace MacFace.FloatApp
 			Brush commitedBrush = new SolidBrush(Color.FromArgb(180, 255, 145, 0));
 			Brush uncommitedBrush = new SolidBrush(Color.FromArgb(180, 180, 200, 255));
 			Brush availableBrush = new SolidBrush(Color.FromArgb(180, 100, 100, 255));
+			Brush spaceBrush = new SolidBrush(Color.FromArgb(180, 255, 255, 100));
 
-			int posu = memHistoryHead - 1;
+			int pos = memHistoryHead - 1;
 			for (int i = 0; i < memHistoryCount; i++) 
 			{
-				if (posu < 0) posu = memHistory.Length - 1;
-				MemoryUsage usage = memHistory[posu];
+				if (pos < 0) pos = memHistory.Length - 1;
+				MemoryUsage usage = memHistory[pos];
 
 				int x, y, w, h;
 
-				x = 305 - i * 5 - 5;
+				x = 300 - i * 5 - 5;
 				w = 5;
 
+				h = 30;
+				y = 0;
+				g.FillRectangle(spaceBrush, x, y, w, h);
+
 				h = (int)(usage.Committed * rate);
-				y = 210 - h;
+				y = 100 - h;
 				g.FillRectangle(commitedBrush, x, y, w, h);
 
-				if (h < 100) 
+				if (h < 70) 
 				{
-					h = 100 - h;
-					y = 110;
+					h = 70 - h;
+					y = 30;
 					g.FillRectangle(uncommitedBrush, x, y, w, h);
 				}
 
 				h = (int)(usage.Available * rate);
-				y = 210-70;
+				y = 100-70;
 				g.FillRectangle(availableBrush, x, y, w, h);
 
-				x = 305 - i * 5 - 5;
+				x = 300 - i * 5 - 5;
 				w = 2;
 				h = (int)(usage.Pagein);
-				y = 210 - h;
+				y = 100 - h;
 				g.FillRectangle(Brushes.LightGray, x, y, w, h);
 
-				x = 308 - i * 5 - 5;
+				x = 303 - i * 5 - 5;
 				w = 2;
 				h = (int)(usage.Pageout);
-				y = 210 - h;
+				y = 100 - h;
 				g.FillRectangle(Brushes.Black, x, y, w, h);
 
-				posu--;
+				pos--;
 			}
-			g.DrawLine(Pens.Black, 5, 210-70, 305, 210-70);
+			g.DrawLine(Pens.Black, 0, 100-70, 300, 100-70);
+
+			g.Dispose();
 		}
 	}
 }
