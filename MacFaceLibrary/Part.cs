@@ -11,12 +11,11 @@ namespace MacFace
 	/// <summary>
 	/// Part ÇÃäTóvÇÃê‡ñæÇ≈Ç∑ÅB
 	/// </summary>
-	public class Part
+	public class Part : IDisposable
 	{
-		protected Image image;
-		protected string filename;
-		protected int x;
-		protected int y;
+		private Image _image;
+		private string _filename;
+		private Point _point;
 
 		/*public Part(string basePath, Hashtable partDef)
 		{
@@ -27,38 +26,45 @@ namespace MacFace
 		
 		public Part(String path, int x, int y)
 		{
-			this.filename = filename;
-			this.image = Image.FromFile(path);
-			this.x = x;
-			this.y = y;
+			_filename = System.IO.Path.GetFileName(path);
+			_image = Image.FromFile(path);
+			this.X = x;
+			this.Y = y;
 		}
 
 		public Part(String path, Image image, int x, int y)
 		{
-			this.filename = filename;
-			this.image = image;
-			this.x = x;
-			this.y = y;
+			_filename = System.IO.Path.GetFileName(path);
+			_image = image;
+			this.X = x;
+			this.Y = y;
 		}
 
 		public string FileName 
 		{
-			get { return filename; }
+			get { return _filename; }
 		}
 
 		public Image Image 
 		{
-			get { return image; }
+			get { return _image; }
 		}
 
+		public Point Point
+		{
+			get { return _point; }
+			set { _point = value; }
+		}
 		public int X
 		{
-			get { return x; }
+			get { return _point.X; }
+			set { _point.X = value; }
 		}
 
 		public int Y
 		{
-			get { return y; }
+			get { return 128 - _point.Y - _image.Height; }
+			set { _point.Y = 128 - value - _image.Height; }
 		}
 
 		/*public void Draw(Graphics g)
@@ -66,5 +72,29 @@ namespace MacFace
 			Image img = part.Image;
 			g.DrawImage(img, x, drawY, img.Size.Width, img.Size.Height);
 		}*/
+
+		#region IDisposable ÉÅÉìÉo
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing) 
+		{
+			if (disposing)
+			{
+			}
+			// çÌèú
+			if (_image != null) { _image.Dispose(); }
+		}
+
+		~Part()
+		{
+			Dispose(false);
+		}
+
+		#endregion
 	}
 }

@@ -18,7 +18,7 @@
                 OutputType = "WinExe"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "MacFace"
+                RootNamespace = "MacFace.FloatApp"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -113,9 +113,34 @@
                     BuildAction = "Content"
                 />
                 <File
+                    RelPath = "AppSettings.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AutoConfigurator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Configuration.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ConfigurationForm.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ConfigurationForm.resx"
+                    DependentUpon = "ConfigurationForm.cs"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "MainForm.cs"

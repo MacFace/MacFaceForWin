@@ -15,39 +15,87 @@ namespace MacFace
 	/// </summary>
 	public class FaceDef
 	{
-		public const string FaceDefName = "faceDef.plist";
-		public const int PatternCols = 11;
-		public const int PatternRows = 3;
+		public static readonly string FaceDefName = "faceDef.plist";
+		public static readonly int PatternCols = 11;
+		public static readonly int PatternRows = 3;
 
-		protected string path;
-		protected string title;
-		protected string auther;
-		protected string version;
-		protected string webSite;
+		private string _path    = "";
+		private string _title   = "";
+		private string _auther  = "";
+		private string _version = ""; /*Version*/
+		private Uri    _webSite = null;
 
-		protected PartList parts = new PartList();
+		internal PartList _parts = new PartList();
 		//protected int[][,] patterns;
-		//protected PartList makers = new PartList();
+		internal PartList _makers = new PartList();
+		internal FacePattern _patterns;
 
 
 		// ctor
-		private FaceDef() {}
-
+		public FaceDef() {}
 
 		// properties
+		public FacePattern FacePattern
+		{
+			get { return _patterns; }
+		}
+		public PartList Markers
+		{
+			get { return _makers; }
+		}
 		public PartList Parts
 		{
-			get { return parts; }
+			get { return _parts; }
 		}
-
+		public Uri WebSite
+		{
+			get { return _webSite; }
+			set { _webSite = value; }
+		}
+		public string /*Version*/ Version
+		{
+			get { return _version; }
+			set { _version = value; }
+		}
+		public string Author
+		{
+			get { return _auther; }
+			set { _auther = value; }
+		}
+		public string Title
+		{
+			get { return _title; }
+			set { _title = value; }
+		}
+		public string Path
+		{
+			get { return _path; }
+			set { _path = value; }
+		}
 
 		// methods
 		public static FaceDef CreateFaceDefFromFile(string path)
 		{
 			FaceDef faceDef = new FaceDef();
 
-			string defFile = Path.Combine(path, FaceDefName);
-			Hashtable def = PropertyList.Load(path);
+			string defFile = System.IO.Path.Combine(path, FaceDefName);
+			Hashtable def = PropertyList.Load(defFile);
+
+			// 情報
+			faceDef.Title = (def.ContainsKey("title") ? def["title"] as string : String.Empty);
+			faceDef.Author = (def.ContainsKey("author") ? def["author"] as string : String.Empty);
+			faceDef.Version = (def.ContainsKey("version") ? def["version"] as string : String.Empty);
+			faceDef.Path = path;
+
+			if (def.ContainsKey("web site"))
+			{
+				try 
+				{
+					faceDef.WebSite = new Uri(def["web site"] as string);
+				} 
+				catch (UriFormatException) {}
+			}
+
 
 			// Part を読み込む。
 			ArrayList partDefList = def["parts"] as ArrayList;
@@ -63,14 +111,26 @@ namespace MacFace
 				string filename = partDef["filename"] as String;
 				int x = (int)partDef["pos x"];
 				int y = (int)partDef["pos y"];
-				faceDef.Parts.Add(new Part(filename, x, y));
+				faceDef.Parts.Add(new Part(System.IO.Path.Combine(path, filename), x, y));
 			}
 
 			// TODO: pattern を読み込む。
+			faceDef._patterns = new FacePattern(faceDef.Parts, def["pattern"] as ArrayList);
 
 			return faceDef;
 		}
+	}
 
+	public enum MarkerBitMask
+	{
+		None    = 0x0000,
+		PageIn  = 0x0001,
+		PageOut = 0x0002
+	}
+
+	public class FaceDefFormatException : ApplicationException
+	{
+		// TODO: フォーマットが不正だったときに投げるExceptionを書いて、不正だったときに投げるようにする。
 	}
 }
 

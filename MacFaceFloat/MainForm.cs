@@ -16,17 +16,19 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading;
 
-namespace MacFace
+namespace MacFace.FloatApp
 {
 	public class MainForm : Misuzilla.Windows.Forms.AlphaForm
 	{
 		private System.Windows.Forms.ContextMenu contextMenu;
 		private System.Windows.Forms.MenuItem menuItemPatternSelect;
+		private System.Windows.Forms.MenuItem menuItemConfigure;
 		private System.Windows.Forms.MenuItem menuItemExit;
-		private Hashtable _property;
-		private ArrayList _parts;
 		private String _facePath;
 		private System.Windows.Forms.Timer _updateTimer;
+
+		private FaceDef _currentFaceDef;
+		private Configuration _config;
 		
 		Int32 prevUsage;
 		PerformanceCounter cpuCount;
@@ -61,31 +63,34 @@ namespace MacFace
 			_updateTimer.Tick += new EventHandler(this.CountProcessorUsage);
 		}
 
-		// THIS METHOD IS MAINTAINED BY THE FORM DESIGNER
-		// DO NOT EDIT IT MANUALLY! YOUR CHANGES ARE LIKELY TO BE LOST
 		void InitializeComponent() {
 			this.menuItemPatternSelect = new System.Windows.Forms.MenuItem();
+			this.menuItemConfigure = new System.Windows.Forms.MenuItem();
 			this.menuItemExit = new System.Windows.Forms.MenuItem();
 			this.contextMenu = new System.Windows.Forms.ContextMenu();
 			// 
 			// menuItemPatternSelect
 			// 
-			this.menuItemPatternSelect.Index = 0;
 			this.menuItemPatternSelect.Text = "顔パターンの選択(&S)";
-			this.menuItemPatternSelect.Click += new System.EventHandler(this.PatternSelect_Click);
+			this.menuItemPatternSelect.Click += new System.EventHandler(this.menuItemPatternSelect_Click);
 
+			// 
+			// menuItemConfigure
+			// 
+			this.menuItemConfigure.Text = "MacFace の設定(&C)...";
+			this.menuItemConfigure.Click +=new EventHandler(menuItemConfigure_Click);
 			// 
 			// menuItemExit
 			// 
 			this.menuItemExit.Index = 0;
 			this.menuItemExit.Shortcut = System.Windows.Forms.Shortcut.CtrlQ;
 			this.menuItemExit.Text = "終了(&X)";
-			this.menuItemExit.Click += new System.EventHandler(this.doQuit);
+			this.menuItemExit.Click += new System.EventHandler(this.menuItemExit_Click);
 			// 
 			// contextMenu
 			// 
 			this.contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-						this.menuItemPatternSelect, new MenuItem("-"), this.menuItemExit});
+						this.menuItemPatternSelect, this.menuItemConfigure, new MenuItem("-"), this.menuItemExit});
 			// 
 			// MainForm
 			// 
@@ -101,6 +106,8 @@ namespace MacFace
 			this.Text = "MacFace For Windows";
 			this.TopMost = true;
 			this.Load += new EventHandler(MainForm_Load);
+			this.Closing += new CancelEventHandler(MainForm_Closing);
+			this.Move += new EventHandler(MainForm_Move);
 		}
 			
 
@@ -142,8 +149,9 @@ namespace MacFace
 		}
 
 
-		bool LoadFaceDefine(string path)
+		public bool LoadFaceDefine(string path)
 		{
+			FaceDef newFaceDef = null;
 			string plistPath = Path.Combine(path, "faceDef.plist");
 
 			if (!File.Exists(plistPath))
@@ -154,10 +162,9 @@ namespace MacFace
 				return false;
 			}
 			
-			Hashtable property;
 			try 
 			{
-				property = PropertyList.Load(plistPath);
+				newFaceDef = MacFace.FaceDef.CreateFaceDefFromFile(path);
 			} 
 			catch (System.IO.IOException ie) 
 			{
@@ -179,9 +186,8 @@ namespace MacFace
 			// 顔パターン差し替え中は更新を止めておく
 			if (_updateTimer != null) _updateTimer.Stop();
 
-			_property = property;
-			_facePath = path;
-			_parts = (ArrayList)_property["parts"];
+			_currentFaceDef = newFaceDef;
+			_facePath = _currentFaceDef.Path;
 			prevUsage = -10;
 
 			// 更新再開
@@ -204,20 +210,12 @@ namespace MacFace
 			}
 				
 			if (prevUsage/10 != usage/10) {
-				ArrayList patterns = (ArrayList)_property["pattern"];
-				ArrayList patternCpu = (ArrayList)patterns[0];
-				ArrayList facePattern = (ArrayList)patternCpu[usage/10];
-				
 				this.Graphics.Clear(Color.FromArgb(0, 0, 0, 0));
-				foreach (Int32 i in facePattern) {
-					Hashtable part = _parts[i] as Hashtable;
-					string filename = (string)part["filename"];
-					string imgPath = Path.Combine(_facePath, filename);
-					using (Bitmap bitmap = new Bitmap(imgPath)) {
-						int x = (int)part["pos x"];
-						int y = 128 - (int)part["pos y"] - bitmap.Size.Height;
-						this.Graphics.DrawImage(bitmap,x,y,bitmap.Size.Width,bitmap.Size.Height);
-					}
+				foreach (Part part in _currentFaceDef.FacePattern.GetPartList(usage, PageOutFlag.Normal))
+				{
+					this.Graphics.DrawImage(part.Image,
+						part.Point.X, part.Point.Y,
+						part.Image.Size.Width, part.Image.Size.Height);
 				}
 				this.Update();
 			}
@@ -226,40 +224,83 @@ namespace MacFace
 		}
 		
 
+		//
+		// 起動
+		//
 		public void MainForm_Load(object sender, System.EventArgs e)
 		{
-			string faceDefPath = Path.Combine(Application.StartupPath, "default.mcface");
-			bool result = false;
+			// 設定
+			_config = Configuration.GetInstance();
+			_config.Load();
 
-			if (Directory.Exists(faceDefPath))
+			ApplyConfiguration();
+
+			// 顔パターン読み込み
+			bool result = false;
+			if (Directory.Exists(_config.FaceDefPath))
 			{
-				result = LoadFaceDefine(faceDefPath);
+				result = LoadFaceDefine(_config.FaceDefPath);
 			}
 
 			if (!result)
 			{
 				if (!SelectFaceDefine(Application.StartupPath))
 				{
-					Application.Exit();
+					this.Close();
 					return;
 				}
 
 			}
 		}
 
+		// 
+		// 終了
+		//
+		private void MainForm_Closing(object sender, CancelEventArgs e)
+		{
+			// 保存
+			_config.Opacity = (int) (this.Opacity * 100);
+			_config.FaceDefPath = (_currentFaceDef != null ? _currentFaceDef.Path : Path.Combine(Application.StartupPath, "default.mcface"));
+			_config.Location = this.Location;
+			_config.TransparentMouseMessage = this.TransparentMouseMessage;
+
+			_config.Save();
+		}
+
+
 		/*
 		 * メニュークリックイベント
 		 */
-		public void PatternSelect_Click(object sender, System.EventArgs e)
+		public void menuItemPatternSelect_Click(object sender, System.EventArgs e)
 		{
 			SelectFaceDefine(_facePath);	
 		}
 
-		public void doQuit(object sender, System.EventArgs e)
+		public void menuItemExit_Click(object sender, System.EventArgs e)
 		{
 			_updateTimer.Stop();
-			Application.Exit();
+			this.Close();
 		}
-		
+
+		private void menuItemConfigure_Click(object sender, EventArgs e)
+		{
+			ConfigurationForm configForm = new ConfigurationForm(this);
+			if (configForm.ShowDialog() == DialogResult.OK) 
+			{
+				ApplyConfiguration();
+			}
+		}
+
+		private void ApplyConfiguration()
+		{
+			this.Opacity = (float)_config.Opacity / 100;
+			this.Location = _config.Location;
+			this.TransparentMouseMessage = _config.TransparentMouseMessage;
+		}
+
+		private void MainForm_Move(object sender, EventArgs e)
+		{
+			_config.Location = this.Location;
+		}
 	}
 }
