@@ -9,10 +9,13 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading;
 
-namespace MacFace 
+namespace MacFace
 {
 	class MainForm : Misuzilla.Windows.Forms.AlphaForm
+//	class MainForm : System.Windows.Forms.Form
 	{
+		private System.Windows.Forms.ContextMenu contextMenu1;
+		private System.Windows.Forms.MenuItem menuItem1;
 		private Hashtable _property;
 		private ArrayList _parts;
 		private String _facePath;
@@ -20,36 +23,47 @@ namespace MacFace
 		public MainForm()
 		{
 			InitializeComponent();
-//			this.Load += new EventHandler(this.Form1_Load);
+			this.TransparentMouseMessage = false;
+			this.MoveAtFormDrag = true;
+
 			_facePath = Path.Combine(Application.StartupPath,"default.mcface");
 			_property = PropertyList.load(Path.Combine(_facePath,"faceDef.plist"));
 			_parts = (ArrayList)_property["parts"];
 
 			(new Thread(new ThreadStart(CountProcessorUsage))).Start();
 		}
-	
+
 		// THIS METHOD IS MAINTAINED BY THE FORM DESIGNER
 		// DO NOT EDIT IT MANUALLY! YOUR CHANGES ARE LIKELY TO BE LOST
-		void InitializeComponent()
-		{
+		void InitializeComponent() {
+			this.menuItem1 = new System.Windows.Forms.MenuItem();
+			this.contextMenu1 = new System.Windows.Forms.ContextMenu();
 			// 
-			//  Set up generated class MainForm
+			// menuItem1
 			// 
-			this.SuspendLayout();
-			this.Name = "MainForm";
-			this.Text = "This is my form";
-			this.Size = new System.Drawing.Size(300, 300);
-			this.ResumeLayout(false);
-			this.ShowInTaskbar = false;
-			this.TopMost = true;
-			this.FormBorderStyle = FormBorderStyle.None;
+			this.menuItem1.Index = 0;
+			this.menuItem1.Shortcut = System.Windows.Forms.Shortcut.CtrlQ;
+			this.menuItem1.Text = "邨ゆｺ�";
+			this.menuItem1.Click += new System.EventHandler(this.doQuit);
+			// 
+			// contextMenu1
+			// 
+			this.contextMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+						this.menuItem1});
+			// 
+			// MainForm
+			// 
+			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
+			this.ClientSize = new System.Drawing.Size(120, 101);
+			this.ContextMenu = this.contextMenu1;
+			this.ControlBox = false;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.ControlBox = false;
-			this.TransparentMouseMessage = false;
-			this.MoveAtFormDrag = true;
-			this.Visible = true;
+			this.Name = "MainForm";
 			this.Opacity = 0.75F;
+			this.ShowInTaskbar = false;
+			this.Text = "MacFace For Windows";
+			this.TopMost = true;
 		}
 			
 		[STAThread]
@@ -86,7 +100,7 @@ namespace MacFace
 					usage = 0;
 				}
 				
-				// 前のパターンと同じなら更新しない。
+				// Oﾌパ^[ﾆ栃９Vﾈ�B
 				if (prevUsage/10 != usage/10) {
 					ArrayList patterns = (ArrayList)_property["pattern"];
 					ArrayList patternCpu = (ArrayList)patterns[0];
@@ -110,5 +124,10 @@ namespace MacFace
 			}
 			
 		}
+		void doQuit(object sender, System.EventArgs e)
+		{
+			Application.Exit();
+		}
+		
 	}
 }
