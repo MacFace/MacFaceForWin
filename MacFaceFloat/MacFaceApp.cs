@@ -268,7 +268,7 @@ namespace MacFace.FloatApp
 
 			patternWindow.UpdatePattern(suite, pattern, markers);
 
-			statusWindow.Refresh();
+			statusWindow.Invalidate();
 		}
 
 		/*
@@ -322,13 +322,16 @@ namespace MacFace.FloatApp
 			{
 				g.DrawLine(pen, 5, y, 305, y);
 			}
+			g.DrawLine(Pens.Gray, 5, 55, 305, 55);
+
 			g.DrawRectangle(Pens.Black, 4, 4, 301, 101);
 
 			g.FillRectangle(new SolidBrush(Color.White), 5, 110, 300, 100);
-			for (int y = 110; y < 210; y += 10) 
+			for (int y = 210; y > 110; y -= 7) 
 			{
 				g.DrawLine(pen, 5, y, 305, y);
 			}
+			g.DrawLine(Pens.Gray, 5, 210-5*7, 305, 210-5*7);
 			g.DrawRectangle(Pens.Black, 4, 109, 301, 101);
 
 
@@ -358,15 +361,19 @@ namespace MacFace.FloatApp
 					pos--;
 				}
 
-				g.FillPolygon(new SolidBrush(Color.FromArgb(64, 0, 0, 255)), userGraph);
+				g.FillPolygon(new SolidBrush(Color.FromArgb(50, 0, 0, 255)), userGraph);
 				g.DrawPolygon(new Pen(Color.FromArgb(0, 0, 255), 1F), userGraph);
-				g.FillPolygon(new SolidBrush(Color.FromArgb(64, 255, 0, 0)), sysGraph);
+				g.FillPolygon(new SolidBrush(Color.FromArgb(50, 255, 0, 0)), sysGraph);
 			}
 
-			double rate = 70.0 / (MemoryUsageCounter.TotalVisibleMemorySize * 1024);
+			int totalMemory = (int)MemoryUsageCounter.TotalVisibleMemorySize * 1024;
+			double rate = 70.0 / totalMemory;
 
 			g.SmoothingMode = SmoothingMode.None;
-			Brush brush = new SolidBrush(Color.FromArgb(180, 255, 145, 0));
+			Brush commitedBrush = new SolidBrush(Color.FromArgb(180, 255, 145, 0));
+			Brush uncommitedBrush = new SolidBrush(Color.FromArgb(180, 180, 200, 255));
+			Brush availableBrush = new SolidBrush(Color.FromArgb(180, 100, 100, 255));
+
 			int posu = memHistoryHead - 1;
 			for (int i = 0; i < memHistoryCount; i++) 
 			{
@@ -377,9 +384,21 @@ namespace MacFace.FloatApp
 
 				x = 305 - i * 5 - 5;
 				w = 5;
+
 				h = (int)(usage.Committed * rate);
 				y = 210 - h;
-				g.FillRectangle(brush, x, y, w, h);
+				g.FillRectangle(commitedBrush, x, y, w, h);
+
+				if (h < 100) 
+				{
+					h = 100 - h;
+					y = 110;
+					g.FillRectangle(uncommitedBrush, x, y, w, h);
+				}
+
+				h = (int)(usage.Available * rate);
+				y = 210-70;
+				g.FillRectangle(availableBrush, x, y, w, h);
 
 				x = 305 - i * 5 - 5;
 				w = 2;
@@ -395,7 +414,7 @@ namespace MacFace.FloatApp
 
 				posu--;
 			}
-			g.DrawLine(Pens.Red, 5, 210-70, 305, 210-70);
+			g.DrawLine(Pens.Black, 5, 210-70, 305, 210-70);
 		}
 	}
 }
