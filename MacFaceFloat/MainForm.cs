@@ -30,12 +30,12 @@ namespace MacFace.FloatApp
 
 		private FaceDef _currentFaceDef;
 		private Configuration _config;
-		
-		int prevUsage;
-		int prevMarkers;
-		PerformanceCounter cpuCount;
-		PerformanceCounter pageoutCount;
-		PerformanceCounter pageinCount;
+
+		private int prevPattern;
+		private int prevMarkers;
+
+		private CPUUsageCounter cpuCounter;
+		private MemoryUsageCounter memoryCounter;
 
 		// コンストラクタ
 		public MainForm()
@@ -44,21 +44,11 @@ namespace MacFace.FloatApp
 			this.TransparentMouseMessage = false;
 			this.MoveAtFormDrag = true;
 
-			prevUsage = -1;
+			prevPattern = -1;
 			prevMarkers = -1;
 
-			cpuCount = new PerformanceCounter();
-			cpuCount.CategoryName = "Processor";
-			cpuCount.CounterName  = "% Processor Time";
-			cpuCount.InstanceName = "_Total";
-
-			pageoutCount = new PerformanceCounter();
-			pageoutCount.CategoryName = "Memory";
-			pageoutCount.CounterName  = "Pages Output/sec";
-
-			pageinCount = new PerformanceCounter();
-			pageinCount.CategoryName = "Memory";
-			pageinCount.CounterName  = "Pages Input/sec";
+			cpuCounter = new CPUUsageCounter();
+			memoryCounter = new MemoryUsageCounter();
 
 			_updateTimer = new System.Windows.Forms.Timer();
 			_updateTimer.Enabled = false;
@@ -202,7 +192,7 @@ namespace MacFace.FloatApp
 			_currentFaceDef = newFaceDef;
 			_facePath = _currentFaceDef.Path;
 			notifyIcon.Text = "MacFace - " + _currentFaceDef.Title;
-			prevUsage = -1;
+			prevPattern = -1;
 			prevMarkers = -1;
 
 			// 更新再開
@@ -213,30 +203,34 @@ namespace MacFace.FloatApp
 
 		public void CountProcessorUsage(object sender, EventArgs e)
 		{
-			int usage = (int)cpuCount.NextValue();
-			int pagein = (int)pageinCount.NextValue();
-			int pageout = (int)pageoutCount.NextValue();
+			CPUUsage cpuUsage = cpuCounter.CurrentUsage();
+			MemoryUsage memUsage = memoryCounter.CurrentUsage();
 
-			usage /= 10;
-			if (usage > 10) {
-				usage = 10;
-			} else if (usage < 0) {
-				usage = 0;
+			int pattern = cpuUsage.Active / 10;
+			if (pattern > 10)
+			{
+				pattern = 10;
+			}
+			else if (pattern < 0)
+			{
+				pattern = 0;
 			}
 
 			int markers = FaceDef.MarkerNone;
+			int pagein = memUsage.Pagein;
+			int pageout = memUsage.Pageout;
 			if (pagein > 0) markers += FaceDef.MarkerPageIn;
 			if (pageout > 0) markers += FaceDef.MarkerPageOut;
 
-			if (prevUsage != usage || prevMarkers != markers) 
+			if (prevPattern != pattern || prevMarkers != markers) 
 			{
 				Graphics g = this.Graphics;
 				g.Clear(Color.FromArgb(0, 0, 0, 0));
-				_currentFaceDef.DrawPatternImage(g, FaceDef.PatternSuite.Normal, usage, markers);
+				_currentFaceDef.DrawPatternImage(g, FaceDef.PatternSuite.Normal, pattern, markers);
 				this.Update();
 			}
 				
-			prevUsage = usage;
+			prevPattern = pattern;
 			prevMarkers = markers;
 		}
 		

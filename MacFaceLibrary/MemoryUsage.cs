@@ -10,11 +10,37 @@ namespace MacFace
 	/// </summary>
 	public class MemoryUsage
 	{
-		public MemoryUsage()
+		private int available;
+		private int committed;
+		private int pagein;
+		private int pageout;
+
+		public MemoryUsage(int available, int committed, int pagein, int pageout)
 		{
-			// 
-			// TODO: コンストラクタ ロジックをここに追加してください。
-			//
+			this.available = available;
+			this.committed = committed;
+			this.pagein = pagein;
+			this.pageout = pageout;
+		}
+
+		public int Available
+		{
+			get { return available; }
+		}
+
+		public int Committed
+		{
+			get { return committed; }
+		}
+
+		public int Pagein
+		{
+			get { return pagein; }
+		}
+
+		public int Pageout
+		{
+			get { return pageout; }
 		}
 	}
 }

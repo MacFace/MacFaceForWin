@@ -10,11 +10,35 @@ namespace MacFace
 	/// </summary>
 	public class CPUUsage
 	{
-		public CPUUsage()
+		private int user;
+		private int system;
+		private int idle;
+
+		public CPUUsage(int user, int system, int idle)
 		{
-			// 
-			// TODO: コンストラクタ ロジックをここに追加してください。
-			//
+			this.user = user;
+			this.system = system;
+			this.idle = idle;
+		}
+
+		public int User
+		{
+			get { return user; }
+		}
+
+		public int System
+		{
+			get { return user; }
+		}
+
+		public int Active
+		{
+			get { return user + system; }
+		}
+
+		public int Idle
+		{
+			get { return idle; }
 		}
 	}
 }
