@@ -28,12 +28,12 @@ namespace MacFace
 
 		public int System
 		{
-			get { return user; }
+			get { return system; }
 		}
 
 		public int Active
 		{
-			get { return user + system; }
+			get { return 100 - idle; }
 		}
 
 		public int Idle
