@@ -150,20 +150,23 @@ namespace MacFace
 			get { return _path; }
 		}
 
-		public Image TitleImage()
+		public Image TitleImage
 		{
-			Bitmap image = new Bitmap(ImageWidth, ImageHeight);
-			Graphics g = Graphics.FromImage(image);
-
-			foreach (Part part in _titlePattern)
+			get 
 			{
-				g.DrawImage(part.Image,
-					part.Point.X, part.Point.Y,
-					part.Image.Size.Width, part.Image.Size.Height);
-			}
+				Bitmap image = new Bitmap(ImageWidth, ImageHeight);
+				Graphics g = Graphics.FromImage(image);
 
-			g.Dispose();
-			return image;
+				foreach (Part part in _titlePattern)
+				{
+					g.DrawImage(part.Image,
+						part.Point.X, part.Point.Y,
+						part.Image.Size.Width, part.Image.Size.Height);
+				}
+
+				g.Dispose();
+				return image;
+			}
 		}
 
 		public void DrawPatternImage(Graphics g, PatternSuite suite, int no, int markers)

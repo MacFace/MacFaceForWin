@@ -20,6 +20,7 @@ namespace MacFace.FloatApp
 {
 	public class MainForm : Misuzilla.Windows.Forms.AlphaForm
 	{
+		private System.Windows.Forms.NotifyIcon notifyIcon;
 		private System.Windows.Forms.ContextMenu contextMenu;
 		private System.Windows.Forms.MenuItem menuItemPatternSelect;
 		private System.Windows.Forms.MenuItem menuItemConfigure;
@@ -66,10 +67,20 @@ namespace MacFace.FloatApp
 		}
 
 		void InitializeComponent() {
+			this.notifyIcon = new System.Windows.Forms.NotifyIcon();
 			this.menuItemPatternSelect = new System.Windows.Forms.MenuItem();
 			this.menuItemConfigure = new System.Windows.Forms.MenuItem();
 			this.menuItemExit = new System.Windows.Forms.MenuItem();
 			this.contextMenu = new System.Windows.Forms.ContextMenu();
+
+			//
+			// notifyIcon
+			//
+			this.notifyIcon.Text = "MacFace";
+			this.notifyIcon.Icon = this.Icon;
+			this.notifyIcon.Visible = true;
+			this.notifyIcon.ContextMenu = this.contextMenu;
+
 			// 
 			// menuItemPatternSelect
 			// 
@@ -190,6 +201,7 @@ namespace MacFace.FloatApp
 
 			_currentFaceDef = newFaceDef;
 			_facePath = _currentFaceDef.Path;
+			notifyIcon.Text = "MacFace - " + _currentFaceDef.Title;
 			prevUsage = -1;
 			prevMarkers = -1;
 
@@ -263,6 +275,8 @@ namespace MacFace.FloatApp
 		//
 		private void MainForm_Closing(object sender, CancelEventArgs e)
 		{
+			notifyIcon.Visible = false;
+
 			// •Û‘¶
 			_config.Opacity = (int) (this.Opacity * 100);
 			_config.FaceDefPath = (_currentFaceDef != null ? _currentFaceDef.Path : Path.Combine(Application.StartupPath, "default.mcface"));

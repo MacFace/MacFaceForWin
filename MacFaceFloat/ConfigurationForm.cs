@@ -35,6 +35,7 @@ namespace MacFace.FloatApp
 		private System.Windows.Forms.LinkLabel linkWebSite;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.CheckBox checkMouseMessage;
+		private System.Windows.Forms.ImageList imageListConfigTreeIcon;
 		private System.ComponentModel.IContainer components;
 
 		public ConfigurationForm(MainForm mainForm)
@@ -72,7 +73,9 @@ namespace MacFace.FloatApp
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ConfigurationForm));
 			this.treeCategory = new System.Windows.Forms.TreeView();
+			this.imageListConfigTreeIcon = new System.Windows.Forms.ImageList(this.components);
 			this.buttonCancel = new System.Windows.Forms.Button();
 			this.buttonApply = new System.Windows.Forms.Button();
 			this.buttonOK = new System.Windows.Forms.Button();
@@ -101,16 +104,28 @@ namespace MacFace.FloatApp
 			// 
 			this.treeCategory.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
 				| System.Windows.Forms.AnchorStyles.Left)));
-			this.treeCategory.ImageIndex = -1;
+			this.treeCategory.FullRowSelect = true;
+			this.treeCategory.HideSelection = false;
+			this.treeCategory.HotTracking = true;
+			this.treeCategory.ImageList = this.imageListConfigTreeIcon;
 			this.treeCategory.Location = new System.Drawing.Point(0, 0);
 			this.treeCategory.Name = "treeCategory";
 			this.treeCategory.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-																					 new System.Windows.Forms.TreeNode("全般"),
+																					 new System.Windows.Forms.TreeNode("全般", 1, 1),
 																					 new System.Windows.Forms.TreeNode("顔パターン")});
-			this.treeCategory.SelectedImageIndex = -1;
+			this.treeCategory.ShowLines = false;
+			this.treeCategory.ShowPlusMinus = false;
+			this.treeCategory.ShowRootLines = false;
 			this.treeCategory.Size = new System.Drawing.Size(193, 449);
 			this.treeCategory.TabIndex = 0;
 			this.treeCategory.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeCategory_AfterSelect);
+			// 
+			// imageListConfigTreeIcon
+			// 
+			this.imageListConfigTreeIcon.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+			this.imageListConfigTreeIcon.ImageSize = new System.Drawing.Size(32, 32);
+			this.imageListConfigTreeIcon.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListConfigTreeIcon.ImageStream")));
+			this.imageListConfigTreeIcon.TransparentColor = System.Drawing.Color.Transparent;
 			// 
 			// buttonCancel
 			// 
@@ -162,8 +177,8 @@ namespace MacFace.FloatApp
 			this.panelContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
 				| System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
-			this.panelContainer.Controls.Add(this.panelFacePatternList);
 			this.panelContainer.Controls.Add(this.panelAppearance);
+			this.panelContainer.Controls.Add(this.panelFacePatternList);
 			this.panelContainer.Location = new System.Drawing.Point(198, 38);
 			this.panelContainer.Name = "panelContainer";
 			this.panelContainer.Size = new System.Drawing.Size(411, 371);
@@ -245,7 +260,6 @@ namespace MacFace.FloatApp
 			// 
 			// checkMouseMessage
 			// 
-			this.checkMouseMessage.Enabled = false;
 			this.checkMouseMessage.Location = new System.Drawing.Point(5, 115);
 			this.checkMouseMessage.Name = "checkMouseMessage";
 			this.checkMouseMessage.Size = new System.Drawing.Size(400, 16);
@@ -385,7 +399,21 @@ namespace MacFace.FloatApp
 			try 
 			{
 				FaceDef faceDef = new FaceDef(path);
-				imageListFacePreviews.Images.Add(faceDef.TitleImage());
+				// 表示/選択した際に汚くならないようにあらかじめ白塗りして描画した画像を用意する。
+				using (Image titleImage = faceDef.TitleImage) 
+				{
+					using (Bitmap titlePreviewImage = new Bitmap(titleImage.Width, titleImage.Height)) 
+					{
+						using (Graphics g = Graphics.FromImage(titlePreviewImage))
+						{
+							g.Clear(Color.White);
+							g.DrawRectangle(new Pen(Color.LightGray), 0, 0, 127, 127);
+							g.DrawImage(titleImage, 0, 0);
+						}
+						imageListFacePreviews.Images.Add(titlePreviewImage);
+					}
+				}
+
 
 				ListViewItem item = listViewFaces.Items.Add(faceDef.Title, imageListFacePreviews.Images.Count-1);
 				item.SubItems.Add(path);    // 0: パス
