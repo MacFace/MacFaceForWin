@@ -15,7 +15,7 @@
                 DefaultHTMLPageLayout = "Grid"
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
-                OutputType = "Exe"
+                OutputType = "WinExe"
                 PreBuildEvent = ""
                 PostBuildEvent = "xcopy /Y $(SolutionDir)default.mcface\*.* $(TargetDir)default.mcface\"
                 RootNamespace = "MacFace"
