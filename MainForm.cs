@@ -12,7 +12,6 @@ using System.Threading;
 namespace MacFace
 {
 	class MainForm : Misuzilla.Windows.Forms.AlphaForm
-//	class MainForm : System.Windows.Forms.Form
 	{
 		private System.Windows.Forms.ContextMenu contextMenu1;
 		private System.Windows.Forms.MenuItem menuItem1;
@@ -43,7 +42,7 @@ namespace MacFace
 			// 
 			this.menuItem1.Index = 0;
 			this.menuItem1.Shortcut = System.Windows.Forms.Shortcut.CtrlQ;
-			this.menuItem1.Text = "終了";
+			this.menuItem1.Text = "�I��";
 			this.menuItem1.Click += new System.EventHandler(this.doQuit);
 			// 
 			// contextMenu1
@@ -100,7 +99,7 @@ namespace MacFace
 					usage = 0;
 				}
 				
-				// Õp^[ƓȂXVȂB
+				// Õp^[ƓȂXVȁE
 				if (prevUsage/10 != usage/10) {
 					ArrayList patterns = (ArrayList)_property["pattern"];
 					ArrayList patternCpu = (ArrayList)patterns[0];
