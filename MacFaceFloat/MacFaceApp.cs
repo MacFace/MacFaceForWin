@@ -195,7 +195,7 @@ namespace MacFace.FloatApp
 			if (updateTimer != null) updateTimer.Stop();
 
 			patternWindow.FaceDef = newFaceDef;
-			patternWindow.RefreshPattern();
+			patternWindow.Refresh();
 
 			notifyIcon.Text = "MacFace - " + patternWindow.FaceDef.Title;
 
@@ -236,7 +236,7 @@ namespace MacFace.FloatApp
 			patternWindow.PatternSize = (float)config.PatternSize / 100;
 			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
 
-			patternWindow.RefreshPattern();
+			patternWindow.Refresh();
 		}
 
 		/*

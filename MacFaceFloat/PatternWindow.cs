@@ -24,10 +24,10 @@ namespace MacFace.FloatApp
 		public PatternWindow()
 		{
 			InitializeComponent();
+			TransparentMouseMessage = false;
+			MoveAtFormDrag = true;
 
-			this.TransparentMouseMessage = false;
-			this.MoveAtFormDrag = true;
-
+			patternSize = 1.0F;
 			curSuite   = FaceDef.PatternSuite.Normal;
 			curPattern = 0;
 			curMarkers = 0;
@@ -71,16 +71,16 @@ namespace MacFace.FloatApp
 				curSuite   = suite;
 				curPattern = patternNo;
 				curMarkers = markers;
-				RefreshPattern();
+				Refresh();
 			}
 		}
 
-		public void RefreshPattern()
+		public override void Refresh()
 		{
 			Graphics g = this.Graphics;
 			g.Clear(Color.FromArgb(0, 0, 0, 0));
 			curFaceDef.DrawPatternImage(g, curSuite, curPattern, curMarkers, patternSize);
-			this.Update();
+			base.Refresh();
 		}
 	}
 }
