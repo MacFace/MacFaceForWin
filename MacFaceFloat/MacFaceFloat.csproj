@@ -110,7 +110,7 @@
                 />
                 <File
                     RelPath = "App.ico"
-                    BuildAction = "Content"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "AppSettings.cs"
