@@ -14,36 +14,32 @@ namespace MacFace
 	public class Part : IDisposable
 	{
 		private Image _image;
-		private string _filename;
+		private string _imagePath;
 		private Point _point;
 
-		/*public Part(string basePath, Hashtable partDef)
-		{
-			this.path = (string)Path.Combine(partDef["filename"]);
-			this.x = (int)partDef["pos x"];
-			this.y = (int)partDef["pos y"];
-		}*/
-		
 		public Part(String path, int x, int y)
 		{
-			_filename = System.IO.Path.GetFileName(path);
+			_imagePath = path;
 			_image = Image.FromFile(path);
-			this.X = x;
-			this.Y = y;
+			_point.X = x;
+			_point.Y = y;
 		}
 
 		public Part(String path, Image image, int x, int y)
 		{
-			_filename = System.IO.Path.GetFileName(path);
-			_image = image;
-			this.X = x;
-			this.Y = y;
+            _imagePath = path;
+            _image = image;
+			_point.X = x;
+			_point.Y = y;
 		}
 
 		public string FileName 
 		{
-			get { return _filename; }
-		}
+            get
+            {
+                return System.IO.Path.GetFileName(_imagePath);
+            }
+        }
 
 		public Image Image 
 		{
@@ -63,8 +59,8 @@ namespace MacFace
 
 		public int Y
 		{
-			get { return 128 - _point.Y - _image.Height; }
-			set { _point.Y = 128 - value - _image.Height; }
+			get { return _point.Y; }
+			set { _point.Y = value; }
 		}
 
 		/*public void Draw(Graphics g)
