@@ -214,7 +214,9 @@ namespace MacFace.FloatApp
 			int pattern = cpuUsage.Active / 10;
 
 			FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
-			if (memUsage.Available < (10 * 1024 *1024)) 
+
+			int avilable = (int)MemoryUsageCounter.TotalVisibleMemorySize * 1024 - memUsage.Committed;
+			if (avilable < (10 * 1024 *1024)) 
 			{
 				suite = FaceDef.PatternSuite.MemoryInsufficient;
 			} 

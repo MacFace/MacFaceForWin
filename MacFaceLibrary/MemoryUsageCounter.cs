@@ -11,10 +11,22 @@ namespace MacFace
 	/// </summary>
 	public class MemoryUsageCounter
 	{
+		private static ulong totalVisibleMemorySize;
+		
 		private PerformanceCounter availableCounter;
 		private PerformanceCounter committedCounter;
 		private PerformanceCounter pageoutCounter;
 		private PerformanceCounter pageinCounter;
+
+		static MemoryUsageCounter()
+		{
+			System.Management.ManagementClass mc = new System.Management.ManagementClass("Win32_OperatingSystem");
+			System.Management.ManagementObjectCollection moc = mc.GetInstances();
+			foreach (System.Management.ManagementObject mo in moc)
+			{
+				totalVisibleMemorySize = (ulong)mo["TotalVisibleMemorySize"];
+			}
+		}
 
 		public MemoryUsageCounter()
 		{
@@ -43,6 +55,11 @@ namespace MacFace
 			int pageout   = (int)pageoutCounter.NextValue();
 
 			return new MemoryUsage(available, committed, pagein, pageout);
+		}
+
+		public static ulong TotalVisibleMemorySize 
+		{
+			get { return totalVisibleMemorySize; }
 		}
 	}
 }
