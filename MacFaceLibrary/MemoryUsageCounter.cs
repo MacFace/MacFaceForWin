@@ -12,6 +12,7 @@ namespace MacFace
 	public class MemoryUsageCounter
 	{
 		private static ulong totalVisibleMemorySize;
+		private static PerformanceCounter commitLimitCounter;
 		
 		private PerformanceCounter availableCounter;
 		private PerformanceCounter committedCounter;
@@ -26,6 +27,10 @@ namespace MacFace
 			{
 				totalVisibleMemorySize = (ulong)mo["TotalVisibleMemorySize"];
 			}
+
+			commitLimitCounter = new PerformanceCounter();
+			commitLimitCounter.CategoryName = "Memory";
+			commitLimitCounter.CounterName = "Commit Limit";
 		}
 
 		public MemoryUsageCounter()
@@ -60,6 +65,11 @@ namespace MacFace
 		public static ulong TotalVisibleMemorySize 
 		{
 			get { return totalVisibleMemorySize; }
+		}
+
+		public static ulong CommitLimit 
+		{
+			get { return (ulong)commitLimitCounter.NextValue(); }
 		}
 	}
 }

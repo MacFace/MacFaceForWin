@@ -55,11 +55,11 @@ namespace MacFace.FloatApp
 			config = Configuration.GetInstance();
 			config.Load();
 
-			cpuHistory = new CPUUsage[60];
+			cpuHistory = new CPUUsage[61];
 			cpuHistoryCount = 0;
 			cpuHistoryHead = 0;
 
-			memHistory = new MemoryUsage[60];
+			memHistory = new MemoryUsage[61];
 			memHistoryCount = 0;
 			memHistoryHead = 0;
 
@@ -114,6 +114,8 @@ namespace MacFace.FloatApp
 			statusWindow.ClientSize = new System.Drawing.Size(310, 215);
 			statusWindow.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			statusWindow.ControlBox = false;
+			statusWindow.MaximizeBox = false;
+			statusWindow.MinimizeBox = false;
 			statusWindow.Icon = new Icon(asm.GetManifestResourceStream("MacFace.FloatApp.App.ico"));
 			statusWindow.Text = "ステータス";
 			statusWindow.Paint +=new PaintEventHandler(statusWindow_Paint);
@@ -383,22 +385,22 @@ namespace MacFace.FloatApp
 		{
 			Graphics g = Graphics.FromImage(memoryGraph);
 
+			int totalMemory = (int)MemoryUsageCounter.TotalVisibleMemorySize * 1024;
+			double rate = 100.0 / MemoryUsageCounter.CommitLimit;
+			int border = (int)(totalMemory * rate);
+
 			g.FillRectangle(new SolidBrush(Color.White), 0, 0, 300, 100);
 			Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1F);
-			for (int y = 100; y > 0; y -= 7) 
+			for (int y = 100; y > 0; y -= (int)(128*1024*1024 * rate)) 
 			{
 				g.DrawLine(pen, 0, y, 300, y);
 			}
-			g.DrawLine(Pens.Gray, 0, 100-5*7, 300, 100-5*7);
-
-			int totalMemory = (int)MemoryUsageCounter.TotalVisibleMemorySize * 1024;
-			double rate = 70.0 / totalMemory;
 
 			g.SmoothingMode = SmoothingMode.None;
 			Brush commitedBrush = new SolidBrush(Color.FromArgb(180, 255, 145, 0));
 			Brush uncommitedBrush = new SolidBrush(Color.FromArgb(180, 180, 200, 255));
-			Brush availableBrush = new SolidBrush(Color.FromArgb(180, 100, 100, 255));
-			Brush spaceBrush = new SolidBrush(Color.FromArgb(180, 255, 255, 100));
+			Brush availableBrush = new SolidBrush(Color.FromArgb(100, 100, 100, 255));
+			Brush spaceBrush = new SolidBrush(Color.FromArgb(180, 240, 230, 255));
 
 			int pos = memHistoryHead - 1;
 			for (int i = 0; i < memHistoryCount; i++) 
@@ -411,7 +413,7 @@ namespace MacFace.FloatApp
 				x = 300 - i * 5 - 5;
 				w = 5;
 
-				h = 30;
+				h = 100 - border;
 				y = 0;
 				g.FillRectangle(spaceBrush, x, y, w, h);
 
@@ -419,15 +421,15 @@ namespace MacFace.FloatApp
 				y = 100 - h;
 				g.FillRectangle(commitedBrush, x, y, w, h);
 
-				if (h < 70) 
+				if (h < border) 
 				{
-					h = 70 - h;
-					y = 30;
+					h = border - h;
+					y = 100 - border;
 					g.FillRectangle(uncommitedBrush, x, y, w, h);
 				}
 
 				h = (int)(usage.Available * rate);
-				y = 100-70;
+				y = 100 - border;
 				g.FillRectangle(availableBrush, x, y, w, h);
 
 				x = 300 - i * 5 - 5;
@@ -444,7 +446,9 @@ namespace MacFace.FloatApp
 
 				pos--;
 			}
-			g.DrawLine(Pens.Black, 0, 100-70, 300, 100-70);
+			Pen borderPen = new Pen(Color.Blue);
+			borderPen.DashStyle = DashStyle.Dash;
+			g.DrawLine(borderPen, 0, 100-border, 300, 100-border);
 
 			g.Dispose();
 		}
