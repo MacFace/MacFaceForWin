@@ -15,6 +15,7 @@ using System.Data;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
 
 namespace MacFace.FloatApp
 {
@@ -42,6 +43,10 @@ namespace MacFace.FloatApp
 		public MainForm()
 		{
 			InitializeComponent();
+
+			Assembly asm = Assembly.GetExecutingAssembly();
+			this.notifyIcon.Icon = new Icon(asm.GetManifestResourceStream("MacFace.FloatApp.App.ico"));
+
 			this.TransparentMouseMessage = false;
 			this.MoveAtFormDrag = true;
 
