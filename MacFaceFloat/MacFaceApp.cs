@@ -105,14 +105,15 @@ namespace MacFace.FloatApp
 				}
 			}
 
-			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
-
 			patternWindow.Location = config.Location;
-			ApplyConfiguration();
+			patternWindow.Opacity = (float)config.Opacity / 100;
+			patternWindow.PatternSize = (float)config.PatternSize / 100;
+			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
 
 			patternWindow.Show();
 			updateTimer.Start();
 
+			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
 			Application.Run(this);
 		}
 
@@ -121,7 +122,6 @@ namespace MacFace.FloatApp
 			notifyIcon.Visible = false;
 
 			// 保存
-			config.FaceDefPath = patternWindow.FaceDef.Path;
 			config.Location = patternWindow.Location;
 			config.Save();
 		}
@@ -229,16 +229,6 @@ namespace MacFace.FloatApp
 			patternWindow.UpdatePattern(suite, pattern, markers);
 		}
 
-		// TODO:ローディング時の初期設定と設定変更の反映は分けるべき
-		private void ApplyConfiguration()
-		{
-			patternWindow.Opacity = (float)config.Opacity / 100;
-			patternWindow.PatternSize = (float)config.PatternSize / 100;
-			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
-
-			patternWindow.Refresh();
-		}
-
 		/*
 		 * メニュークリックイベント
 		 */
@@ -256,11 +246,28 @@ namespace MacFace.FloatApp
 
 		private void menuItemConfigure_Click(object sender, EventArgs e)
 		{
-			ConfigurationForm configForm = new ConfigurationForm(this);
-			if (configForm.ShowDialog() == DialogResult.OK) 
+			ConfigurationForm configForm = new ConfigurationForm();
+			configForm.ConfigChanged += new ConfigChangedEvent(configForm_ConfigChanged);
+			configForm.Show();
+		}
+
+		private void configForm_ConfigChanged()
+		{
+			if (patternWindow.FaceDef.Path != config.FaceDefPath) 
 			{
-				ApplyConfiguration();
+				bool result = LoadFaceDefine(config.FaceDefPath);
+				// パターン変更に失敗したら設定を元に戻す
+				if (!result) 
+				{
+					config.FaceDefPath = patternWindow.FaceDef.Path;
+				}
 			}
+			
+			patternWindow.Opacity = (float)config.Opacity / 100;
+			patternWindow.PatternSize = (float)config.PatternSize / 100;
+			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
+
+			patternWindow.Refresh();
 		}
 	}
 }

@@ -9,20 +9,18 @@ using System.IO;
 
 namespace MacFace.FloatApp
 {
+	public delegate void ConfigChangedEvent();
+
 	/// <summary>
 	/// ConfigurationForm の概要の説明です。
 	/// </summary>
 	public class ConfigurationForm : System.Windows.Forms.Form
 	{
-		private MacFaceApp _app;
 		private Configuration _config;
-		private System.Windows.Forms.Button buttonCancel;
-		private System.Windows.Forms.Button buttonApply;
-		private System.Windows.Forms.Button buttonOK;
 		private System.Windows.Forms.ImageList imageListFacePreviews;
 		private System.Windows.Forms.ToolTip toolTipPreviewDetail;
 		private System.Windows.Forms.ImageList imageListConfigTreeIcon;
-		private Label label6;
+		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.CheckBox checkMouseMessage;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.LinkLabel linkWebSite;
@@ -38,7 +36,9 @@ namespace MacFace.FloatApp
 		private System.Windows.Forms.TrackBar trackBarPatternSize;
 		private System.ComponentModel.IContainer components;
 
-		public ConfigurationForm(MacFaceApp app)
+		public event ConfigChangedEvent ConfigChanged;
+
+		public ConfigurationForm()
 		{
 			//
 			// Windows フォーム デザイナ サポートに必要です。
@@ -46,7 +46,6 @@ namespace MacFace.FloatApp
 			InitializeComponent();
 
 			_config = Configuration.GetInstance();
-			_app = app;
 		}
 
 		/// <summary>
@@ -74,9 +73,6 @@ namespace MacFace.FloatApp
 			this.components = new System.ComponentModel.Container();
 			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(ConfigurationForm));
 			this.imageListConfigTreeIcon = new System.Windows.Forms.ImageList(this.components);
-			this.buttonCancel = new System.Windows.Forms.Button();
-			this.buttonApply = new System.Windows.Forms.Button();
-			this.buttonOK = new System.Windows.Forms.Button();
 			this.imageListFacePreviews = new System.Windows.Forms.ImageList(this.components);
 			this.label6 = new System.Windows.Forms.Label();
 			this.toolTipPreviewDetail = new System.Windows.Forms.ToolTip(this.components);
@@ -86,9 +82,9 @@ namespace MacFace.FloatApp
 			this.buttonBrowse = new System.Windows.Forms.Button();
 			this.listViewFaces = new System.Windows.Forms.ListView();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.trackBarOpacity = new System.Windows.Forms.TrackBar();
-			this.label2 = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.trackBarOpacity = new System.Windows.Forms.TrackBar();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.label8 = new System.Windows.Forms.Label();
@@ -105,37 +101,6 @@ namespace MacFace.FloatApp
 			this.imageListConfigTreeIcon.ImageSize = new System.Drawing.Size(32, 32);
 			this.imageListConfigTreeIcon.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListConfigTreeIcon.ImageStream")));
 			this.imageListConfigTreeIcon.TransparentColor = System.Drawing.Color.Transparent;
-			// 
-			// buttonCancel
-			// 
-			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.buttonCancel.Location = new System.Drawing.Point(186, 386);
-			this.buttonCancel.Name = "buttonCancel";
-			this.buttonCancel.Size = new System.Drawing.Size(87, 21);
-			this.buttonCancel.TabIndex = 1;
-			this.buttonCancel.Text = "キャンセル";
-			// 
-			// buttonApply
-			// 
-			this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonApply.Enabled = false;
-			this.buttonApply.Location = new System.Drawing.Point(282, 386);
-			this.buttonApply.Name = "buttonApply";
-			this.buttonApply.Size = new System.Drawing.Size(87, 21);
-			this.buttonApply.TabIndex = 2;
-			this.buttonApply.Text = "適用(&A)";
-			// 
-			// buttonOK
-			// 
-			this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-			this.buttonOK.Location = new System.Drawing.Point(90, 386);
-			this.buttonOK.Name = "buttonOK";
-			this.buttonOK.Size = new System.Drawing.Size(87, 21);
-			this.buttonOK.TabIndex = 3;
-			this.buttonOK.Text = "OK";
-			this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
 			// 
 			// imageListFacePreviews
 			// 
@@ -154,11 +119,12 @@ namespace MacFace.FloatApp
 			// checkMouseMessage
 			// 
 			this.checkMouseMessage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this.checkMouseMessage.Location = new System.Drawing.Point(8, 354);
+			this.checkMouseMessage.Location = new System.Drawing.Point(8, 352);
 			this.checkMouseMessage.Name = "checkMouseMessage";
 			this.checkMouseMessage.Size = new System.Drawing.Size(339, 16);
 			this.checkMouseMessage.TabIndex = 6;
 			this.checkMouseMessage.Text = "マウスの動作を背面のウィンドウへ伝える(&T)";
+			this.checkMouseMessage.Click += new System.EventHandler(this.checkMouseMessage_Click);
 			// 
 			// label4
 			// 
@@ -199,7 +165,6 @@ namespace MacFace.FloatApp
 			this.listViewFaces.Name = "listViewFaces";
 			this.listViewFaces.Size = new System.Drawing.Size(362, 160);
 			this.listViewFaces.TabIndex = 12;
-			this.listViewFaces.DoubleClick += new System.EventHandler(this.listViewFaces_DoubleClick);
 			this.listViewFaces.MouseMove += new System.Windows.Forms.MouseEventHandler(this.listViewFaces_MouseMove);
 			this.listViewFaces.SelectedIndexChanged += new System.EventHandler(this.listViewFaces_SelectedIndexChanged);
 			// 
@@ -217,27 +182,6 @@ namespace MacFace.FloatApp
 			this.groupBox1.TabStop = false;
 			this.groupBox1.Text = "透明度";
 			// 
-			// trackBarOpacity
-			// 
-			this.trackBarOpacity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.trackBarOpacity.LargeChange = 10;
-			this.trackBarOpacity.Location = new System.Drawing.Point(64, 16);
-			this.trackBarOpacity.Maximum = 100;
-			this.trackBarOpacity.Name = "trackBarOpacity";
-			this.trackBarOpacity.Size = new System.Drawing.Size(232, 37);
-			this.trackBarOpacity.TabIndex = 9;
-			this.trackBarOpacity.TickFrequency = 10;
-			this.trackBarOpacity.Value = 100;
-			// 
-			// label2
-			// 
-			this.label2.Location = new System.Drawing.Point(8, 24);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(40, 11);
-			this.label2.TabIndex = 11;
-			this.label2.Text = "透明";
-			// 
 			// label5
 			// 
 			this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -247,6 +191,29 @@ namespace MacFace.FloatApp
 			this.label5.TabIndex = 12;
 			this.label5.Text = "不透明";
 			this.label5.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
+			// label2
+			// 
+			this.label2.Location = new System.Drawing.Point(8, 24);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(40, 11);
+			this.label2.TabIndex = 11;
+			this.label2.Text = "透明";
+			// 
+			// trackBarOpacity
+			// 
+			this.trackBarOpacity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
+			this.trackBarOpacity.LargeChange = 10;
+			this.trackBarOpacity.Location = new System.Drawing.Point(64, 16);
+			this.trackBarOpacity.Maximum = 100;
+			this.trackBarOpacity.Minimum = 5;
+			this.trackBarOpacity.Name = "trackBarOpacity";
+			this.trackBarOpacity.Size = new System.Drawing.Size(232, 37);
+			this.trackBarOpacity.TabIndex = 9;
+			this.trackBarOpacity.TickFrequency = 10;
+			this.trackBarOpacity.Value = 100;
+			this.trackBarOpacity.ValueChanged += new System.EventHandler(this.trackBarOpacity_ValueChanged);
 			// 
 			// groupBox2
 			// 
@@ -293,11 +260,12 @@ namespace MacFace.FloatApp
 			this.trackBarPatternSize.TabIndex = 19;
 			this.trackBarPatternSize.TickFrequency = 10;
 			this.trackBarPatternSize.Value = 100;
+			this.trackBarPatternSize.ValueChanged += new System.EventHandler(this.trackBarPatternSize_ValueChanged);
 			// 
 			// ConfigurationForm
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
-			this.ClientSize = new System.Drawing.Size(378, 413);
+			this.ClientSize = new System.Drawing.Size(378, 376);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
 			this.Controls.Add(this.label4);
@@ -305,14 +273,11 @@ namespace MacFace.FloatApp
 			this.Controls.Add(this.buttonBrowse);
 			this.Controls.Add(this.listViewFaces);
 			this.Controls.Add(this.checkMouseMessage);
-			this.Controls.Add(this.buttonOK);
-			this.Controls.Add(this.buttonApply);
-			this.Controls.Add(this.buttonCancel);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(384, 440);
+			this.MinimumSize = new System.Drawing.Size(384, 400);
 			this.Name = "ConfigurationForm";
 			this.Text = "MacFace の設定";
 			this.Load += new System.EventHandler(this.ConfigurationForm_Load);
@@ -353,15 +318,6 @@ namespace MacFace.FloatApp
 			}
 		}
 
-		private void buttonOK_Click(object sender, System.EventArgs e)
-		{
-			_config.Opacity = trackBarOpacity.Value;
-			_config.PatternSize = trackBarPatternSize.Value;
-			_config.TransparentMouseMessage = checkMouseMessage.Checked;
-
-			this.Close();
-		}
-
 		private void AddPreviewListItem(string path)
 		{
 			try 
@@ -398,6 +354,17 @@ namespace MacFace.FloatApp
 			}
 		}
 
+		private void buttonBrowse_Click(object sender, System.EventArgs e)
+		{
+			FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+			folderBrowser.SelectedPath = Application.StartupPath;
+			folderBrowser.Description = "顔パターンファイルの存在するフォルダを選択してください。";
+			if (folderBrowser.ShowDialog() == DialogResult.OK) 
+			{
+				AddPreviewListItem(folderBrowser.SelectedPath);
+			} 
+		}
+
 		private void listViewFaces_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			ListViewItem item = listViewFaces.GetItemAt(e.X, e.Y);
@@ -420,38 +387,36 @@ namespace MacFace.FloatApp
 
 		private void listViewFaces_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
-			if (listViewFaces.SelectedItems.Count == 0) 
-			{
-				linkWebSite.Text = "";
-			} 
-			else 
+			if (listViewFaces.SelectedItems.Count != 0) 
 			{
 				ListViewItem item = listViewFaces.SelectedItems[0];
 				linkWebSite.Text = item.SubItems[4].Text;
-			}
-		}
 
-		private void listViewFaces_DoubleClick(object sender, System.EventArgs e)
-		{
-			Point pos = listViewFaces.PointToClient(Cursor.Position);
-			ListViewItem item = listViewFaces.GetItemAt(pos.X, pos.Y);
-			
-			if (item != null) 
-			{
-				// TODO: ここだけリアルタイムに設定内容が反映されるのは反則っぽい
-				_app.LoadFaceDefine(item.SubItems[1].Text);
+				_config.FaceDefPath = item.SubItems[1].Text;
+				ConfigChanged();
 			}
-		}
-
-		private void buttonBrowse_Click(object sender, System.EventArgs e)
-		{
-			FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-			folderBrowser.SelectedPath = Application.StartupPath;
-			folderBrowser.Description = "顔パターンファイルの存在するフォルダを選択してください。";
-			if (folderBrowser.ShowDialog() == DialogResult.OK) 
+			else 
 			{
-				AddPreviewListItem(folderBrowser.SelectedPath);
+				linkWebSite.Text = "";
 			} 
+		}
+
+		private void trackBarOpacity_ValueChanged(object sender, System.EventArgs e)
+		{
+			_config.Opacity = trackBarOpacity.Value;
+			ConfigChanged();
+		}
+
+		private void trackBarPatternSize_ValueChanged(object sender, System.EventArgs e)
+		{
+			_config.PatternSize = trackBarPatternSize.Value;
+			ConfigChanged();		
+		}
+
+		private void checkMouseMessage_Click(object sender, System.EventArgs e)
+		{
+			_config.TransparentMouseMessage = checkMouseMessage.Checked;
+			ConfigChanged();	
 		}
 
 		private void linkWebSite_LinkClicked(object sender, System.Windows.Forms.LinkLabelLinkClickedEventArgs e)
@@ -460,5 +425,6 @@ namespace MacFace.FloatApp
 				Process.Start(linkWebSite.Text);
 			} 
 		}
+
 	}
 }
