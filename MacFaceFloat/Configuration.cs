@@ -48,6 +48,10 @@ namespace MacFace.FloatApp
 		[Category("顔フォーム"), Description("マウスメッセージを透過させるかどうかを指定します。")]
 		public bool TransparentMouseMessage;
 
+		[AutoConfigure("form.status.point")]
+		[Category("ステータスウインドウ"), Description("表示位置")]
+		public Point StatusWindowLocation;
+
 		public static Configuration GetInstance()
 		{
 			if (_configInstance == null) 

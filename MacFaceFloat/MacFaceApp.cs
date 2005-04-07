@@ -31,7 +31,7 @@ namespace MacFace.FloatApp
 		private CPUUsageCounter cpuCounter;
 		private MemoryUsageCounter memoryCounter;
 
-		private Form statusWindow;
+		private StatusWindow statusWindow;
 		private Bitmap cpuGraph;
 		private Bitmap memoryGraph;
 
@@ -105,20 +105,15 @@ namespace MacFace.FloatApp
 
 			// パターンウインドウ
 			this.patternWindow = new PatternWindow();
+			this.patternWindow.Closing += new System.ComponentModel.CancelEventHandler(patternWindow_Closing);
 
 			// ステータスウインドウ
 			cpuGraph = new Bitmap(5*60, 100);
 			memoryGraph = new Bitmap(5*60, 100);
-
-			statusWindow = new Form();
-			statusWindow.ClientSize = new System.Drawing.Size(310, 215);
-			statusWindow.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-			statusWindow.ControlBox = false;
-			statusWindow.MaximizeBox = false;
-			statusWindow.MinimizeBox = false;
-			statusWindow.Icon = new Icon(asm.GetManifestResourceStream("MacFace.FloatApp.App.ico"));
-			statusWindow.Text = "ステータス";
-			statusWindow.Paint +=new PaintEventHandler(statusWindow_Paint);
+			statusWindow = new StatusWindow();
+			patternWindow.Closing += new System.ComponentModel.CancelEventHandler(patternWindow_Closing);
+			statusWindow.cpuGraphPicBox.Image = cpuGraph;
+			statusWindow.memoryGraphPicBox.Image = memoryGraph;
 		}
 
 		public void StartApplication()
@@ -141,6 +136,7 @@ namespace MacFace.FloatApp
 
 			drawCPUGraph();
 			drawMemoryGraph();
+			statusWindow.Location = config.StatusWindowLocation;
 			statusWindow.Show();
 
 			patternWindow.Location = config.Location;
@@ -162,6 +158,7 @@ namespace MacFace.FloatApp
 
 			// 保存
 			config.Location = patternWindow.Location;
+			config.StatusWindowLocation = statusWindow.Location;
 			config.Save();
 		}
 
@@ -279,7 +276,8 @@ namespace MacFace.FloatApp
 
 			drawCPUGraph();
 			drawMemoryGraph();
-			statusWindow.Invalidate();
+			statusWindow.cpuGraphPicBox.Invalidate();
+			statusWindow.memoryGraphPicBox.Invalidate();
 		}
 
 		/*
@@ -399,7 +397,7 @@ namespace MacFace.FloatApp
 			g.SmoothingMode = SmoothingMode.None;
 			Brush commitedBrush = new SolidBrush(Color.FromArgb(180, 255, 145, 0));
 			Brush uncommitedBrush = new SolidBrush(Color.FromArgb(180, 180, 200, 255));
-			Brush availableBrush = new SolidBrush(Color.FromArgb(100, 100, 100, 255));
+			Brush availableBrush = new SolidBrush(Color.FromArgb(180, 100, 100, 255));
 			Brush spaceBrush = new SolidBrush(Color.FromArgb(180, 240, 230, 255));
 
 			int pos = memHistoryHead - 1;
@@ -413,24 +411,24 @@ namespace MacFace.FloatApp
 				x = 300 - i * 5 - 5;
 				w = 5;
 
-				h = 100 - border;
-				y = 0;
-				g.FillRectangle(spaceBrush, x, y, w, h);
+				h = (int)(usage.Available * rate);
+				y = 100 - h;
+				g.FillRectangle(availableBrush, x, y, w, h);
 
 				h = (int)(usage.Committed * rate);
-				y = 100 - h;
+				y -= h;
 				g.FillRectangle(commitedBrush, x, y, w, h);
 
-				if (h < border) 
+				if (y > 100 - border) 
 				{
-					h = border - h;
+					h = y - (100 - border);
 					y = 100 - border;
 					g.FillRectangle(uncommitedBrush, x, y, w, h);
 				}
 
-				h = (int)(usage.Available * rate);
-				y = 100 - border;
-				g.FillRectangle(availableBrush, x, y, w, h);
+				h = y;
+				y = 0;
+				g.FillRectangle(spaceBrush, x, y, w, h);
 
 				x = 300 - i * 5 - 5;
 				w = 2;
@@ -451,6 +449,11 @@ namespace MacFace.FloatApp
 			g.DrawLine(borderPen, 0, 100-border, 300, 100-border);
 
 			g.Dispose();
+		}
+
+		private void patternWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			e.Cancel = true;
 		}
 	}
 }
