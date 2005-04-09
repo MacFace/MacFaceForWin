@@ -152,6 +152,16 @@
                     SubType = "Form"
                     BuildAction = "Compile"
                 />
+                <File
+                    RelPath = "StatusWindow.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "StatusWindow.resx"
+                    DependentUpon = "StatusWindow.cs"
+                    BuildAction = "EmbeddedResource"
+                />
             </Include>
         </Files>
     </CSHARP>
