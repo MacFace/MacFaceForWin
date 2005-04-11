@@ -111,7 +111,7 @@ namespace MacFace.FloatApp
 			cpuGraph = new Bitmap(5*60, 100);
 			memoryGraph = new Bitmap(5*60, 100);
 			statusWindow = new StatusWindow();
-			patternWindow.Closing += new System.ComponentModel.CancelEventHandler(patternWindow_Closing);
+			statusWindow.Closing += new System.ComponentModel.CancelEventHandler(patternWindow_Closing);
 			statusWindow.cpuGraphPicBox.Image = cpuGraph;
 			statusWindow.memoryGraphPicBox.Image = memoryGraph;
 		}
@@ -136,7 +136,11 @@ namespace MacFace.FloatApp
 
 			drawCPUGraph();
 			drawMemoryGraph();
+			FormBorderStyle orgStyle = statusWindow.FormBorderStyle;
+			statusWindow.FormBorderStyle = FormBorderStyle.Sizable;
+			statusWindow.StartPosition = FormStartPosition.Manual;
 			statusWindow.Location = config.StatusWindowLocation;
+			statusWindow.FormBorderStyle = orgStyle;
 			statusWindow.Show();
 
 			patternWindow.Location = config.Location;
@@ -453,7 +457,10 @@ namespace MacFace.FloatApp
 
 		private void patternWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			e.Cancel = true;
+			if (!System.Environment.HasShutdownStarted)
+			{
+				e.Cancel = true;
+			}
 		}
 	}
 }
