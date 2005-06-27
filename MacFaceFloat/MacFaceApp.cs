@@ -43,6 +43,8 @@ namespace MacFace.FloatApp
 		private int memHistoryHead;
 		private int memHistoryCount;
 
+		private bool doExit;
+
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -118,6 +120,8 @@ namespace MacFace.FloatApp
 
 		public void StartApplication()
 		{
+			doExit = false;
+
 			// äÁÉpÉ^Å[Éìì«Ç›çûÇ›
 			bool result = false;
 			if (Directory.Exists(config.FaceDefPath))
@@ -153,6 +157,7 @@ namespace MacFace.FloatApp
 			updateTimer.Start();
 
 			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
+			Microsoft.Win32.SystemEvents.SessionEnding += new Microsoft.Win32.SessionEndingEventHandler(SystemEvents_SessionEnding);
 			Application.Run(this);
 		}
 
@@ -399,10 +404,12 @@ namespace MacFace.FloatApp
 			}
 
 			g.SmoothingMode = SmoothingMode.None;
-			Brush commitedBrush = new SolidBrush(Color.FromArgb(180, 255, 145, 0));
-			Brush uncommitedBrush = new SolidBrush(Color.FromArgb(180, 180, 200, 255));
 			Brush availableBrush = new SolidBrush(Color.FromArgb(180, 100, 100, 255));
-			Brush spaceBrush = new SolidBrush(Color.FromArgb(180, 240, 230, 255));
+			Brush kernelBrush = new SolidBrush(Color.FromArgb(180, 255, 0, 0));
+			Brush commitedBrush = new SolidBrush(Color.FromArgb(180, 255, 145, 0));
+			Brush systemCacheBrush = new SolidBrush(Color.FromArgb(50, 255, 0, 0));
+//			Brush spaceBrush = new SolidBrush(Color.FromArgb(180, 240, 230, 255));
+			Brush spaceBrush = new SolidBrush(Color.FromArgb(100, 100, 100, 255));
 
 			int pos = memHistoryHead - 1;
 			for (int i = 0; i < memHistoryCount; i++) 
@@ -410,29 +417,32 @@ namespace MacFace.FloatApp
 				if (pos < 0) pos = memHistory.Length - 1;
 				MemoryUsage usage = memHistory[pos];
 
-				int x, y, w, h;
+				int x = 300 - i * 5 - 5;
+				int y = 100;
+				int w = 5;
+				int h = 0;
 
-				x = 300 - i * 5 - 5;
-				w = 5;
+				int kernelTotal = usage.KernelNonPaged + usage.KernelPaged + usage.DriverTotal + usage.SystemCodeTotal;
+				h = (int)((kernelTotal) * rate);
+				y -= h;
+				g.FillRectangle(kernelBrush, x, y, w, h);
 
-				h = (int)(usage.Available * rate);
-				y = 100 - h;
-				g.FillRectangle(availableBrush, x, y, w, h);
+				h = (int)(usage.SystemCache * rate);
+				y -= h;
+				g.FillRectangle(systemCacheBrush, x, y, w, h);
 
 				h = (int)(usage.Committed * rate);
 				y -= h;
 				g.FillRectangle(commitedBrush, x, y, w, h);
 
-				if (y > 100 - border) 
-				{
-					h = y - (100 - border);
-					y = 100 - border;
-					g.FillRectangle(uncommitedBrush, x, y, w, h);
-				}
+				h = (int)(usage.Available * rate);
+				y -= h;
+				g.FillRectangle(availableBrush, x, y, w, h);
 
 				h = y;
 				y = 0;
 				g.FillRectangle(spaceBrush, x, y, w, h);
+
 
 				x = 300 - i * 5 - 5;
 				w = 2;
@@ -457,10 +467,19 @@ namespace MacFace.FloatApp
 
 		private void patternWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			if (!System.Environment.HasShutdownStarted)
+			if (!doExit)
 			{
 				e.Cancel = true;
 			}
+		}
+
+		private void SystemEvents_SessionEnding(object sender, Microsoft.Win32.SessionEndingEventArgs e)
+		{
+			doExit = true;
+			updateTimer.Stop();
+			patternWindow.Close();
+			statusWindow.Close();
+			ExitThread();
 		}
 	}
 }

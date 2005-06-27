@@ -18,6 +18,11 @@ namespace MacFace
 		private PerformanceCounter committedCounter;
 		private PerformanceCounter pageoutCounter;
 		private PerformanceCounter pageinCounter;
+		private PerformanceCounter systemCacheCounter;
+		private PerformanceCounter kernelPagedCounter;
+		private PerformanceCounter kernelNonPagedCounter;
+		private PerformanceCounter driverTotalCounter;
+		private PerformanceCounter systemCodeTotalCounter;
 
 		static MemoryUsageCounter()
 		{
@@ -50,16 +55,42 @@ namespace MacFace
 			pageinCounter = new PerformanceCounter();
 			pageinCounter.CategoryName = "Memory";
 			pageinCounter.CounterName = "Pages Input/sec";
+
+			systemCacheCounter = new PerformanceCounter();
+			systemCacheCounter.CategoryName = "Memory";
+			systemCacheCounter.CounterName = "Cache Bytes";
+
+			kernelPagedCounter = new PerformanceCounter();
+			kernelPagedCounter.CategoryName = "Memory";
+			kernelPagedCounter.CounterName = "Pool Paged Bytes";
+
+			kernelNonPagedCounter = new PerformanceCounter();
+			kernelNonPagedCounter.CategoryName = "Memory";
+			kernelNonPagedCounter.CounterName = "Pool Nonpaged Bytes";
+
+			driverTotalCounter = new PerformanceCounter();
+			driverTotalCounter.CategoryName = "Memory";
+			driverTotalCounter.CounterName = "System Driver Total Bytes";
+
+			systemCodeTotalCounter = new PerformanceCounter();
+			systemCodeTotalCounter.CategoryName = "Memory";
+			systemCodeTotalCounter.CounterName = "System Code Total Bytes";
 		}
 
 		public MemoryUsage CurrentUsage()
 		{
-			int available = (int)availableCounter.NextValue();
-			int committed = (int)committedCounter.NextValue();
-			int pagein	= (int)pageinCounter.NextValue();
-			int pageout   = (int)pageoutCounter.NextValue();
+			int available      = (int)availableCounter.NextValue();
+			int committed      = (int)committedCounter.NextValue();
+			int pagein	       = (int)pageinCounter.NextValue();
+			int pageout        = (int)pageoutCounter.NextValue();
+			int systemCache    = (int)systemCacheCounter.NextValue();
+			int kernelPaged    = (int)kernelPagedCounter.NextValue();
+			int kernelNonPaged = (int)kernelNonPagedCounter.NextValue();
+			int driverTotal    = (int)driverTotalCounter.NextValue();
+			int systemCodeTotal = (int)systemCodeTotalCounter.NextValue();
 
-			return new MemoryUsage(available, committed, pagein, pageout);
+			return new MemoryUsage(available, committed, pagein, pageout,
+				systemCache, kernelPaged, kernelNonPaged, driverTotal, systemCodeTotal);
 		}
 
 		public static ulong TotalVisibleMemorySize 
