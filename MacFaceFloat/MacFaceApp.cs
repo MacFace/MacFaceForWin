@@ -73,6 +73,12 @@ namespace MacFace.FloatApp
 			updateTimer.Interval = 1000;
 			updateTimer.Tick += new EventHandler(this.CountProcessorUsage);
 
+			patternWindow = null;
+
+			cpuGraph = null;
+			memoryGraph = null;
+			statusWindow = null;
+
 			InitializeComponent();
 		}
 
@@ -80,12 +86,16 @@ namespace MacFace.FloatApp
 		{
 			// コンテキストメニュー
 			ContextMenu contextMenu = new System.Windows.Forms.ContextMenu();
-			MenuItem menuItemPatternSelect = new System.Windows.Forms.MenuItem();
+			MenuItem menuItemShowPatternWindow = new System.Windows.Forms.MenuItem();
+			MenuItem menuItemShowStatusWindow = new System.Windows.Forms.MenuItem();
 			MenuItem menuItemConfigure = new System.Windows.Forms.MenuItem();
 			MenuItem menuItemExit = new System.Windows.Forms.MenuItem();
 
-			menuItemPatternSelect.Text = "顔パターンの選択(&S)";
-			menuItemPatternSelect.Click += new System.EventHandler(menuItemPatternSelect_Click);
+			menuItemShowPatternWindow.Text = "パターンウインドウを開く(&P)";
+			menuItemShowPatternWindow.Click +=new EventHandler(menuItemShowPatternWindow_Click);
+
+			menuItemShowStatusWindow.Text = "ステータスウインドウを開く(&S)";
+			menuItemShowStatusWindow.Click +=new EventHandler(menuItemShowStatusWindow_Click);
 
 			menuItemConfigure.Text = "MacFace の設定(&C)...";
 			menuItemConfigure.Click +=new EventHandler(menuItemConfigure_Click);
@@ -95,7 +105,7 @@ namespace MacFace.FloatApp
 			menuItemExit.Click += new System.EventHandler(menuItemExit_Click);
 
 			contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-					menuItemPatternSelect, menuItemConfigure, new MenuItem("-"), menuItemExit});
+					menuItemShowPatternWindow, menuItemShowStatusWindow, new MenuItem("-"), menuItemConfigure, new MenuItem("-"), menuItemExit});
 
 			// 通知アイコン
 			Assembly asm = Assembly.GetExecutingAssembly();
@@ -104,18 +114,6 @@ namespace MacFace.FloatApp
 			this.notifyIcon.Icon = new Icon(asm.GetManifestResourceStream("MacFace.FloatApp.App.ico"));
 			this.notifyIcon.Visible = true;
 			this.notifyIcon.ContextMenu = contextMenu;
-
-			// パターンウインドウ
-			this.patternWindow = new PatternWindow();
-			this.patternWindow.Closing += new System.ComponentModel.CancelEventHandler(patternWindow_Closing);
-
-			// ステータスウインドウ
-			cpuGraph = new Bitmap(5*60, 100);
-			memoryGraph = new Bitmap(5*60, 100);
-			statusWindow = new StatusWindow();
-			statusWindow.Closing += new System.ComponentModel.CancelEventHandler(patternWindow_Closing);
-			statusWindow.cpuGraphPicBox.Image = cpuGraph;
-			statusWindow.memoryGraphPicBox.Image = memoryGraph;
 		}
 
 		public void StartApplication()
@@ -138,26 +136,11 @@ namespace MacFace.FloatApp
 				}
 			}
 
-			drawCPUGraph();
-			drawMemoryGraph();
-			FormBorderStyle orgStyle = statusWindow.FormBorderStyle;
-			statusWindow.FormBorderStyle = FormBorderStyle.Sizable;
-			statusWindow.StartPosition = FormStartPosition.Manual;
-			statusWindow.Location = config.StatusWindowLocation;
-			statusWindow.FormBorderStyle = orgStyle;
-			statusWindow.Show();
-
-			patternWindow.Location = config.Location;
-			patternWindow.Opacity = (float)config.Opacity / 100;
-			patternWindow.PatternSize = (float)config.PatternSize / 100;
-			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
-			patternWindow.Refresh();
-
-			patternWindow.Show();
+			openPatternWindow();
+			openStatusWindow();
 			updateTimer.Start();
 
 			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
-			Microsoft.Win32.SystemEvents.SessionEnding += new Microsoft.Win32.SessionEndingEventHandler(SystemEvents_SessionEnding);
 			Application.Run(this);
 		}
 
@@ -165,9 +148,6 @@ namespace MacFace.FloatApp
 		{
 			notifyIcon.Visible = false;
 
-			// 保存
-			config.Location = patternWindow.Location;
-			config.StatusWindowLocation = statusWindow.Location;
 			config.Save();
 		}
 
@@ -236,16 +216,19 @@ namespace MacFace.FloatApp
 				return false;
 			}
 
-			// 顔パターン差し替え中は更新を止めておく
-			if (updateTimer != null) updateTimer.Stop();
+			if (patternWindow != null) 
+			{
+				// 顔パターン差し替え中は更新を止めておく
+				if (updateTimer != null) updateTimer.Stop();
 
-			patternWindow.FaceDef = newFaceDef;
-			patternWindow.Refresh();
+				patternWindow.FaceDef = newFaceDef;
+				patternWindow.Refresh();
 
-			notifyIcon.Text = "MacFace - " + patternWindow.FaceDef.Title;
+				notifyIcon.Text = "MacFace - " + patternWindow.FaceDef.Title;
 
-			// 更新再開
-			if (updateTimer != null) updateTimer.Start();
+				// 更新再開
+				if (updateTimer != null) updateTimer.Start();
+			}
 
 			return true;
 		}
@@ -263,30 +246,75 @@ namespace MacFace.FloatApp
 			if (memHistoryHead >= memHistory.Length) memHistoryHead = 0;
 			if (memHistoryCount < memHistory.Length) memHistoryCount++;
 
-			int pattern = cpuUsage.Active / 10;
-
-			FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
-
-			int avilable = (int)MemoryUsageCounter.TotalVisibleMemorySize * 1024 - memUsage.Committed;
-			if (avilable < (10 * 1024 *1024)) 
+			if (patternWindow != null) 
 			{
-				suite = FaceDef.PatternSuite.MemoryInsufficient;
-			} 
-			else if (memUsage.Available < (30 * 1024 *1024)) 
-			{
-				suite = FaceDef.PatternSuite.MemoryDecline;
+				FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
+
+				int pattern = cpuUsage.Active / 10;
+				int avilable = (int)MemoryUsageCounter.TotalVisibleMemorySize * 1024 - memUsage.Committed;
+				if (avilable < (10 * 1024 *1024)) 
+				{
+					suite = FaceDef.PatternSuite.MemoryInsufficient;
+				} 
+				else if (memUsage.Available < (30 * 1024 *1024)) 
+				{
+					suite = FaceDef.PatternSuite.MemoryDecline;
+				}
+
+				int markers = FaceDef.MarkerNone;
+				if (memUsage.Pagein > 0) markers += FaceDef.MarkerPageIn;
+				if (memUsage.Pageout > 0) markers += FaceDef.MarkerPageOut;
+
+				patternWindow.UpdatePattern(suite, pattern, markers);
 			}
 
-			int markers = FaceDef.MarkerNone;
-			if (memUsage.Pagein > 0) markers += FaceDef.MarkerPageIn;
-			if (memUsage.Pageout > 0) markers += FaceDef.MarkerPageOut;
+			if (statusWindow != null) 
+			{
+				drawCPUGraph();
+				drawMemoryGraph();
+				statusWindow.cpuGraphPicBox.Invalidate();
+				statusWindow.memoryGraphPicBox.Invalidate();
+			}
+		}
 
-			patternWindow.UpdatePattern(suite, pattern, markers);
+		public void openPatternWindow()
+		{
+			// パターンウインドウ
+			patternWindow = new PatternWindow();
+			patternWindow.Closed += new EventHandler(patternWindow_Closed);
+			patternWindow.Move +=new EventHandler(patternWindow_Move);
 
+			LoadFaceDefine(config.FaceDefPath);
+
+			patternWindow.Location = config.Location;
+			patternWindow.Opacity = (float)config.Opacity / 100;
+			patternWindow.PatternSize = (float)config.PatternSize / 100;
+			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
+			patternWindow.Refresh();
+
+			patternWindow.Show();
+		}
+
+		public void openStatusWindow()
+		{
+			statusWindow = new StatusWindow();
+			statusWindow.Closed += new EventHandler(statusWindow_Closed);
+			statusWindow.Move +=new EventHandler(statusWindow_Move);
+
+			FormBorderStyle orgStyle = statusWindow.FormBorderStyle;
+			statusWindow.FormBorderStyle = FormBorderStyle.Sizable;
+			statusWindow.StartPosition = FormStartPosition.Manual;
+			statusWindow.Location = config.StatusWindowLocation;
+			statusWindow.FormBorderStyle = orgStyle;
+
+			cpuGraph = new Bitmap(5*60, 100);
+			memoryGraph = new Bitmap(5*60, 100);
+			statusWindow.cpuGraphPicBox.Image = cpuGraph;
+			statusWindow.memoryGraphPicBox.Image = memoryGraph;
 			drawCPUGraph();
 			drawMemoryGraph();
-			statusWindow.cpuGraphPicBox.Invalidate();
-			statusWindow.memoryGraphPicBox.Invalidate();
+
+			statusWindow.Show();
 		}
 
 		/*
@@ -300,7 +328,17 @@ namespace MacFace.FloatApp
 		public void menuItemExit_Click(object sender, System.EventArgs e)
 		{
 			updateTimer.Stop();
-			patternWindow.Close();
+
+			if (patternWindow != null)
+			{
+				patternWindow.Close();
+			}
+
+			if (statusWindow != null) 
+			{
+				statusWindow.Close();
+			}
+
 			ExitThread();
 		}
 
@@ -322,11 +360,14 @@ namespace MacFace.FloatApp
 					config.FaceDefPath = patternWindow.FaceDef.Path;
 				}
 			}
-			
-			patternWindow.Opacity = (float)config.Opacity / 100;
-			patternWindow.PatternSize = (float)config.PatternSize / 100;
-			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
-			patternWindow.Refresh();
+
+			if (patternWindow != null) 
+			{
+				patternWindow.Opacity = (float)config.Opacity / 100;
+				patternWindow.PatternSize = (float)config.PatternSize / 100;
+				patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
+				patternWindow.Refresh();
+			}
 		}
 
 		private void statusWindow_Paint(object sender, PaintEventArgs e)
@@ -465,21 +506,46 @@ namespace MacFace.FloatApp
 			g.Dispose();
 		}
 
-		private void patternWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		private void patternWindow_Closed(object sender, EventArgs e)
 		{
-			if (!doExit)
+			patternWindow.Dispose();
+			patternWindow = null;
+		}
+
+		private void statusWindow_Closed(object sender, EventArgs e)
+		{
+			cpuGraph.Dispose();
+			cpuGraph = null;
+			memoryGraph.Dispose();
+			memoryGraph = null;
+			statusWindow.Dispose();
+			statusWindow = null;
+		}
+
+		private void menuItemShowPatternWindow_Click(object sender, EventArgs e)
+		{
+			if (patternWindow == null) 
 			{
-				e.Cancel = true;
+				openPatternWindow();
 			}
 		}
 
-		private void SystemEvents_SessionEnding(object sender, Microsoft.Win32.SessionEndingEventArgs e)
+		private void menuItemShowStatusWindow_Click(object sender, EventArgs e)
 		{
-			doExit = true;
-			updateTimer.Stop();
-			patternWindow.Close();
-			statusWindow.Close();
-			ExitThread();
+			if (statusWindow == null) 
+			{
+				openStatusWindow();
+			}
+		}
+
+		private void patternWindow_Move(object sender, EventArgs e)
+		{
+			config.Location = patternWindow.Location;
+		}
+
+		private void statusWindow_Move(object sender, EventArgs e)
+		{
+			config.StatusWindowLocation = statusWindow.Location;
 		}
 	}
 }

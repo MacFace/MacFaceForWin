@@ -79,7 +79,6 @@ namespace MacFace.FloatApp
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
 			this.ClientSize = new System.Drawing.Size(314, 232);
-			this.ControlBox = false;
 			this.Controls.Add(this.cpuGraphPicBox);
 			this.Controls.Add(this.memoryGraphPicBox);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
