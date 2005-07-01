@@ -43,8 +43,6 @@ namespace MacFace.FloatApp
 		private int memHistoryHead;
 		private int memHistoryCount;
 
-		private bool doExit;
-
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -118,8 +116,6 @@ namespace MacFace.FloatApp
 
 		public void StartApplication()
 		{
-			doExit = false;
-
 			// 顔パターン読み込み
 			bool result = false;
 			if (Directory.Exists(config.FaceDefPath))
@@ -129,7 +125,9 @@ namespace MacFace.FloatApp
 
 			if (!result)
 			{
-				if (!SelectFaceDefine(Application.StartupPath))
+				string path = Path.Combine(Application.StartupPath, "default.plist");
+
+				if (!LoadFaceDefine(path))
 				{
 					Application.Exit();
 					return;
@@ -150,37 +148,6 @@ namespace MacFace.FloatApp
 
 			config.Save();
 		}
-
-		/*
-		 * 顔パターン定義フォルダ選択
-		 */
-		public bool SelectFaceDefine()
-		{
-			return SelectFaceDefine(Application.StartupPath);
-		}
-
-		public bool SelectFaceDefine(string defaultPath)
-		{
-			while (true) 
-			{
-				FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-				folderBrowser.SelectedPath = defaultPath;
-				folderBrowser.Description = "顔パターンファイルの存在するフォルダを選択してください。";
-				if (folderBrowser.ShowDialog() == DialogResult.OK) 
-				{
-					if (LoadFaceDefine(folderBrowser.SelectedPath)) 
-					{
-						return true;
-					}
-				}
-				else 
-				{
-					return false;
-				}
-			}
-
-		}
-
 
 		public bool LoadFaceDefine(string path)
 		{
@@ -284,13 +251,12 @@ namespace MacFace.FloatApp
 			patternWindow.Closed += new EventHandler(patternWindow_Closed);
 			patternWindow.Move +=new EventHandler(patternWindow_Move);
 
-			LoadFaceDefine(config.FaceDefPath);
-
 			patternWindow.Location = config.Location;
 			patternWindow.Opacity = (float)config.Opacity / 100;
 			patternWindow.PatternSize = (float)config.PatternSize / 100;
 			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
-			patternWindow.Refresh();
+
+			LoadFaceDefine(config.FaceDefPath);
 
 			patternWindow.Show();
 		}
@@ -320,10 +286,6 @@ namespace MacFace.FloatApp
 		/*
 		 * メニュークリックイベント
 		 */
-		public void menuItemPatternSelect_Click(object sender, System.EventArgs e)
-		{
-			SelectFaceDefine(patternWindow.FaceDef.Path);	
-		}
 
 		public void menuItemExit_Click(object sender, System.EventArgs e)
 		{
