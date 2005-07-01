@@ -17,7 +17,7 @@
                 DelaySign = "false"
                 OutputType = "WinExe"
                 PreBuildEvent = ""
-                PostBuildEvent = ""
+                PostBuildEvent = 'xcopy /Y /I "$(ProjectDir)default.mcface" "$(TargetDir)default.mcface"'
                 RootNamespace = "MacFace.FloatApp"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
