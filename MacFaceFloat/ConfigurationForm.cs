@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 using System;
 using System.Drawing;
 using System.Collections;
@@ -196,7 +199,7 @@ namespace MacFace.FloatApp
 			this.trackBarOpacity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
 			this.trackBarOpacity.LargeChange = 10;
-			this.trackBarOpacity.Location = new System.Drawing.Point(64, 13);
+			this.trackBarOpacity.Location = new System.Drawing.Point(64, 12);
 			this.trackBarOpacity.Maximum = 100;
 			this.trackBarOpacity.Minimum = 5;
 			this.trackBarOpacity.Name = "trackBarOpacity";
@@ -264,7 +267,7 @@ namespace MacFace.FloatApp
 			this.Controls.Add(this.buttonBrowse);
 			this.Controls.Add(this.listViewFaces);
 			this.Controls.Add(this.checkMouseMessage);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
