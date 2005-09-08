@@ -33,24 +33,33 @@ namespace MacFace.FloatApp
 		public String FaceDefPath;
 
 		[AutoConfigure("form.faceform.opacity")]
-		[Category("顔フォーム"), Description("透明度0-100の中で指定します。")]
+		[Category("パターンウインドウ"), Description("透明度0-100の中で指定します。")]
 		public Int32 Opacity = 100;
 
 		[AutoConfigure("form.faceform.patternsize")]
-		[Category("顔フォーム"), Description("パターンの大きさ10-100の中で指定します。")]
+		[Category("パターンウインドウ"), Description("パターンの大きさ10-100の中で指定します。")]
 		public Int32 PatternSize = 100;
 
+		[AutoConfigure("form.faceform.transparentmousemessage")]
+		[Category("パターンウインドウ"), Description("マウスメッセージを透過させるかどうかを指定します。")]
+		public bool TransparentMouseMessage;
+
 		[AutoConfigure("form.faceform.point")]
-		[Category("顔フォーム"), Description("表示位置")]
+		[Category("パターンウインドウ"), Description("表示位置")]
 		public Point Location;
 
-		[AutoConfigure("form.faceform.transparentmousemessage")]
-		[Category("顔フォーム"), Description("マウスメッセージを透過させるかどうかを指定します。")]
-		public bool TransparentMouseMessage;
+		[AutoConfigure("form.faceform.show")]
+		[Category("パターンウインドウ"), Description("表示状態")]
+		public bool ShowPatternWindow = true;
 
 		[AutoConfigure("form.status.point")]
 		[Category("ステータスウインドウ"), Description("表示位置")]
 		public Point StatusWindowLocation;
+
+		[AutoConfigure("form.status.show")]
+		[Category("ステータスウインドウ"), Description("表示状態")]
+		public bool ShowStatusWindow = true;
+
 
 		public static Configuration GetInstance()
 		{

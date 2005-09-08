@@ -118,8 +118,16 @@ namespace MacFace.FloatApp
 				}
 			}
 
-			openPatternWindow();
-			openStatusWindow();
+			if (config.ShowPatternWindow) 
+			{
+				openPatternWindow();
+			}
+
+			if (config.ShowStatusWindow) 
+			{
+				openStatusWindow();
+			}
+
 			updateTimer.Start();
 
 			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
@@ -237,6 +245,7 @@ namespace MacFace.FloatApp
 			patternWindow.Show();
 
 			menuItemTogglePatternWindow.Text = MES_CLOSE_PATTERN_WINDOW;
+			config.ShowPatternWindow = true;
 		}
 
 		public void openStatusWindow()
@@ -252,6 +261,7 @@ namespace MacFace.FloatApp
 			statusWindow.Show();
 
 			menuItemToggleStatusWindow.Text = MES_CLOSE_STATUS_WINDOW;
+			config.ShowStatusWindow = true;
 		}
 
 		/*
@@ -261,17 +271,6 @@ namespace MacFace.FloatApp
 		public void menuItemExit_Click(object sender, System.EventArgs e)
 		{
 			updateTimer.Stop();
-
-			if (patternWindow != null)
-			{
-				patternWindow.Close();
-			}
-
-			if (statusWindow != null) 
-			{
-				statusWindow.Close();
-			}
-
 			ExitThread();
 		}
 
@@ -308,6 +307,7 @@ namespace MacFace.FloatApp
 			patternWindow.Dispose();
 			patternWindow = null;
 			menuItemTogglePatternWindow.Text = MES_OPEN_PATTERN_WINDOW;
+			config.ShowPatternWindow = false;
 		}
 
 		private void statusWindow_Closed(object sender, EventArgs e)
@@ -315,6 +315,7 @@ namespace MacFace.FloatApp
 			statusWindow.Dispose();
 			statusWindow = null;
 			menuItemToggleStatusWindow.Text = MES_OPEN_STATUS_WINDOW;
+			config.ShowStatusWindow = false;
 		}
 
 		private void menuItemTogglePatternWindow_Click(object sender, EventArgs e)
