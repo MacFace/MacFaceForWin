@@ -28,20 +28,13 @@ namespace MacFace.FloatApp
 		private PatternWindow patternWindow;
 		
 		private System.Windows.Forms.Timer updateTimer;
-		private CPUUsageCounter cpuCounter;
-		private MemoryUsageCounter memoryCounter;
 
 		private StatusWindow statusWindow;
 		private Bitmap cpuGraph;
 		private Bitmap memoryGraph;
 
-		private CPUUsage[] cpuHistory;
-		private int cpuHistoryHead;
-		private int cpuHistoryCount;
-
-		private MemoryUsage[] memHistory;
-		private int memHistoryHead;
-		private int memHistoryCount;
+		private CPUStatistics cpuStats;
+		private MemoryStatistics memStats;
 
 		[STAThread]
 		public static void Main(string[] args)
@@ -55,16 +48,8 @@ namespace MacFace.FloatApp
 			config = Configuration.GetInstance();
 			config.Load();
 
-			cpuHistory = new CPUUsage[61];
-			cpuHistoryCount = 0;
-			cpuHistoryHead = 0;
-
-			memHistory = new MemoryUsage[61];
-			memHistoryCount = 0;
-			memHistoryHead = 0;
-
-			cpuCounter = new CPUUsageCounter();
-			memoryCounter = new MemoryUsageCounter();
+			cpuStats = new CPUStatistics(61);
+			memStats = new MemoryStatistics(61);
 
 			updateTimer = new System.Windows.Forms.Timer();
 			updateTimer.Enabled = false;
@@ -202,23 +187,18 @@ namespace MacFace.FloatApp
 
 		public void CountProcessorUsage(object sender, EventArgs e)
 		{
-			CPUUsage cpuUsage = cpuCounter.CurrentUsage();
-			MemoryUsage memUsage = memoryCounter.CurrentUsage();
+			cpuStats.Update();
+			CPUUsage cpuUsage = cpuStats.Latest;
 
-			cpuHistory[cpuHistoryHead++] = cpuUsage;
-			if (cpuHistoryHead >= cpuHistory.Length) cpuHistoryHead = 0;
-			if (cpuHistoryCount < cpuHistory.Length) cpuHistoryCount++;
-
-			memHistory[memHistoryHead++] = memUsage;
-			if (memHistoryHead >= memHistory.Length) memHistoryHead = 0;
-			if (memHistoryCount < memHistory.Length) memHistoryCount++;
-
+			memStats.Update();
+			MemoryUsage memUsage = memStats.Latest;
+			
 			if (patternWindow != null) 
 			{
 				FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
 
 				int pattern = cpuUsage.Active / 10;
-				int avilable = (int)MemoryUsageCounter.TotalVisibleMemorySize * 1024 - memUsage.Committed;
+				int avilable = (int)memStats.TotalVisibleMemorySize * 1024 - memUsage.Committed;
 				if (avilable < (10 * 1024 *1024)) 
 				{
 					suite = FaceDef.PatternSuite.MemoryInsufficient;
@@ -357,30 +337,29 @@ namespace MacFace.FloatApp
 			}
 			g.DrawLine(Pens.Gray, 0, 50, 300, 50);
 
-			if (cpuHistoryCount >= 2) 
+			int count = cpuStats.Count;
+
+			if (count >= 2) 
 			{
-				Point[] userGraph = new Point[cpuHistoryCount+2];
-				Point[] sysGraph = new Point[cpuHistoryCount+2];
+				Point[] userGraph = new Point[count+2];
+				Point[] sysGraph = new Point[count+2];
 
-				userGraph[cpuHistoryCount+0].X = 300 - (cpuHistoryCount-1) * 5;
-				userGraph[cpuHistoryCount+0].Y = 100 - 0;
-				userGraph[cpuHistoryCount+1].X = 300 - 0 * 5;
-				userGraph[cpuHistoryCount+1].Y = 100 - 0;
+				userGraph[count+0].X = 300 - (count-1) * 5;
+				userGraph[count+0].Y = 100 - 0;
+				userGraph[count+1].X = 300 - 0 * 5;
+				userGraph[count+1].Y = 100 - 0;
 
-				sysGraph[cpuHistoryCount+0].X = 300 - (cpuHistoryCount-1) * 5;
-				sysGraph[cpuHistoryCount+0].Y = 100 - 0;
-				sysGraph[cpuHistoryCount+1].X = 300 - 0 * 5;
-				sysGraph[cpuHistoryCount+1].Y = 100 - 0;
+				sysGraph[count+0].X = 300 - (count-1) * 5;
+				sysGraph[count+0].Y = 100 - 0;
+				sysGraph[count+1].X = 300 - 0 * 5;
+				sysGraph[count+1].Y = 100 - 0;
 
-				int pos = cpuHistoryHead - 1;
-				for (int i = 0; i < cpuHistoryCount; i++) 
+				for (int i = 0; i < count; i++) 
 				{
-					if (pos < 0) pos = cpuHistory.Length - 1;
-					CPUUsage usage = cpuHistory[pos];
+					CPUUsage usage = cpuStats[i];
 					userGraph[i].X = sysGraph[i].X = 300 - i * 5;
 					userGraph[i].Y = 100 - usage.Active;
 					sysGraph[i].Y = 100 - usage.System;
-					pos--;
 				}
 
 				g.FillPolygon(new SolidBrush(Color.FromArgb(50, 0, 0, 255)), userGraph);
@@ -395,8 +374,8 @@ namespace MacFace.FloatApp
 		{
 			Graphics g = Graphics.FromImage(memoryGraph);
 
-			int totalMemory = (int)MemoryUsageCounter.TotalVisibleMemorySize * 1024;
-			double rate = 100.0 / MemoryUsageCounter.CommitLimit;
+			int totalMemory = (int)memStats.TotalVisibleMemorySize * 1024;
+			double rate = 100.0 / memStats.CommitLimit;
 			int border = (int)(totalMemory * rate);
 
 			g.FillRectangle(new SolidBrush(Color.White), 0, 0, 300, 100);
@@ -414,11 +393,11 @@ namespace MacFace.FloatApp
 //			Brush spaceBrush = new SolidBrush(Color.FromArgb(180, 240, 230, 255));
 			Brush spaceBrush = new SolidBrush(Color.FromArgb(100, 100, 100, 255));
 
-			int pos = memHistoryHead - 1;
-			for (int i = 0; i < memHistoryCount; i++) 
+			int count = memStats.Count;
+
+			for (int i = 0; i < count; i++) 
 			{
-				if (pos < 0) pos = memHistory.Length - 1;
-				MemoryUsage usage = memHistory[pos];
+				MemoryUsage usage = memStats[i];
 
 				int x = 300 - i * 5 - 5;
 				int y = 100;
@@ -458,8 +437,6 @@ namespace MacFace.FloatApp
 				h = (int)(usage.Pageout);
 				y = 100 - h;
 				g.FillRectangle(Brushes.Black, x, y, w, h);
-
-				pos--;
 			}
 			Pen borderPen = new Pen(Color.Blue);
 			borderPen.DashStyle = DashStyle.Dash;

@@ -1,19 +1,20 @@
-/*
- * $Id$
- */
 using System;
 using System.Diagnostics;
 
 namespace MacFace
 {
 	/// <summary>
-	/// MemoryUsageCounter の概要の説明です。
+	/// MemoryStatistics の概要の説明です。
 	/// </summary>
-	public class MemoryUsageCounter
+	public class MemoryStatistics
 	{
-		private static ulong totalVisibleMemorySize;
-		private static PerformanceCounter commitLimitCounter;
-		
+		private MemoryUsage[] history;
+		private int length;
+		private int head;
+		private int count;
+
+		private MemoryUsage latest;
+
 		private PerformanceCounter availableCounter;
 		private PerformanceCounter committedCounter;
 		private PerformanceCounter pageoutCounter;
@@ -23,9 +24,17 @@ namespace MacFace
 		private PerformanceCounter kernelNonPagedCounter;
 		private PerformanceCounter driverTotalCounter;
 		private PerformanceCounter systemCodeTotalCounter;
+		private PerformanceCounter commitLimitCounter;
 
-		static MemoryUsageCounter()
+		private ulong totalVisibleMemorySize;
+
+		public MemoryStatistics(int historySize)
 		{
+			history = new MemoryUsage[historySize];
+			length = historySize;
+			count = 0;
+			head = 0;
+
 			System.Management.ManagementClass mc = new System.Management.ManagementClass("Win32_OperatingSystem");
 			System.Management.ManagementObjectCollection moc = mc.GetInstances();
 			foreach (System.Management.ManagementObject mo in moc)
@@ -33,13 +42,6 @@ namespace MacFace
 				totalVisibleMemorySize = (ulong)mo["TotalVisibleMemorySize"];
 			}
 
-			commitLimitCounter = new PerformanceCounter();
-			commitLimitCounter.CategoryName = "Memory";
-			commitLimitCounter.CounterName = "Commit Limit";
-		}
-
-		public MemoryUsageCounter()
-		{
 			availableCounter = new PerformanceCounter();
 			availableCounter.CategoryName = "Memory";
 			availableCounter.CounterName = "Available Bytes";
@@ -75,9 +77,53 @@ namespace MacFace
 			systemCodeTotalCounter = new PerformanceCounter();
 			systemCodeTotalCounter.CategoryName = "Memory";
 			systemCodeTotalCounter.CounterName = "System Code Total Bytes";
+
+			commitLimitCounter = new PerformanceCounter();
+			commitLimitCounter.CategoryName = "Memory";
+			commitLimitCounter.CounterName = "Commit Limit";
 		}
 
-		public MemoryUsage CurrentUsage()
+	
+		public MemoryUsage Latest 
+		{
+			get { return latest; }
+		}
+
+		public MemoryUsage this[int index]
+		{
+			get 
+			{
+				index = head - index - 1;
+				if (index < 0) index += length;
+				return history[index];
+			}
+		}
+
+		public int Count 
+		{
+			get { return count; }
+		}
+
+		public ulong TotalVisibleMemorySize 
+		{
+			get { return totalVisibleMemorySize; }
+		}
+
+		public ulong CommitLimit 
+		{
+			get { return (ulong)commitLimitCounter.NextValue(); }
+		}
+
+		public void Update() 
+		{
+			latest = NextValue();
+			history[head++] = latest;
+
+			if (head >= length) head = 0;
+			if (count < length) count++;
+		}
+
+		protected MemoryUsage NextValue()
 		{
 			int available      = (int)availableCounter.NextValue();
 			int committed      = (int)committedCounter.NextValue();
@@ -91,16 +137,6 @@ namespace MacFace
 
 			return new MemoryUsage(available, committed, pagein, pageout,
 				systemCache, kernelPaged, kernelNonPaged, driverTotal, systemCodeTotal);
-		}
-
-		public static ulong TotalVisibleMemorySize 
-		{
-			get { return totalVisibleMemorySize; }
-		}
-
-		public static ulong CommitLimit 
-		{
-			get { return (ulong)commitLimitCounter.NextValue(); }
 		}
 	}
 }

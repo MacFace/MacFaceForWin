@@ -99,12 +99,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "CPUUsage.cs"
+                    RelPath = "CPUStatistics.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "CPUUsageCounter.cs"
+                    RelPath = "CPUUsage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -119,12 +119,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MemoryUsage.cs"
+                    RelPath = "MemoryStatistics.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "MemoryUsageCounter.cs"
+                    RelPath = "MemoryUsage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
