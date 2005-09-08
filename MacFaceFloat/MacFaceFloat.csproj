@@ -143,6 +143,16 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "InfoWindow.cs"
+                    SubType = "Form"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "InfoWindow.resx"
+                    DependentUpon = "InfoWindow.cs"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "MacFaceApp.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

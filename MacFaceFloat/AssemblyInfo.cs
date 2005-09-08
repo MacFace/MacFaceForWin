@@ -6,12 +6,12 @@ using System.Runtime.CompilerServices;
 // 属性セットを通して制御されます。アセンブリに関連付けられている 
 // 情報を変更するには、これらの属性値を変更してください。
 //
-[assembly: AssemblyTitle("MacFace for Windows お試し版")]
-[assembly: AssemblyDescription("エモーショナルCPUメータMacFace")]
+[assembly: AssemblyTitle("MacFace for Windows")]
+[assembly: AssemblyDescription("エモーショナルCPUメーター")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Team MacFace")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Team MacFace")]
+[assembly: AssemblyProduct("MacFace for Windows")]
+[assembly: AssemblyCopyright("Copyright c 2004-2005 Team MacFace, All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -26,6 +26,7 @@ using System.Runtime.CompilerServices;
 // 下にあるように、'*' を使って、すべての値を指定するか、
 // ビルドおよびリビジョン番号を既定値にすることができます。
 
+[assembly: AssemblyInformationalVersion("アルファ版(2005-09-09)")]
 [assembly: AssemblyVersion("1.0.*")]
 
 //

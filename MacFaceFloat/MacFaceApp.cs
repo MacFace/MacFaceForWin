@@ -72,6 +72,7 @@ namespace MacFace.FloatApp
 			menuItemToggleStatusWindow = new System.Windows.Forms.MenuItem();
 			MenuItem menuItemConfigure = new System.Windows.Forms.MenuItem();
 			MenuItem menuItemExit = new System.Windows.Forms.MenuItem();
+			MenuItem menuVersionInfo = new System.Windows.Forms.MenuItem();
 
 			menuItemTogglePatternWindow.Text = MES_OPEN_PATTERN_WINDOW;
 			menuItemTogglePatternWindow.Click +=new EventHandler(menuItemTogglePatternWindow_Click);
@@ -79,15 +80,26 @@ namespace MacFace.FloatApp
 			menuItemToggleStatusWindow.Text = MES_OPEN_STATUS_WINDOW;
 			menuItemToggleStatusWindow.Click +=new EventHandler(menuItemToggleStatusWindow_Click);
 
-			menuItemConfigure.Text = "MacFace の設定(&C)...";
+			menuItemConfigure.Text = "MacFace の設定(&O)";
 			menuItemConfigure.Click +=new EventHandler(menuItemConfigure_Click);
+
+			menuVersionInfo.Index = 0;
+			menuVersionInfo.Text = "バージョン情報(&A)";
+			menuVersionInfo.Click +=new EventHandler(menuVersionInfo_Click);
 
 			menuItemExit.Index = 0;
 			menuItemExit.Text = "終了(&X)";
 			menuItemExit.Click += new System.EventHandler(menuItemExit_Click);
 
-			contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-					menuItemTogglePatternWindow, menuItemToggleStatusWindow, new MenuItem("-"), menuItemConfigure, new MenuItem("-"), menuItemExit});
+			contextMenu.MenuItems.AddRange(new MenuItem[] {
+					menuItemTogglePatternWindow,
+					menuItemToggleStatusWindow,
+					new MenuItem("-"),
+					menuItemConfigure,
+					menuVersionInfo,
+					new MenuItem("-"),
+					menuItemExit}
+				);
 
 			// 通知アイコン
 			Assembly asm = Assembly.GetExecutingAssembly();
@@ -350,6 +362,12 @@ namespace MacFace.FloatApp
 		private void statusWindow_Move(object sender, EventArgs e)
 		{
 			config.StatusWindowLocation = statusWindow.Location;
+		}
+
+		private void menuVersionInfo_Click(object sender, EventArgs e)
+		{
+			InfoWindow window = new InfoWindow();
+			window.Show();
 		}
 	}
 }
