@@ -6,12 +6,12 @@ using System.Runtime.CompilerServices;
 // 属性セットを通して制御されます。アセンブリに関連付けられている 
 // 情報を変更するには、これらの属性値を変更してください。
 //
-[assembly: AssemblyTitle("MacFace Lib")]
-[assembly: AssemblyDescription("MacFace Library")]
+[assembly: AssemblyTitle("MacFace Library")]
+[assembly: AssemblyDescription("MacFace for Windows Fundation Library")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Team MacFace")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Team MacFace")]
+[assembly: AssemblyCopyright("c 2005 Team MacFace, All rights Reserved")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 

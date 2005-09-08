@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Team MacFace")]
 [assembly: AssemblyProduct("MacFace for Windows")]
-[assembly: AssemblyCopyright("Copyright c 2004-2005 Team MacFace, All rights reserved.")]
+[assembly: AssemblyCopyright("c 2005 Team MacFace, All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
