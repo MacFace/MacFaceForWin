@@ -20,6 +20,10 @@ namespace MacFace.FloatApp
 	/// </summary>
 	public class MacFaceApp : ApplicationContext
 	{
+		private const string MES_OPEN_PATTERN_WINDOW = "パターンウインドウを開く(&P)";
+		private const string MES_CLOSE_PATTERN_WINDOW = "パターンウインドウを閉じる(&P)";
+		private const string MES_OPEN_STATUS_WINDOW = "ステータスウインドウを開く(&S)";
+		private const string MES_CLOSE_STATUS_WINDOW = "ステータスウインドウを閉じる(&S)";
 
 		private Configuration config;
 
@@ -31,7 +35,9 @@ namespace MacFace.FloatApp
 		private NotifyIcon notifyIcon;
 		private PatternWindow patternWindow;
 		private StatusWindow statusWindow;
-		
+		private MenuItem menuItemTogglePatternWindow;
+		private MenuItem menuItemToggleStatusWindow;
+
 		[STAThread]
 		public static void Main(string[] args)
 		{
@@ -62,16 +68,16 @@ namespace MacFace.FloatApp
 		{
 			// コンテキストメニュー
 			ContextMenu contextMenu = new System.Windows.Forms.ContextMenu();
-			MenuItem menuItemShowPatternWindow = new System.Windows.Forms.MenuItem();
-			MenuItem menuItemShowStatusWindow = new System.Windows.Forms.MenuItem();
+			menuItemTogglePatternWindow = new System.Windows.Forms.MenuItem();
+			menuItemToggleStatusWindow = new System.Windows.Forms.MenuItem();
 			MenuItem menuItemConfigure = new System.Windows.Forms.MenuItem();
 			MenuItem menuItemExit = new System.Windows.Forms.MenuItem();
 
-			menuItemShowPatternWindow.Text = "パターンウインドウを開く(&P)";
-			menuItemShowPatternWindow.Click +=new EventHandler(menuItemShowPatternWindow_Click);
+			menuItemTogglePatternWindow.Text = MES_OPEN_PATTERN_WINDOW;
+			menuItemTogglePatternWindow.Click +=new EventHandler(menuItemTogglePatternWindow_Click);
 
-			menuItemShowStatusWindow.Text = "ステータスウインドウを開く(&S)";
-			menuItemShowStatusWindow.Click +=new EventHandler(menuItemShowStatusWindow_Click);
+			menuItemToggleStatusWindow.Text = MES_OPEN_STATUS_WINDOW;
+			menuItemToggleStatusWindow.Click +=new EventHandler(menuItemToggleStatusWindow_Click);
 
 			menuItemConfigure.Text = "MacFace の設定(&C)...";
 			menuItemConfigure.Click +=new EventHandler(menuItemConfigure_Click);
@@ -81,7 +87,7 @@ namespace MacFace.FloatApp
 			menuItemExit.Click += new System.EventHandler(menuItemExit_Click);
 
 			contextMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-					menuItemShowPatternWindow, menuItemShowStatusWindow, new MenuItem("-"), menuItemConfigure, new MenuItem("-"), menuItemExit});
+					menuItemTogglePatternWindow, menuItemToggleStatusWindow, new MenuItem("-"), menuItemConfigure, new MenuItem("-"), menuItemExit});
 
 			// 通知アイコン
 			Assembly asm = Assembly.GetExecutingAssembly();
@@ -229,6 +235,8 @@ namespace MacFace.FloatApp
 			LoadFaceDefine(config.FaceDefPath);
 
 			patternWindow.Show();
+
+			menuItemTogglePatternWindow.Text = MES_CLOSE_PATTERN_WINDOW;
 		}
 
 		public void openStatusWindow()
@@ -242,6 +250,8 @@ namespace MacFace.FloatApp
 
 			statusWindow.UpdateGraph();
 			statusWindow.Show();
+
+			menuItemToggleStatusWindow.Text = MES_CLOSE_STATUS_WINDOW;
 		}
 
 		/*
@@ -297,27 +307,37 @@ namespace MacFace.FloatApp
 		{
 			patternWindow.Dispose();
 			patternWindow = null;
+			menuItemTogglePatternWindow.Text = MES_OPEN_PATTERN_WINDOW;
 		}
 
 		private void statusWindow_Closed(object sender, EventArgs e)
 		{
 			statusWindow.Dispose();
 			statusWindow = null;
+			menuItemToggleStatusWindow.Text = MES_OPEN_STATUS_WINDOW;
 		}
 
-		private void menuItemShowPatternWindow_Click(object sender, EventArgs e)
+		private void menuItemTogglePatternWindow_Click(object sender, EventArgs e)
 		{
 			if (patternWindow == null) 
 			{
 				openPatternWindow();
+			} 
+			else 
+			{
+				patternWindow.Close();
 			}
 		}
 
-		private void menuItemShowStatusWindow_Click(object sender, EventArgs e)
+		private void menuItemToggleStatusWindow_Click(object sender, EventArgs e)
 		{
 			if (statusWindow == null) 
 			{
 				openStatusWindow();
+			}
+			else 
+			{
+				statusWindow.Close();
 			}
 		}
 
