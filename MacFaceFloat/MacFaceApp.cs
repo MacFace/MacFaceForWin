@@ -80,7 +80,7 @@ namespace MacFace.FloatApp
 			menuItemToggleStatusWindow.Text = MES_OPEN_STATUS_WINDOW;
 			menuItemToggleStatusWindow.Click +=new EventHandler(menuItemToggleStatusWindow_Click);
 
-			menuItemConfigure.Text = "MacFace ÇÃê›íË(&O)";
+			menuItemConfigure.Text = "MacFace ÇÃê›íË(&O)...";
 			menuItemConfigure.Click +=new EventHandler(menuItemConfigure_Click);
 
 			menuVersionInfo.Index = 0;
