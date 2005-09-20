@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -12,12 +15,13 @@ namespace MacFace.FloatApp
 	/// </summary>
 	public class StatusWindow : System.Windows.Forms.Form
 	{
-		internal System.Windows.Forms.PictureBox memoryGraphPicBox;
-		internal System.Windows.Forms.PictureBox cpuGraphPicBox;
 		/// <summary>
 		/// 必要なデザイナ変数です。
 		/// </summary>
 		private System.ComponentModel.Container components = null;
+
+		internal System.Windows.Forms.PictureBox memoryGraphPicBox;
+		internal System.Windows.Forms.PictureBox cpuGraphPicBox;
 
 		private CPUStatistics cpuStats;
 		private MemoryStatistics memStats;
@@ -35,8 +39,8 @@ namespace MacFace.FloatApp
 			this.cpuStats = cpuStats;
 			this.memStats = memStats;
 
-			cpuGraph = new Bitmap(5*60, 100);
-			memoryGraph = new Bitmap(5*60, 100);
+			cpuGraph = new Bitmap(cpuGraphPicBox.Width, cpuGraphPicBox.Height);
+			memoryGraph = new Bitmap(memoryGraphPicBox.Width, memoryGraphPicBox.Height);
 			cpuGraphPicBox.Image = cpuGraph;
 			memoryGraphPicBox.Image = memoryGraph;
 		}
@@ -69,40 +73,44 @@ namespace MacFace.FloatApp
 		private void drawCPUGraph()
 		{
 			Graphics g = Graphics.FromImage(cpuGraph);
-
 			g.SmoothingMode = SmoothingMode.AntiAlias;
 
-			g.FillRectangle(new SolidBrush(Color.White), 0, 0, 300, 100);
+			int fw = cpuGraph.Width;
+			int fh = cpuGraph.Height;
+			int m = fh / 10;
+
+			g.FillRectangle(new SolidBrush(Color.White), 0, 0, fw, fh);
 			Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1F);
-			for (int y = 0; y < 100; y += 10) 
+			for (int y = 0; y < fh; y += m) 
 			{
-				g.DrawLine(pen, 0, y, 300, y);
+				g.DrawLine(pen, 0, y, fw, y);
 			}
-			g.DrawLine(Pens.Gray, 0, 50, 300, 50);
+			g.DrawLine(Pens.Gray, 0, fh/2, fw, fh/2);
 
 			int count = cpuStats.Count;
 
 			if (count >= 2) 
 			{
+				int bw = fw / 60;
 				Point[] userGraph = new Point[count+2];
 				Point[] sysGraph = new Point[count+2];
 
-				userGraph[count+0].X = 300 - (count-1) * 5;
-				userGraph[count+0].Y = 100 - 0;
-				userGraph[count+1].X = 300 - 0 * 5;
-				userGraph[count+1].Y = 100 - 0;
+				userGraph[count+0].X = fw - (count-1) * bw;
+				userGraph[count+0].Y = fh - 0;
+				userGraph[count+1].X = fw - 0 * bw;
+				userGraph[count+1].Y = fh - 0;
 
-				sysGraph[count+0].X = 300 - (count-1) * 5;
-				sysGraph[count+0].Y = 100 - 0;
-				sysGraph[count+1].X = 300 - 0 * 5;
-				sysGraph[count+1].Y = 100 - 0;
+				sysGraph[count+0].X = fw - (count-1) * bw;
+				sysGraph[count+0].Y = fh - 0;
+				sysGraph[count+1].X = fw - 0 * bw;
+				sysGraph[count+1].Y = fh - 0;
 
 				for (int i = 0; i < count; i++) 
 				{
 					CPUUsage usage = cpuStats[i];
-					userGraph[i].X = sysGraph[i].X = 300 - i * 5;
-					userGraph[i].Y = 100 - usage.Active;
-					sysGraph[i].Y = 100 - usage.System;
+					userGraph[i].X = sysGraph[i].X = fw - i * bw;
+					userGraph[i].Y = fh - usage.Active;
+					sysGraph[i].Y = fh - usage.System;
 				}
 
 				g.FillPolygon(new SolidBrush(Color.FromArgb(50, 0, 0, 255)), userGraph);
@@ -117,15 +125,18 @@ namespace MacFace.FloatApp
 		{
 			Graphics g = Graphics.FromImage(memoryGraph);
 
+			int fw = memoryGraph.Width;
+			int fh = memoryGraph.Height;
+
 			int totalMemory = (int)memStats.TotalVisibleMemorySize * 1024;
-			double rate = 100.0 / memStats.CommitLimit;
+			double rate = (double)fh / memStats.CommitLimit;
 			int border = (int)(totalMemory * rate);
 
-			g.FillRectangle(new SolidBrush(Color.White), 0, 0, 300, 100);
+			g.FillRectangle(new SolidBrush(Color.White), 0, 0, fw, fh);
 			Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1F);
-			for (int y = 100; y > 0; y -= (int)(128*1024*1024 * rate)) 
+			for (int y = fh; y > 0; y -= (int)(128*1024*1024 * rate)) 
 			{
-				g.DrawLine(pen, 0, y, 300, y);
+				g.DrawLine(pen, 0, y, fw, y);
 			}
 
 			g.SmoothingMode = SmoothingMode.None;
@@ -137,14 +148,15 @@ namespace MacFace.FloatApp
 			Brush spaceBrush = new SolidBrush(Color.FromArgb(100, 100, 100, 255));
 
 			int count = memStats.Count;
+			int bw = fw / 60;
 
 			for (int i = 0; i < count; i++) 
 			{
 				MemoryUsage usage = memStats[i];
 
-				int x = 300 - i * 5 - 5;
-				int y = 100;
-				int w = 5;
+				int x = fw - i * bw - bw;
+				int y = fh;
+				int w = bw;
 				int h = 0;
 
 				int kernelTotal = usage.KernelNonPaged + usage.KernelPaged + usage.DriverTotal + usage.SystemCodeTotal;
@@ -169,21 +181,21 @@ namespace MacFace.FloatApp
 				g.FillRectangle(spaceBrush, x, y, w, h);
 
 
-				x = 300 - i * 5 - 5;
-				w = 2;
+				x = fw - i * bw - bw;
+				w = bw/2;
 				h = (int)(usage.Pagein);
-				y = 100 - h;
+				y = fh - h;
 				g.FillRectangle(Brushes.LightGray, x, y, w, h);
 
-				x = 303 - i * 5 - 5;
-				w = 2;
+				x = fw + bw/2 - i * bw - bw;
+				w = bw/2;
 				h = (int)(usage.Pageout);
-				y = 100 - h;
+				y = fh - h;
 				g.FillRectangle(Brushes.Black, x, y, w, h);
 			}
 			Pen borderPen = new Pen(Color.Blue);
 			borderPen.DashStyle = DashStyle.Dash;
-			g.DrawLine(borderPen, 0, 100-border, 300, 100-border);
+			g.DrawLine(borderPen, 0, fh-border, fw, fh-border);
 
 			g.Dispose();
 		}
@@ -202,19 +214,24 @@ namespace MacFace.FloatApp
 			// 
 			// memoryGraphPicBox
 			// 
+			this.memoryGraphPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+				| System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
 			this.memoryGraphPicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.memoryGraphPicBox.Location = new System.Drawing.Point(6, 8);
+			this.memoryGraphPicBox.Location = new System.Drawing.Point(8, 8);
 			this.memoryGraphPicBox.Name = "memoryGraphPicBox";
-			this.memoryGraphPicBox.Size = new System.Drawing.Size(302, 102);
+			this.memoryGraphPicBox.Size = new System.Drawing.Size(296, 104);
 			this.memoryGraphPicBox.TabIndex = 0;
 			this.memoryGraphPicBox.TabStop = false;
 			// 
 			// cpuGraphPicBox
 			// 
+			this.cpuGraphPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
 			this.cpuGraphPicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.cpuGraphPicBox.Location = new System.Drawing.Point(6, 120);
+			this.cpuGraphPicBox.Location = new System.Drawing.Point(8, 120);
 			this.cpuGraphPicBox.Name = "cpuGraphPicBox";
-			this.cpuGraphPicBox.Size = new System.Drawing.Size(302, 102);
+			this.cpuGraphPicBox.Size = new System.Drawing.Size(296, 104);
 			this.cpuGraphPicBox.TabIndex = 1;
 			this.cpuGraphPicBox.TabStop = false;
 			// 
@@ -224,15 +241,26 @@ namespace MacFace.FloatApp
 			this.ClientSize = new System.Drawing.Size(314, 232);
 			this.Controls.Add(this.cpuGraphPicBox);
 			this.Controls.Add(this.memoryGraphPicBox);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
+			this.MinimumSize = new System.Drawing.Size(322, 261);
 			this.Name = "StatusWindow";
 			this.Text = "ステータス";
+			this.SizeChanged += new System.EventHandler(this.StatusWindow_SizeChanged);
 			this.ResumeLayout(false);
 
 		}
 		#endregion
+
+		private void StatusWindow_SizeChanged(object sender, System.EventArgs e)
+		{
+			cpuGraph.Dispose();
+			memoryGraph.Dispose();
+			cpuGraph = new Bitmap(cpuGraphPicBox.Width, cpuGraphPicBox.Height);
+			memoryGraph = new Bitmap(memoryGraphPicBox.Width, memoryGraphPicBox.Height);
+			cpuGraphPicBox.Image = cpuGraph;
+			memoryGraphPicBox.Image = memoryGraph;
+		}
 	}
 }
