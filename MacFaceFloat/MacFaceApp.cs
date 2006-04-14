@@ -214,8 +214,8 @@ namespace MacFace.FloatApp
 			memStats.Update();
 			MemoryUsage memUsage = memStats.Latest;
 
-			if (memUsage.Pagein > 0) pageio_count += memUsage.Pageout;
-			pageio_count -= 50;
+			if (memUsage.Pageout > 80 || memUsage.Pagein > 0) pageio_count += memUsage.Pageout;
+			pageio_count -= 30;
 			if (pageio_count < 0) pageio_count = 0;
 
 			if (patternWindow != null) 
