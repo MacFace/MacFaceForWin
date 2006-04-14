@@ -39,6 +39,11 @@ namespace MacFace
 			get { return available; }
 		}
 
+		public int Used
+		{
+			get { return committed + systemCache + kernelPaged + KernelNonPaged + DriverTotal + SystemCodeTotal; }
+		}
+
 		public int Committed
 		{
 			get { return committed; }

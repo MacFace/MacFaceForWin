@@ -29,6 +29,7 @@ namespace MacFace.FloatApp
 
 		private CPUStatistics cpuStats;
 		private MemoryStatistics memStats;
+		private int pageio_count;
 
 		private System.Windows.Forms.Timer updateTimer;
 
@@ -50,8 +51,9 @@ namespace MacFace.FloatApp
 			config = Configuration.GetInstance();
 			config.Load();
 
-			cpuStats = new CPUStatistics(61);
-			memStats = new MemoryStatistics(61);
+			cpuStats = new CPUStatistics(81);
+			memStats = new MemoryStatistics(81);
+			pageio_count = 0;
 
 			updateTimer = new System.Windows.Forms.Timer();
 			updateTimer.Enabled = false;
@@ -211,18 +213,30 @@ namespace MacFace.FloatApp
 
 			memStats.Update();
 			MemoryUsage memUsage = memStats.Latest;
-			
+
+			if (memUsage.Pagein > 0) pageio_count += memUsage.Pageout;
+			pageio_count -= 50;
+			if (pageio_count < 0) pageio_count = 0;
+
 			if (patternWindow != null) 
 			{
+				int pattern = cpuUsage.Active / 10;
+				pattern += memUsage.Pageout / 20;
+				pattern += memUsage.Pagein / 50;
+				if (pattern > 10) pattern = 10;
+
 				FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
 
-				int pattern = cpuUsage.Active / 10;
-				int avilable = (int)memStats.TotalVisibleMemorySize * 1024 - memUsage.Committed;
-				if (avilable < (10 * 1024 *1024)) 
+				int avilable = (int)memStats.TotalVisibleMemorySize * 1024 - memUsage.Used;
+				if (pageio_count > 100) 
+				{
+					suite = FaceDef.PatternSuite.MemoryInsufficient;
+				}
+				else if (avilable < 0) 
 				{
 					suite = FaceDef.PatternSuite.MemoryInsufficient;
 				} 
-				else if (memUsage.Available < (30 * 1024 *1024)) 
+				else if (avilable < (10 * 1024 *1024)) 
 				{
 					suite = FaceDef.PatternSuite.MemoryDecline;
 				}
