@@ -214,15 +214,16 @@ namespace MacFace.FloatApp
 			memStats.Update();
 			MemoryUsage memUsage = memStats.Latest;
 
-			if (memUsage.Pageout > 80 || memUsage.Pagein > 0) pageio_count += memUsage.Pageout;
-			pageio_count -= 30;
+			pageio_count += memUsage.Pageout;
+			if (pageio_count > 0) pageio_count += memUsage.Pagein;
+			pageio_count--;
 			if (pageio_count < 0) pageio_count = 0;
 
 			if (patternWindow != null) 
 			{
 				int pattern = cpuUsage.Active / 10;
-				pattern += memUsage.Pageout / 20;
-				pattern += memUsage.Pagein / 50;
+				pattern += memUsage.Pageout / 15;
+				pattern += memUsage.Pagein / 30;
 				if (pattern > 10) pattern = 10;
 
 				FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
