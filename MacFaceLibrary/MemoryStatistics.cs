@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace MacFace
 {
 	/// <summary>
-	/// MemoryStatistics ÇÃäTóvÇÃê‡ñæÇ≈Ç∑ÅB
+	/// MemoryStatistics nngY
 	/// </summary>
 	public class MemoryStatistics
 	{
@@ -109,7 +109,7 @@ namespace MacFace
 			get { return totalVisibleMemorySize; }
 		}
 
-		public ulong CommitLimit 
+		public virtual ulong CommitLimit 
 		{
 			get { return (ulong)commitLimitCounter.NextValue(); }
 		}
@@ -123,7 +123,7 @@ namespace MacFace
 			if (count < length) count++;
 		}
 
-		protected MemoryUsage NextValue()
+		protected virtual MemoryUsage NextValue()
 		{
 			int available      = (int)availableCounter.NextValue();
 			int committed      = (int)committedCounter.NextValue();

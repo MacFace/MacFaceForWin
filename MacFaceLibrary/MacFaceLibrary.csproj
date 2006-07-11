@@ -104,6 +104,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CPUStatisticsGetSystemTime.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "CPUUsage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -120,6 +125,11 @@
                 />
                 <File
                     RelPath = "MemoryStatistics.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MemoryStatisticsPSAPI.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

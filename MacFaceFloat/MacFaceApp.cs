@@ -38,6 +38,7 @@ namespace MacFace.FloatApp
 		private StatusWindow statusWindow;
 		private MenuItem menuItemTogglePatternWindow;
 		private MenuItem menuItemToggleStatusWindow;
+		private MacFace.FaceDef curFaceDef;
 
 		[STAThread]
 		public static void Main(string[] args)
@@ -50,10 +51,22 @@ namespace MacFace.FloatApp
 		{
 			config = Configuration.GetInstance();
 			config.Load();
-
+			
 			cpuStats = new CPUStatistics(81);
 			memStats = new MemoryStatistics(81);
 			pageio_count = 0;
+			// XXX: 対処方法がアレすぎなのを何とかする
+			try 
+			{
+				// 試しにカウンタを実行してみる
+				cpuStats.Update();
+			} 
+			catch (System.ComponentModel.Win32Exception e) 
+			{
+				// ダメだったのでパフォーマンスカウンタを使わない方法へ
+				cpuStats = new CPUStatisticsGetSystemTime(61);
+				memStats = new MemoryStatisticsPSAPI(61);
+			}
 
 			updateTimer = new System.Windows.Forms.Timer();
 			updateTimer.Enabled = false;
@@ -123,7 +136,7 @@ namespace MacFace.FloatApp
 
 			if (!result)
 			{
-				string path = Path.Combine(Application.StartupPath, "default.plist");
+				string path = Path.Combine(Application.StartupPath, "default.mcface");
 
 				if (!LoadFaceDefine(path))
 				{
@@ -188,6 +201,8 @@ namespace MacFace.FloatApp
 				
 				return false;
 			}
+			
+			curFaceDef = newFaceDef;
 
 			if (patternWindow != null) 
 			{
@@ -267,7 +282,8 @@ namespace MacFace.FloatApp
 			patternWindow.PatternSize = (float)config.PatternSize / 100;
 			patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
 
-			LoadFaceDefine(config.FaceDefPath);
+			//LoadFaceDefine(config.FaceDefPath);
+			patternWindow.FaceDef = curFaceDef;
 
 			patternWindow.Show();
 

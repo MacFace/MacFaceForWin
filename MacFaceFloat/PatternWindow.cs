@@ -79,6 +79,7 @@ namespace MacFace.FloatApp
 		{
 			Graphics g = this.Graphics;
 			g.Clear(Color.FromArgb(0, 0, 0, 0));
+			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 			curFaceDef.DrawPatternImage(g, curSuite, curPattern, curMarkers, patternSize);
 			base.Refresh();
 		}

@@ -24,6 +24,7 @@ namespace MacFace
 			XmlTextReader reader = new XmlTextReader(path);
 			reader.XmlResolver = null;
 			doc.Load(reader);
+			reader.Close();
 
 			return ReadDictionary(doc.DocumentElement.FirstChild);
 		}

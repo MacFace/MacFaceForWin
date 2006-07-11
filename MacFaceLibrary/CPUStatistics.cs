@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace MacFace
 {
 	/// <summary>
-	/// CPUStats ‚ÌŠT—v‚Ìà–¾‚Å‚·B
+	/// CPUStats nngY
 	/// </summary>
 	public class CPUStatistics
 	{
@@ -70,7 +70,7 @@ namespace MacFace
 			if (count < length) count++;
 		}
 
-		protected CPUUsage NextValue()
+		protected virtual CPUUsage NextValue()
 		{
 			int user   = (int)userCounter.NextValue();
 			int system = (int)systemCounter.NextValue();
