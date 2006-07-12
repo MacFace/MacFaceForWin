@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace MacFace
 {
 	/// <summary>
-	/// MemoryStatistics nngY
+	/// MemoryStatistics
 	/// </summary>
 	public class MemoryStatistics
 	{

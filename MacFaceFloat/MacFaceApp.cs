@@ -43,6 +43,7 @@ namespace MacFace.FloatApp
 		[STAThread]
 		public static void Main(string[] args)
 		{
+			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 			MacFaceApp app = new MacFaceApp();
 			app.StartApplication();
 		}
@@ -399,6 +400,56 @@ namespace MacFace.FloatApp
 		{
 			InfoWindow window = new InfoWindow();
 			window.Show();
+		}
+
+		/// <summary>
+		/// ハンドルされていない例外をキャッチして、スタックトレースを保存してデバッグに役立てる
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+		{
+			Exception ex = e.ExceptionObject as Exception; // Exception 以外が飛んでくるのは超特殊な場合のみ。
+
+			if (MessageBox.Show(
+				String.Format("アプリケーションの実行中に予期しない重大なエラーが発生しました。\n\nエラー内容:\n{0}\n\nエラー情報をファイルに保存し、報告していただくことで不具合の解決に役立つ可能性があります。エラー情報をファイルに保存しますか?",
+				((Exception)(e.ExceptionObject)).Message)
+				, Application.ProductName
+				, MessageBoxButtons.YesNo
+				, MessageBoxIcon.Error
+				, MessageBoxDefaultButton.Button1
+				) == DialogResult.Yes)
+			{
+				using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+				{
+					saveFileDialog.DefaultExt = "txt";
+					saveFileDialog.Filter = "テキストファイル|*.txt";
+					saveFileDialog.FileName = String.Format("macface4win_stacktrace_{0:yyyyMMdd_HHmmss}.txt", DateTime.Now);
+					if (saveFileDialog.ShowDialog() == DialogResult.OK)
+					{
+						using (Stream stream = saveFileDialog.OpenFile())
+						using (StreamWriter sw = new StreamWriter(stream))
+						{
+							sw.WriteLine("発生時刻: {0}", DateTime.Now);
+							sw.WriteLine();
+							sw.WriteLine("MacFace for Windows:");
+							sw.WriteLine("========================");
+							sw.WriteLine("バージョン: {0}", Application.ProductVersion);
+							sw.WriteLine("アセンブリ: {0}", Assembly.GetExecutingAssembly().FullName);
+							sw.WriteLine();
+							sw.WriteLine("環境情報:");
+							sw.WriteLine("========================");
+							sw.WriteLine("オペレーティングシステム: {0}", Environment.OSVersion);
+							sw.WriteLine("Microsoft .NET Framework: {0}", Environment.Version);
+							sw.WriteLine();
+							sw.WriteLine("ハンドルされていない例外: ");
+							sw.WriteLine("=========================");
+							sw.WriteLine(ex.ToString());
+						}
+					}
+				}
+				
+			}
 		}
 	}
 }
