@@ -48,25 +48,74 @@ namespace MacFace.FloatApp
 			app.StartApplication();
 		}
 
+		/// <summary>
+		/// Windows 2000 はパフォーマンスモニタがダメならそれぞれAPIでがんばる
+		/// </summary>
+		public void SetupStatisticsForWindows2000()
+		{
+			cpuStats = new CPUStatistics(81);
+			memStats = new MemoryStatistics(81);
+
+			try 
+			{
+				// 試しにカウンタを実行してみる
+				cpuStats.Update();
+				memStats.Update();
+			} 
+			catch (System.ComponentModel.Win32Exception) 
+			{
+				// ダメだったのでパフォーマンスカウンタを使わない方法へ
+				cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
+				memStats = new MemoryStatisticsGlobalMemoryStatusEx(61);
+			}
+			catch (System.InvalidOperationException) 
+			{
+				// ダメだったのでパフォーマンスカウンタを使わない方法へ
+				cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
+				memStats = new MemoryStatisticsGlobalMemoryStatusEx(61);
+			}
+		}
+
+		public void SetupStatisticsForWindowsXP()
+		{
+			cpuStats = new CPUStatistics(81);
+			memStats = new MemoryStatistics(81);
+			try 
+			{
+				// 試しにカウンタを実行してみる
+				cpuStats.Update();
+				memStats.Update();
+			} 
+			catch (System.ComponentModel.Win32Exception) 
+			{
+				// ダメだったのでパフォーマンスカウンタを使わない方法へ
+				cpuStats = new CPUStatisticsGetSystemTime(61);
+				memStats = new MemoryStatisticsPSAPI(61);
+			}
+			catch (System.InvalidOperationException) 
+			{
+				// ダメだったのでパフォーマンスカウンタを使わない方法へ
+				cpuStats = new CPUStatisticsGetSystemTime(61);
+				memStats = new MemoryStatisticsPSAPI(61);
+			}
+		}
+
 		public MacFaceApp()
 		{
 			config = Configuration.GetInstance();
 			config.Load();
 			
-			cpuStats = new CPUStatistics(81);
-			memStats = new MemoryStatistics(81);
 			pageio_count = 0;
-			// XXX: 対処方法がアレすぎなのを何とかする
-			try 
+
+			// OS ごとに取得する方法を変更する
+			if (Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor == 0)
 			{
-				// 試しにカウンタを実行してみる
-				cpuStats.Update();
-			} 
-			catch (System.ComponentModel.Win32Exception e) 
+				SetupStatisticsForWindows2000();
+			}
+			else
 			{
-				// ダメだったのでパフォーマンスカウンタを使わない方法へ
-				cpuStats = new CPUStatisticsGetSystemTime(61);
-				memStats = new MemoryStatisticsPSAPI(61);
+				// XP / 2003 / Vista
+				SetupStatisticsForWindowsXP();
 			}
 
 			updateTimer = new System.Windows.Forms.Timer();

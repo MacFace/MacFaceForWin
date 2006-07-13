@@ -109,6 +109,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CPUStatisticsNtQuerySystemInformation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "CPUUsage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -125,6 +130,11 @@
                 />
                 <File
                     RelPath = "MemoryStatistics.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "MemoryStatisticsGlobalMemoryStatusEx.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

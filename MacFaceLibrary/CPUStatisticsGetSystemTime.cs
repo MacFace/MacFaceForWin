@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace MacFace
 {
 	/// <summary>
-	/// CPUStatisticsGetSystemTime nngY
+	/// CPUStatisticsGetSystemTime
 	/// </summary>
 	public class CPUStatisticsGetSystemTime : CPUStatistics
 	{
