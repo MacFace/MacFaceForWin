@@ -207,6 +207,7 @@ namespace MacFace.FloatApp
 
 			updateTimer.Start();
 
+			Microsoft.Win32.SystemEvents.SessionEnded += new Microsoft.Win32.SessionEndedEventHandler(SystemEvents_SessionEnded);
 			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
 			Application.Run(this);
 		}
@@ -499,6 +500,16 @@ namespace MacFace.FloatApp
 				}
 				
 			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void SystemEvents_SessionEnded(object sender, Microsoft.Win32.SessionEndedEventArgs e)
+		{
+			config.Save();
 		}
 	}
 }
