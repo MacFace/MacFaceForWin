@@ -4,6 +4,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Reflection;
+using System.IO;
 
 namespace MacFace.FloatApp
 {
@@ -30,7 +31,7 @@ namespace MacFace.FloatApp
 
 			Assembly asm = Assembly.GetEntryAssembly();
 			lblAppName.Text = Application.ProductName;
-			lblAppVersion.Text = Application.ProductVersion;
+			lblAppVersion.Text = ((ApplicationVersionStringAttribute)GetAssemblyAttribute(asm, typeof(ApplicationVersionStringAttribute))).Version;
 			lblAppCopyright.Text = ((AssemblyCopyrightAttribute)GetAssemblyAttribute(asm, typeof(AssemblyCopyrightAttribute))).Copyright;
 		}
 

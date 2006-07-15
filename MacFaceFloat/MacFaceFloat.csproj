@@ -113,6 +113,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "ApplicationVersionStringAttribute.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AppSettings.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
