@@ -139,6 +139,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MemoryStatisticsNtQuerySystemInformation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MemoryStatisticsPSAPI.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

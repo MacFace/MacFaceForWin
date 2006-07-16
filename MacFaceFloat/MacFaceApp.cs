@@ -53,51 +53,57 @@ namespace MacFace.FloatApp
 		/// </summary>
 		public void SetupStatisticsForWindows2000()
 		{
-			cpuStats = new CPUStatistics(81);
-			memStats = new MemoryStatistics(81);
+//			cpuStats = new CPUStatistics(81);
+//			memStats = new MemoryStatistics(81);
+//
+//			try 
+//			{
+//				// 試しにカウンタを実行してみる
+//				cpuStats.Update();
+//				memStats.Update();
+//			} 
+//			catch (System.ComponentModel.Win32Exception) 
+//			{
+//				// ダメだったのでパフォーマンスカウンタを使わない方法へ
+//				cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
+//				memStats = new MemoryStatisticsGlobalMemoryStatusEx(61);
+//			}
+//			catch (System.InvalidOperationException) 
+//			{
+//				// ダメだったのでパフォーマンスカウンタを使わない方法へ
+//				cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
+//				memStats = new MemoryStatisticsGlobalMemoryStatusEx(61);
+//			}
 
-			try 
-			{
-				// 試しにカウンタを実行してみる
-				cpuStats.Update();
-				memStats.Update();
-			} 
-			catch (System.ComponentModel.Win32Exception) 
-			{
-				// ダメだったのでパフォーマンスカウンタを使わない方法へ
-				cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
-				memStats = new MemoryStatisticsGlobalMemoryStatusEx(61);
-			}
-			catch (System.InvalidOperationException) 
-			{
-				// ダメだったのでパフォーマンスカウンタを使わない方法へ
-				cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
-				memStats = new MemoryStatisticsGlobalMemoryStatusEx(61);
-			}
+			cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
+			memStats = new MemoryStatisticsNtQuerySystemInformation(61);
 		}
 
 		public void SetupStatisticsForWindowsXP()
 		{
-			cpuStats = new CPUStatistics(81);
-			memStats = new MemoryStatistics(81);
-			try 
-			{
-				// 試しにカウンタを実行してみる
-				cpuStats.Update();
-				memStats.Update();
-			} 
-			catch (System.ComponentModel.Win32Exception) 
-			{
-				// ダメだったのでパフォーマンスカウンタを使わない方法へ
-				cpuStats = new CPUStatisticsGetSystemTime(61);
-				memStats = new MemoryStatisticsPSAPI(61);
-			}
-			catch (System.InvalidOperationException) 
-			{
-				// ダメだったのでパフォーマンスカウンタを使わない方法へ
-				cpuStats = new CPUStatisticsGetSystemTime(61);
-				memStats = new MemoryStatisticsPSAPI(61);
-			}
+//			cpuStats = new CPUStatistics(81);
+//			memStats = new MemoryStatistics(81);
+//			try 
+//			{
+//				// 試しにカウンタを実行してみる
+//				cpuStats.Update();
+//				memStats.Update();
+//			} 
+//			catch (System.ComponentModel.Win32Exception) 
+//			{
+//				// ダメだったのでパフォーマンスカウンタを使わない方法へ
+//				cpuStats = new CPUStatisticsGetSystemTime(61);
+//				memStats = new MemoryStatisticsNtQuerySystemInformation(61);
+//			}
+//			catch (System.InvalidOperationException) 
+//			{
+//				// ダメだったのでパフォーマンスカウンタを使わない方法へ
+//				cpuStats = new CPUStatisticsGetSystemTime(61);
+//				memStats = new MemoryStatisticsPSAPI(61);
+//			}
+
+			cpuStats = new CPUStatisticsGetSystemTime(61);
+			memStats = new MemoryStatisticsNtQuerySystemInformation(61);
 		}
 
 		public MacFaceApp()
@@ -480,11 +486,13 @@ namespace MacFace.FloatApp
 						using (Stream stream = saveFileDialog.OpenFile())
 						using (StreamWriter sw = new StreamWriter(stream))
 						{
+							Assembly asm = Assembly.GetExecutingAssembly();
+
 							sw.WriteLine("発生時刻: {0}", DateTime.Now);
 							sw.WriteLine();
 							sw.WriteLine("MacFace for Windows:");
 							sw.WriteLine("========================");
-							sw.WriteLine("バージョン: {0}", Application.ProductVersion);
+							sw.WriteLine("バージョン: {0}", ((ApplicationVersionStringAttribute)(asm.GetCustomAttributes(typeof(ApplicationVersionStringAttribute), true))[0]).Version);
 							sw.WriteLine("アセンブリ: {0}", Assembly.GetExecutingAssembly().FullName);
 							sw.WriteLine();
 							sw.WriteLine("環境情報:");
