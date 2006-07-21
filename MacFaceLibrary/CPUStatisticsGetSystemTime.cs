@@ -30,16 +30,18 @@ namespace MacFace
 			Int32 idleTimeDiff = (Int32)(idleTime - idleTimePrev);
 			Int32 userTimeDiff = (Int32)(userTime - userTimePrev);
 			Int32 kernelTimeDiff = (Int32)(kernelTime - kernelTimePrev);
-			Int32 systemTimeDiff = (Int32)(userTimeDiff + kernelTimeDiff);
+
+			Int32 total = userTimeDiff + kernelTimeDiff;
+			Int32 sys   = kernelTimeDiff - idleTimeDiff;
 
 			idleTimePrev = idleTime;
 			kernelTimePrev = kernelTime;
 			userTimePrev = userTime;
 
 			return new CPUUsage(
-				(Int32)(100 - ((Double)idleTimeDiff / userTimePrev) * 100),
-				(Int32)(100 - ((Double)idleTimeDiff / kernelTimePrev) * 100),
-				(Int32)(((Double)idleTimeDiff / (systemTimeDiff)) * 100)
+				(userTimeDiff * 100) / total,
+				(sys * 100) / total,
+				(idleTimeDiff * 100) / total
 			);
 		}
 
