@@ -91,7 +91,7 @@ namespace MacFace.FloatApp
 
 			if (count >= 2) 
 			{
-				int bw = fw / 60;
+				int bw = (fw + (60-1)) / 60;
 				Point[] userGraph = new Point[count+2];
 				Point[] sysGraph = new Point[count+2];
 
@@ -148,7 +148,7 @@ namespace MacFace.FloatApp
 			Brush spaceBrush = new SolidBrush(Color.FromArgb(100, 100, 100, 255));
 
 			int count = memStats.Count;
-			int bw = fw / 60;
+			int bw = (fw + (60-1)) / 60;
 
 			for (int i = 0; i < count; i++) 
 			{
@@ -218,9 +218,9 @@ namespace MacFace.FloatApp
 				| System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
 			this.memoryGraphPicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.memoryGraphPicBox.Location = new System.Drawing.Point(8, 8);
+			this.memoryGraphPicBox.Location = new System.Drawing.Point(7, 8);
 			this.memoryGraphPicBox.Name = "memoryGraphPicBox";
-			this.memoryGraphPicBox.Size = new System.Drawing.Size(296, 104);
+			this.memoryGraphPicBox.Size = new System.Drawing.Size(300, 100);
 			this.memoryGraphPicBox.TabIndex = 0;
 			this.memoryGraphPicBox.TabStop = false;
 			// 
@@ -229,22 +229,22 @@ namespace MacFace.FloatApp
 			this.cpuGraphPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
 				| System.Windows.Forms.AnchorStyles.Right)));
 			this.cpuGraphPicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.cpuGraphPicBox.Location = new System.Drawing.Point(8, 120);
+			this.cpuGraphPicBox.Location = new System.Drawing.Point(7, 116);
 			this.cpuGraphPicBox.Name = "cpuGraphPicBox";
-			this.cpuGraphPicBox.Size = new System.Drawing.Size(296, 104);
+			this.cpuGraphPicBox.Size = new System.Drawing.Size(300, 100);
 			this.cpuGraphPicBox.TabIndex = 1;
 			this.cpuGraphPicBox.TabStop = false;
 			// 
 			// StatusWindow
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
-			this.ClientSize = new System.Drawing.Size(314, 232);
+			this.ClientSize = new System.Drawing.Size(314, 223);
 			this.Controls.Add(this.cpuGraphPicBox);
 			this.Controls.Add(this.memoryGraphPicBox);
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(322, 261);
+			this.MinimumSize = new System.Drawing.Size(322, 250);
 			this.Name = "StatusWindow";
 			this.Text = "ステータス";
 			this.SizeChanged += new System.EventHandler(this.StatusWindow_SizeChanged);
