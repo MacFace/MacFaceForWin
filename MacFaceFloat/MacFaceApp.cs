@@ -213,7 +213,7 @@ namespace MacFace.FloatApp
 
 			updateTimer.Start();
 
-			Microsoft.Win32.SystemEvents.SessionEnded += new Microsoft.Win32.SessionEndedEventHandler(SystemEvents_SessionEnded);
+			Microsoft.Win32.SystemEvents.SessionEnding += new Microsoft.Win32.SessionEndingEventHandler(SystemEvents_SessionEnding);
 			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
 			Application.Run(this);
 		}
@@ -301,11 +301,11 @@ namespace MacFace.FloatApp
 				FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
 
 				int avilable = (int)memStats.TotalVisibleMemorySize * 1024 - memUsage.Used;
-				if (pageio_count > 100) 
+				/*if (pageio_count > 100) 
 				{
 					suite = FaceDef.PatternSuite.MemoryInsufficient;
 				}
-				else if (avilable < 0) 
+				else */if (avilable < 0) 
 				{
 					suite = FaceDef.PatternSuite.MemoryInsufficient;
 				} 
@@ -515,7 +515,7 @@ namespace MacFace.FloatApp
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void SystemEvents_SessionEnded(object sender, Microsoft.Win32.SessionEndedEventArgs e)
+		private void SystemEvents_SessionEnding(object sender, Microsoft.Win32.SessionEndingEventArgs e)
 		{
 			config.Save();
 		}
