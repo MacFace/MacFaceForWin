@@ -300,7 +300,7 @@ namespace MacFace.FloatApp
 
 				FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
 
-				int avilable = (int)memStats.TotalVisibleMemorySize * 1024 - memUsage.Used;
+				long avilable = (long)memStats.TotalVisibleMemorySize * 1024 - memUsage.Used;
 				/*if (pageio_count > 100) 
 				{
 					suite = FaceDef.PatternSuite.MemoryInsufficient;
