@@ -83,5 +83,17 @@ namespace MacFace.FloatApp
 			curFaceDef.DrawPatternImage(g, curSuite, curPattern, curMarkers, patternSize);
 			base.Refresh();
 		}
+
+		protected override CreateParams	CreateParams
+		{
+			get
+			{
+				// WS_EX_TOOLWINDOWを指定することでタスクスイッチ時にリストされなくなる
+				CreateParams cp = base.CreateParams;
+				cp.ExStyle |= 0x000080; /* WS_EX_TOOLWINDOW */
+				return cp;
+			}
+		}
+
 	}
 }

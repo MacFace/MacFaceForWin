@@ -159,7 +159,7 @@ namespace MacFace.FloatApp
 				int w = bw;
 				int h = 0;
 
-				int kernelTotal = usage.KernelNonPaged + usage.KernelPaged + usage.DriverTotal + usage.SystemCodeTotal;
+				long kernelTotal = usage.KernelNonPaged + usage.KernelPaged + usage.DriverTotal + usage.SystemCodeTotal;
 				h = (int)((kernelTotal) * rate);
 				y -= h;
 				g.FillRectangle(kernelBrush, x, y, w, h);
