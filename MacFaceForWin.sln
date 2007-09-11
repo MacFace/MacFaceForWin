@@ -1,7 +1,6 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacFaceLibrary", "MacFaceLibrary\MacFaceLibrary.csproj", "{23267F41-38FE-41F6-BF08-2D8940A1E024}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacFaceFloat", "MacFaceFloat\MacFaceFloat.csproj", "{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -9,30 +8,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacFaceFloat", "MacFaceFloa
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacFaceTest", "MacFaceTest\MacFaceTest.csproj", "{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Release = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Debug.ActiveCfg = Debug|.NET
-		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Debug.Build.0 = Debug|.NET
-		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Release.ActiveCfg = Release|.NET
-		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Release.Build.0 = Release|.NET
-		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Debug.ActiveCfg = Debug|.NET
-		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Debug.Build.0 = Debug|.NET
-		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Release.ActiveCfg = Release|.NET
-		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Release.Build.0 = Release|.NET
-		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Debug.ActiveCfg = Debug|.NET
-		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Debug.Build.0 = Debug|.NET
-		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Release.ActiveCfg = Release|.NET
-		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Release.Build.0 = Release|.NET
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23267F41-38FE-41F6-BF08-2D8940A1E024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40CD5CB5-835A-4DDD-928D-AEFE64EFAA8E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
