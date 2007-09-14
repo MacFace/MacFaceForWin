@@ -310,7 +310,8 @@ namespace MacFace.FloatApp
 					}
 				}
 			}
-		}
+            listViewFaces.Focus();
+        }
 
 		private void AddPreviewListItem(string path)
 		{
@@ -340,6 +341,11 @@ namespace MacFace.FloatApp
 				item.SubItems.Add(
 					(faceDef.WebSite != null ?
 					faceDef.WebSite.ToString() : "")); // 3: ウェブサイト
+
+                if (_config.FaceDefPath == path)
+                {
+                    item.Selected = true;
+                }
 			} 
 			catch (Exception ex) 
 			{
