@@ -142,7 +142,8 @@ namespace MacFace.FloatApp
 			menuItemTogglePatternWindow = new System.Windows.Forms.MenuItem();
 			menuItemToggleStatusWindow = new System.Windows.Forms.MenuItem();
 			MenuItem menuItemConfigure = new System.Windows.Forms.MenuItem();
-			MenuItem menuItemExit = new System.Windows.Forms.MenuItem();
+            MenuItem menuItemPatternList = new System.Windows.Forms.MenuItem();
+            MenuItem menuItemExit = new System.Windows.Forms.MenuItem();
 			MenuItem menuVersionInfo = new System.Windows.Forms.MenuItem();
 
 			menuItemTogglePatternWindow.Text = MES_OPEN_PATTERN_WINDOW;
@@ -153,6 +154,9 @@ namespace MacFace.FloatApp
 
 			menuItemConfigure.Text = "MacFace の設定(&O)...";
 			menuItemConfigure.Click +=new EventHandler(menuItemConfigure_Click);
+
+            menuItemPatternList.Text = "パターン一覧をデスクトップにダンプ";
+            menuItemPatternList.Click += new EventHandler(menuItemPatternList_Click);
 
 			menuVersionInfo.Index = 0;
 			menuVersionInfo.Text = "バージョン情報(&A)";
@@ -167,6 +171,7 @@ namespace MacFace.FloatApp
 					menuItemToggleStatusWindow,
 					new MenuItem("-"),
 					menuItemConfigure,
+                    menuItemPatternList,
 					menuVersionInfo,
 					new MenuItem("-"),
 					menuItemExit}
@@ -286,9 +291,9 @@ namespace MacFace.FloatApp
 			memStats.Update();
 			MemoryUsage memUsage = memStats.Latest;
 
-			pageio_count += memUsage.Pageout;
-			if (pageio_count > 0) pageio_count += memUsage.Pagein;
-			pageio_count--;
+			pageio_count += memUsage.Pageout * (memUsage.Pagein + 1);
+            //if (pageio_count > 0) pageio_count += memUsage.Pagein;
+			pageio_count -= pageio_count / 50 + 1;
 			if (pageio_count < 0) pageio_count = 0;
 
 			if (patternWindow != null) 
@@ -301,15 +306,11 @@ namespace MacFace.FloatApp
 				FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
 
 				long avilable = (long)memStats.TotalVisibleMemorySize * 1024 - memUsage.Used;
-				/*if (pageio_count > 100) 
+                if (pageio_count > 100) 
 				{
 					suite = FaceDef.PatternSuite.MemoryInsufficient;
 				}
-				else */if (avilable < 0) 
-				{
-					suite = FaceDef.PatternSuite.MemoryInsufficient;
-				} 
-				else if (avilable < (10 * 1024 *1024)) 
+                else if (avilable < 0) 
 				{
 					suite = FaceDef.PatternSuite.MemoryDecline;
 				}
@@ -373,6 +374,29 @@ namespace MacFace.FloatApp
 			updateTimer.Stop();
 			ExitThread();
 		}
+
+        private void menuItemPatternList_Click(object sender, EventArgs e)
+        {
+            MacFace.FaceDef faceDef = new MacFace.FaceDef(config.FaceDefPath);
+            Bitmap image = new Bitmap(128*11, 128*3);
+            Graphics g = Graphics.FromImage(image);
+            Image patternImg;
+
+
+            for (int suite = 0; suite <= 2; suite++)
+            {
+                for (int no = 0; no <= 10; no++)
+                {
+                    patternImg = faceDef.PatternImage((MacFace.FaceDef.PatternSuite)suite, no, 0);
+                    g.DrawImage(patternImg, 128 * no, 128 * suite);
+                }
+            }
+            
+            g.Dispose();
+
+            image.Save(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\facedump.png",
+                        System.Drawing.Imaging.ImageFormat.Png);
+        }
 
 		private void menuItemConfigure_Click(object sender, EventArgs e)
 		{
