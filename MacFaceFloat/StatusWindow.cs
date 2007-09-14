@@ -129,12 +129,12 @@ namespace MacFace.FloatApp
 			int fh = memoryGraph.Height;
 
 			int totalMemory = (int)memStats.TotalVisibleMemorySize * 1024;
-			double rate = (double)fh / memStats.CommitLimit;
+			double rate = (double)fh / (totalMemory * 1.5);
 			int border = (int)(totalMemory * rate);
 
 			g.FillRectangle(new SolidBrush(Color.White), 0, 0, fw, fh);
 			Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1F);
-			for (int y = fh; y > 0; y -= (int)(128*1024*1024 * rate)) 
+			for (int y = fh; y > 0; y -= (int)(256*1024*1024 * rate)) 
 			{
 				g.DrawLine(pen, 0, y, fw, y);
 			}
