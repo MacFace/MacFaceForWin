@@ -74,10 +74,19 @@ namespace MacFace
 				case "string":
 					value = node.InnerText;
 					break;
-				case "integer":
-					value = int.Parse(node.InnerText);
-					break;
-				default:
+                case "integer":
+                    value = Int64.Parse(node.InnerText);
+                    break;
+                case "real":
+                    value = Double.Parse(node.InnerText);
+                    break;
+                case "true":
+                    value = true;
+                    break;
+                case "false":
+                    value = false;
+                    break;
+                default:
 					value = node;
 					break;
 			}
