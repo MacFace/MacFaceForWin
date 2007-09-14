@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Team MacFace")]
 [assembly: AssemblyProduct("MacFace for Windows")]
-[assembly: AssemblyCopyright("Copyright © 2005-2006 Team MacFace, All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2005-2007 Team MacFace, All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
 
@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 // 下にあるように、'*' を使って、すべての値を指定するか、
 // ビルドおよびリビジョン番号を既定値にすることができます。
 
-[assembly: MacFace.FloatApp.ApplicationVersionString("2006-09-20 (アルファ版)")]
+[assembly: MacFace.FloatApp.ApplicationVersionString("2007-09-14 (アルファ版)")]
 [assembly: AssemblyInformationalVersion("1.0.0.0")]
 [assembly: AssemblyVersion("1.0.*")]
 
