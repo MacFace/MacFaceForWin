@@ -118,7 +118,7 @@ namespace MacFace
 			_markers = new Part[markerDefList.Count];
 			for (int i = 0; i < markerDefList.Count; i++)
 			{
-				_markers[i] = _parts[(int)markerDefList[i]];
+				_markers[i] = _parts[(int)((long)markerDefList[i])];
 			}
 
 			// タイトルパターンの読み込み
@@ -137,8 +137,8 @@ namespace MacFace
 			string imgPath = System.IO.Path.Combine(path, filename);
 			Image img = Image.FromFile(imgPath);
 
-			int x = (int)partDef[KeyPartPosX];
-			int y = ImageHeight - (int)partDef[KeyPartPosY] - img.Height;
+			int x = (int)((long)partDef[KeyPartPosX]);
+			int y = ImageHeight - (int)((long)partDef[KeyPartPosY]) - img.Height;
 
 			return new Part(imgPath, img, x, y);
 		}
@@ -148,7 +148,7 @@ namespace MacFace
 			Part[] pattern = new Part[patternDef.Count];
 			for (int i = 0; i < patternDef.Count; i++) 
 			{
-				pattern[i] = _parts[(int)patternDef[i]];
+				pattern[i] = _parts[(int)((long)patternDef[i])];
 			}
 			return pattern;
 		}
