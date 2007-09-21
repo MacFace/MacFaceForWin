@@ -25,6 +25,28 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <ManifestCertificateThumbprint>E46F330F309E5BC6AACA4EF63E14D6767E580ABC</ManifestCertificateThumbprint>
+    <ManifestKeyFile>MacFaceFloat_TemporaryKey.pfx</ManifestKeyFile>
+    <GenerateManifests>true</GenerateManifests>
+    <SignManifests>true</SignManifests>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>C:\Users\Tomoyo\Documents\Work\SvnWork\MacFaceForWin\Publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://www.misuzilla.org/~mayuki/dist/macface/clickonce/</InstallUrl>
+    <SupportUrl>http://www.fprog.org/projects/MacFaceForWin/</SupportUrl>
+    <ProductName>MacFace for Windows</ProductName>
+    <PublisherName>MacFace</PublisherName>
+    <WebPage>index.html</WebPage>
+    <ApplicationVersion>1.0.0.96</ApplicationVersion>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -145,6 +167,62 @@
       <DependentUpon>StatusWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="default.mcface\faceDef.plist" />
+    <Content Include="kikiki-rin.mcface\faceDef.plist" />
+    <None Include="MacFaceFloat_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="default.mcface\brow-down.tiff" />
+    <Content Include="default.mcface\brow-normal.tiff" />
+    <Content Include="default.mcface\brow-up.tiff" />
+    <Content Include="default.mcface\eye-arrow.tiff" />
+    <Content Include="default.mcface\eye-circle.tiff" />
+    <Content Include="default.mcface\eye-close.tiff" />
+    <Content Include="default.mcface\eye-line.tiff" />
+    <Content Include="default.mcface\eye-normal.tiff" />
+    <Content Include="default.mcface\eye-smile.tiff" />
+    <Content Include="default.mcface\eye-spiral.tiff" />
+    <Content Include="default.mcface\face-base.tiff" />
+    <Content Include="default.mcface\mouth-circle.tiff" />
+    <Content Include="default.mcface\mouth-close.tiff" />
+    <Content Include="default.mcface\mouth-laugh.tiff" />
+    <Content Include="default.mcface\mouth-open.tiff" />
+    <Content Include="default.mcface\mouth-smile.tiff" />
+    <Content Include="default.mcface\note.tiff" />
+    <Content Include="default.mcface\shock.tiff" />
+    <Content Include="default.mcface\sweat.tiff" />
+    <Content Include="kikiki-rin.mcface\angery-mark.tiff" />
+    <Content Include="kikiki-rin.mcface\brow-hill.tiff" />
+    <Content Include="kikiki-rin.mcface\brow-normal.tiff" />
+    <Content Include="kikiki-rin.mcface\brow-up.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-angery.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-arrow.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-circle.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-close.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-close2.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-line.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-normal.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-smile.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-spiral.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-thin.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-vbar.tiff" />
+    <Content Include="kikiki-rin.mcface\face-base.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-circle.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-close.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-laugh.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-open.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-smile.tiff" />
+    <Content Include="kikiki-rin.mcface\note.tiff" />
+    <Content Include="kikiki-rin.mcface\shock.tiff" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
