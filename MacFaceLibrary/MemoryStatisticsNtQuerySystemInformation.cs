@@ -39,9 +39,9 @@ namespace MacFace
 				(UInt32)sysInfoLen,
 				out retLen);
 
-			Int32 pageSize = 4096;
+			UInt32 pageSize = 4096;
 			
-			_commitLimit = (UInt32)(sysPerfInfo.TotalCommitLimit * pageSize);
+			_commitLimit = (UInt64)(sysPerfInfo.TotalCommitLimit * pageSize);
 			
 			Int32 pageIn = (Int32)((sysPerfInfo.PagesRead - _prevPagesRead)/ ((TimeSpan)(DateTime.Now - _prevCollectTime)).TotalSeconds);
 			Int32 pageOut = (Int32)((sysPerfInfo.PagefilePagesWritten - _prevPagesWritten)/ ((TimeSpan)(DateTime.Now - _prevCollectTime)).TotalSeconds);
@@ -50,15 +50,15 @@ namespace MacFace
 			_prevPagesWritten = sysPerfInfo.PagefilePagesWritten;
 
 			return new MemoryUsage(
-				(Int32)sysPerfInfo.AvailablePages * pageSize,
-				(Int32)sysPerfInfo.TotalCommittedPages * pageSize,
+				(UInt64)sysPerfInfo.AvailablePages * pageSize,
+				(UInt64)sysPerfInfo.TotalCommittedPages * pageSize,
 				pageIn,
 				pageOut,
-				(Int32)sysPerfInfo.MmSystemCachePage * pageSize,
-				(Int32)sysPerfInfo.PagedPoolUsage * pageSize,
-				(Int32)sysPerfInfo.NonPagedPoolUsage * pageSize,
-				(Int32)sysPerfInfo.SystemDriverPage * pageSize,
-				(Int32)sysPerfInfo.SystemCodePage * pageSize);
+				(UInt64)sysPerfInfo.MmSystemCachePage * pageSize,
+				(UInt64)sysPerfInfo.PagedPoolUsage * pageSize,
+				(UInt64)sysPerfInfo.NonPagedPoolUsage * pageSize,
+				(UInt64)sysPerfInfo.SystemDriverPage * pageSize,
+				(UInt64)sysPerfInfo.SystemCodePage * pageSize);
 		}
 
 		private class Unmanaged

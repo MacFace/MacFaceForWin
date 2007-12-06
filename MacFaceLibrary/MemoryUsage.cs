@@ -10,18 +10,18 @@ namespace MacFace
 	/// </summary>
 	public class MemoryUsage
 	{
-		private int available;
-		private int committed;
+		private UInt64 available;
+        private UInt64 committed;
 		private int pagein;
 		private int pageout;
-		private int systemCache;
-		private int kernelPaged;
-		private int kernelNonPaged;
-		private int driverTotal;
-		private int systemCodeTotal;
+        private UInt64 systemCache;
+        private UInt64 kernelPaged;
+        private UInt64 kernelNonPaged;
+        private UInt64 driverTotal;
+        private UInt64 systemCodeTotal;
 
-		public MemoryUsage(int available, int committed, int pagein, int pageout,
-			int systemCache, int kernelPaged, int kernelNonPaged, int driverTotal, int systemCodeTotal)
+        public MemoryUsage(UInt64 available, UInt64 committed, int pagein, int pageout,
+            UInt64 systemCache, UInt64 kernelPaged, UInt64 kernelNonPaged, UInt64 driverTotal, UInt64 systemCodeTotal)
 		{
 			this.available = available;
 			this.committed = committed;
@@ -34,17 +34,17 @@ namespace MacFace
 			this.systemCodeTotal = systemCodeTotal;
 		}
 
-		public int Available
+		public UInt64 Available
 		{
 			get { return available; }
 		}
 
-		public int Used
+		public UInt64 Used
 		{
 			get { return committed + systemCache + kernelPaged + KernelNonPaged + DriverTotal + SystemCodeTotal; }
 		}
 
-		public int Committed
+		public UInt64 Committed
 		{
 			get { return committed; }
 		}
@@ -59,27 +59,27 @@ namespace MacFace
 			get { return pageout; }
 		}
 
-		public int SystemCache
+		public UInt64 SystemCache
 		{
 			get { return systemCache; }
 		}
 
-		public int KernelPaged
+		public UInt64 KernelPaged
 		{
 			get { return kernelPaged; }
 		}
 
-		public int KernelNonPaged
+		public UInt64 KernelNonPaged
 		{
 			get { return kernelNonPaged; }
 		}
 
-		public int DriverTotal
+		public UInt64 DriverTotal
 		{
 			get { return driverTotal; }
 		}
 
-		public int SystemCodeTotal
+		public UInt64 SystemCodeTotal
 		{
 			get { return systemCodeTotal; }
 		}

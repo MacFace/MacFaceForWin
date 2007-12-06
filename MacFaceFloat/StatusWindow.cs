@@ -128,9 +128,9 @@ namespace MacFace.FloatApp
 			int fw = memoryGraph.Width;
 			int fh = memoryGraph.Height;
 
-			int totalMemory = (int)memStats.TotalVisibleMemorySize * 1024;
+            ulong totalMemory = (ulong)memStats.TotalVisibleMemorySize * 1024;
 			double rate = (double)fh / (totalMemory * 1.5);
-			int border = (int)(totalMemory * rate);
+            int border = (int)(totalMemory * rate);
 
 			g.FillRectangle(new SolidBrush(Color.White), 0, 0, fw, fh);
 			Pen pen = new Pen(Color.FromArgb(220, 220, 220), 1F);
@@ -159,7 +159,7 @@ namespace MacFace.FloatApp
 				int w = bw;
 				int h = 0;
 
-				long kernelTotal = usage.KernelNonPaged + usage.KernelPaged + usage.DriverTotal + usage.SystemCodeTotal;
+				UInt64 kernelTotal = usage.KernelNonPaged + usage.KernelPaged + usage.DriverTotal + usage.SystemCodeTotal;
 				h = (int)((kernelTotal) * rate);
 				y -= h;
 				g.FillRectangle(kernelBrush, x, y, w, h);
@@ -168,7 +168,7 @@ namespace MacFace.FloatApp
 				y -= h;
 				g.FillRectangle(systemCacheBrush, x, y, w, h);
 
-				h = (int)(usage.Committed * rate);
+                h = (int)((usage.Committed - kernelTotal) * rate);
 				y -= h;
 				g.FillRectangle(commitedBrush, x, y, w, h);
 

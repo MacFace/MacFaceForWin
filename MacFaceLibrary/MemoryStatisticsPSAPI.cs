@@ -31,21 +31,21 @@ namespace MacFace
 			pInfo.cb = (UInt32)Marshal.SizeOf(typeof(Unmanaged.PERFORMANCE_INFORMATION));
 			Unmanaged.GetPerformanceInfo(out pInfo, (UInt32)Marshal.SizeOf(typeof(Unmanaged.PERFORMANCE_INFORMATION)));
 
-			int available      = (int)(pInfo.PhysicalAvailable * pInfo.PageSize);
-			int committed      = (int)(pInfo.CommitTotal * pInfo.PageSize);
+			UInt64 available      = (UInt64)(pInfo.PhysicalAvailable * pInfo.PageSize);
+			UInt64 committed      = (UInt64)(pInfo.CommitTotal * pInfo.PageSize);
 			
 			// TODO:
 			int pagein	       = (int)0;
 			int pageout        = (int)0;
 
-			int systemCache    = (int)(pInfo.SystemCache * pInfo.PageSize);
-			int kernelPaged    = (int)(pInfo.KernelPaged * pInfo.PageSize);
-			int kernelNonPaged = (int)(pInfo.KernelNonpaged * pInfo.PageSize);
+			UInt64 systemCache    = (UInt64)(pInfo.SystemCache * pInfo.PageSize);
+			UInt64 kernelPaged    = (UInt64)(pInfo.KernelPaged * pInfo.PageSize);
+			UInt64 kernelNonPaged = (UInt64)(pInfo.KernelNonpaged * pInfo.PageSize);
 
 			// XXX: Ç∆ÇËÇ†Ç¶Ç∏ï–ï˚Ç…êUÇËï™ÇØÇƒÇµÇ‹Ç§
-			// int kernelTotal = usage.KernelNonPaged + usage.KernelPaged + usage.DriverTotal + usage.SystemCodeTotal;
-			int driverTotal    = (int)0;
-			int systemCodeTotal = (int)((pInfo.KernelTotal - (pInfo.KernelNonpaged + pInfo.KernelPaged)) * pInfo.PageSize);
+			// UInt64 kernelTotal = usage.KernelNonPaged + usage.KernelPaged + usage.DriverTotal + usage.SystemCodeTotal;
+			UInt64 driverTotal    = (UInt64)0;
+			UInt64 systemCodeTotal = (UInt64)((pInfo.KernelTotal - (pInfo.KernelNonpaged + pInfo.KernelPaged)) * pInfo.PageSize);
 
 			return new MemoryUsage(available, committed, pagein, pageout,
 				systemCache, kernelPaged, kernelNonPaged, driverTotal, systemCodeTotal);

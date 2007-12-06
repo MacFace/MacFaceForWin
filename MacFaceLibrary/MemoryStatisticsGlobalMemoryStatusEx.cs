@@ -31,8 +31,8 @@ namespace MacFace
 			memStat.dwLength = (UInt32)Marshal.SizeOf(typeof(Unmanaged.MEMORYSTATUSEX));
 			Unmanaged.GlobalMemoryStatusEx(ref memStat);
 
-			int available      = (int)(memStat.ullAvailPageFile);
-			int committed      = (int)(memStat.ullTotalPageFile - memStat.ullAvailPageFile);
+			UInt64 available      = (UInt64)(memStat.ullAvailPageFile);
+			UInt64 committed      = (UInt64)(memStat.ullTotalPageFile - memStat.ullAvailPageFile);
 			
 			return new MemoryUsage(available, committed, 0, 0,
 				0, 0, 0, 0, 0);

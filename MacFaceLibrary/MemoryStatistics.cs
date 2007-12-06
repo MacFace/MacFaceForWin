@@ -26,7 +26,7 @@ namespace MacFace
 		private PerformanceCounter systemCodeTotalCounter;
 		private PerformanceCounter commitLimitCounter;
 
-		private ulong totalVisibleMemorySize;
+		private UInt64 totalVisibleMemorySize;
 
 		public MemoryStatistics(int historySize)
 		{
@@ -104,7 +104,7 @@ namespace MacFace
 			get { return count; }
 		}
 
-		public ulong TotalVisibleMemorySize 
+		public UInt64 TotalVisibleMemorySize 
 		{
 			get { return totalVisibleMemorySize; }
 		}
@@ -125,15 +125,15 @@ namespace MacFace
 
 		protected virtual MemoryUsage NextValue()
 		{
-			int available      = (int)availableCounter.NextValue();
-			int committed      = (int)committedCounter.NextValue();
+			UInt64 available      = (UInt64)availableCounter.NextValue();
+			UInt64 committed      = (UInt64)committedCounter.NextValue();
 			int pagein	       = (int)pageinCounter.NextValue();
 			int pageout        = (int)pageoutCounter.NextValue();
-			int systemCache    = (int)systemCacheCounter.NextValue();
-			int kernelPaged    = (int)kernelPagedCounter.NextValue();
-			int kernelNonPaged = (int)kernelNonPagedCounter.NextValue();
-			int driverTotal    = (int)driverTotalCounter.NextValue();
-			int systemCodeTotal = (int)systemCodeTotalCounter.NextValue();
+			UInt64 systemCache    = (UInt64)systemCacheCounter.NextValue();
+			UInt64 kernelPaged    = (UInt64)kernelPagedCounter.NextValue();
+			UInt64 kernelNonPaged = (UInt64)kernelNonPagedCounter.NextValue();
+			UInt64 driverTotal    = (UInt64)driverTotalCounter.NextValue();
+			UInt64 systemCodeTotal = (UInt64)systemCodeTotalCounter.NextValue();
 
 			return new MemoryUsage(available, committed, pagein, pageout,
 				systemCache, kernelPaged, kernelNonPaged, driverTotal, systemCodeTotal);

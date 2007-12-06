@@ -208,6 +208,15 @@ namespace MacFace
 			}
 		}
 
+		public Image PatternImage(PatternSuite suite, int no, int markers)
+		{
+			Bitmap image = new Bitmap(ImageWidth, ImageHeight);
+			Graphics g = Graphics.FromImage(image);
+			DrawPatternImage(g, suite, no, markers);
+			g.Dispose();
+			return image;
+		}
+
 		public void DrawPatternImage(Graphics g, PatternSuite suite, int no, int markers, float rate)
 		{
 			Part[] pattern = _patternSuites[(int)suite][no];
@@ -255,15 +264,6 @@ namespace MacFace
 					}
 				}
 			}
-		}
-
-		public Image PatternImage(PatternSuite suite, int no, int markers)
-		{
-			Bitmap image = new Bitmap(ImageWidth, ImageHeight);
-			Graphics g = Graphics.FromImage(image);
-			DrawPatternImage(g, suite, no, markers);
-			g.Dispose();
-			return image;
 		}
 	}
 

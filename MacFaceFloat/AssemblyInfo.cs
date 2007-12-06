@@ -26,8 +26,8 @@ using System.Runtime.CompilerServices;
 // 下にあるように、'*' を使って、すべての値を指定するか、
 // ビルドおよびリビジョン番号を既定値にすることができます。
 
-[assembly: MacFace.FloatApp.ApplicationVersionString("2007-09-14 (アルファ版)")]
-[assembly: AssemblyInformationalVersion("1.0.0.0")]
+[assembly: MacFace.FloatApp.ApplicationVersionString("2007-12-05 (アルファ版)")]
+[assembly: AssemblyInformationalVersion("1.0.0.*")]
 [assembly: AssemblyVersion("1.0.*")]
 
 //
