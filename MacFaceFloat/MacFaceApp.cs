@@ -43,7 +43,8 @@ namespace MacFace.FloatApp
 		[STAThread]
 		public static void Main(string[] args)
 		{
-			AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            Application.EnableVisualStyles();
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 			MacFaceApp app = new MacFaceApp();
 			app.StartApplication();
 		}
