@@ -41,6 +41,8 @@ namespace MacFace.FloatApp
         private Label lblCPUUser;
         private Label lblCPUSystem;
         private Label lblCPUIdle;
+        private Label label8;
+        private Label lblTotal;
 		private Bitmap memoryGraph;
 
 		public StatusWindow(CPUStatistics cpuStats, MemoryStatistics memStats)
@@ -223,6 +225,7 @@ namespace MacFace.FloatApp
             if (memStats.Count > 0)
             {
                 MemoryUsage u = memStats[0];
+                lblTotal.Text = (memStats.TotalVisibleMemorySize / (1024.0)).ToString("#####0.0MB");
                 lblFree.Text = (u.Available / (1048576.0)).ToString("#####0.0MB");
                 lblCommited.Text = (u.Committed / (1048576.0)).ToString("#####0.0MB");
                 lblSysCache.Text = (u.SystemCache / (1048576.0)).ToString("#####0.0MB");
@@ -254,6 +257,8 @@ namespace MacFace.FloatApp
             this.lblCPUUser = new System.Windows.Forms.Label();
             this.lblCPUSystem = new System.Windows.Forms.Label();
             this.lblCPUIdle = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.lblTotal = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.memoryGraphPicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cpuGraphPicBox)).BeginInit();
             this.SuspendLayout();
@@ -285,7 +290,7 @@ namespace MacFace.FloatApp
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(313, 12);
+            this.label1.Location = new System.Drawing.Point(313, 26);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(28, 12);
             this.label1.TabIndex = 2;
@@ -294,7 +299,7 @@ namespace MacFace.FloatApp
             // lblFree
             // 
             this.lblFree.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblFree.Location = new System.Drawing.Point(393, 12);
+            this.lblFree.Location = new System.Drawing.Point(393, 26);
             this.lblFree.Name = "lblFree";
             this.lblFree.Size = new System.Drawing.Size(62, 12);
             this.lblFree.TabIndex = 3;
@@ -305,7 +310,7 @@ namespace MacFace.FloatApp
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(313, 32);
+            this.label3.Location = new System.Drawing.Point(313, 44);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(56, 12);
             this.label3.TabIndex = 2;
@@ -315,7 +320,7 @@ namespace MacFace.FloatApp
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(313, 52);
+            this.label4.Location = new System.Drawing.Point(313, 62);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(79, 12);
             this.label4.TabIndex = 2;
@@ -325,7 +330,7 @@ namespace MacFace.FloatApp
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(313, 72);
+            this.label5.Location = new System.Drawing.Point(313, 80);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(43, 12);
             this.label5.TabIndex = 2;
@@ -334,7 +339,7 @@ namespace MacFace.FloatApp
             // lblCommited
             // 
             this.lblCommited.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCommited.Location = new System.Drawing.Point(393, 32);
+            this.lblCommited.Location = new System.Drawing.Point(393, 44);
             this.lblCommited.Name = "lblCommited";
             this.lblCommited.Size = new System.Drawing.Size(62, 12);
             this.lblCommited.TabIndex = 3;
@@ -344,7 +349,7 @@ namespace MacFace.FloatApp
             // lblSysCache
             // 
             this.lblSysCache.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSysCache.Location = new System.Drawing.Point(393, 52);
+            this.lblSysCache.Location = new System.Drawing.Point(393, 62);
             this.lblSysCache.Name = "lblSysCache";
             this.lblSysCache.Size = new System.Drawing.Size(62, 12);
             this.lblSysCache.TabIndex = 3;
@@ -354,7 +359,7 @@ namespace MacFace.FloatApp
             // lblSystem
             // 
             this.lblSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSystem.Location = new System.Drawing.Point(393, 72);
+            this.lblSystem.Location = new System.Drawing.Point(393, 80);
             this.lblSystem.Name = "lblSystem";
             this.lblSystem.Size = new System.Drawing.Size(62, 12);
             this.lblSystem.TabIndex = 3;
@@ -375,7 +380,7 @@ namespace MacFace.FloatApp
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(313, 136);
+            this.label6.Location = new System.Drawing.Point(313, 134);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(43, 12);
             this.label6.TabIndex = 5;
@@ -385,7 +390,7 @@ namespace MacFace.FloatApp
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(313, 157);
+            this.label7.Location = new System.Drawing.Point(313, 152);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(23, 12);
             this.label7.TabIndex = 6;
@@ -394,7 +399,7 @@ namespace MacFace.FloatApp
             // lblCPUUser
             // 
             this.lblCPUUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCPUUser.Location = new System.Drawing.Point(395, 116);
+            this.lblCPUUser.Location = new System.Drawing.Point(393, 116);
             this.lblCPUUser.Name = "lblCPUUser";
             this.lblCPUUser.Size = new System.Drawing.Size(62, 12);
             this.lblCPUUser.TabIndex = 7;
@@ -404,7 +409,7 @@ namespace MacFace.FloatApp
             // lblCPUSystem
             // 
             this.lblCPUSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCPUSystem.Location = new System.Drawing.Point(395, 136);
+            this.lblCPUSystem.Location = new System.Drawing.Point(393, 134);
             this.lblCPUSystem.Name = "lblCPUSystem";
             this.lblCPUSystem.Size = new System.Drawing.Size(62, 12);
             this.lblCPUSystem.TabIndex = 8;
@@ -414,17 +419,37 @@ namespace MacFace.FloatApp
             // lblCPUIdle
             // 
             this.lblCPUIdle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCPUIdle.Location = new System.Drawing.Point(395, 157);
+            this.lblCPUIdle.Location = new System.Drawing.Point(393, 152);
             this.lblCPUIdle.Name = "lblCPUIdle";
             this.lblCPUIdle.Size = new System.Drawing.Size(62, 12);
             this.lblCPUIdle.TabIndex = 9;
             this.lblCPUIdle.Text = "100%";
             this.lblCPUIdle.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(313, 8);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(31, 12);
+            this.label8.TabIndex = 10;
+            this.label8.Text = "Total";
+            // 
+            // lblTotal
+            // 
+            this.lblTotal.Location = new System.Drawing.Point(393, 9);
+            this.lblTotal.Name = "lblTotal";
+            this.lblTotal.Size = new System.Drawing.Size(62, 12);
+            this.lblTotal.TabIndex = 11;
+            this.lblTotal.Text = "00000.0MB";
+            this.lblTotal.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // StatusWindow
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
             this.ClientSize = new System.Drawing.Size(460, 223);
+            this.Controls.Add(this.lblTotal);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.lblCPUIdle);
             this.Controls.Add(this.lblCPUSystem);
             this.Controls.Add(this.lblCPUUser);
