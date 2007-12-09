@@ -124,15 +124,17 @@ namespace MacFace.FloatApp
 				SetupStatisticsForWindowsXP();
 			}
 
-			updateTimer = new System.Windows.Forms.Timer();
+            patternWindow = null;
+            statusWindow = null;
+
+            InitializeComponent();
+
+            CountProcessorUsage(null, null);
+
+            updateTimer = new System.Windows.Forms.Timer();
 			updateTimer.Enabled = false;
 			updateTimer.Interval = 1000;
 			updateTimer.Tick += new EventHandler(this.CountProcessorUsage);
-
-			patternWindow = null;
-			statusWindow = null;
-
-			InitializeComponent();
 		}
 
 		void InitializeComponent() 
