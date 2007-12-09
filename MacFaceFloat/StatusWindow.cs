@@ -135,9 +135,9 @@ namespace MacFace.FloatApp
             if (cpuStats.Count > 0)
             {
                 CPUUsage u = cpuStats[0];
-                lblCPUUser.Text = u.User.ToString("###\\%");
-                lblCPUSystem.Text = u.System.ToString("###\\%");
-                lblCPUIdle.Text = u.Idle.ToString("###\\%");
+                lblCPUUser.Text = u.User.ToString("##0\\%");
+                lblCPUSystem.Text = u.System.ToString("##0\\%");
+                lblCPUIdle.Text = u.Idle.ToString("##0\\%");
             }
 
             g.Dispose();
@@ -223,10 +223,10 @@ namespace MacFace.FloatApp
             if (memStats.Count > 0)
             {
                 MemoryUsage u = memStats[0];
-                lblFree.Text = (u.Available / (1048576.0)).ToString("######.0MB");
-                lblCommited.Text = (u.Committed / (1048576.0)).ToString("######.0MB");
-                lblSysCache.Text = (u.SystemCache / (1048576.0)).ToString("######.0MB");
-                lblSystem.Text = (u.KernelTotal / (1048576.0)).ToString("######.0MB");
+                lblFree.Text = (u.Available / (1048576.0)).ToString("#####0.0MB");
+                lblCommited.Text = (u.Committed / (1048576.0)).ToString("#####0.0MB");
+                lblSysCache.Text = (u.SystemCache / (1048576.0)).ToString("#####0.0MB");
+                lblSystem.Text = (u.KernelTotal / (1048576.0)).ToString("#####0.0MB");
             }
 		}
 
