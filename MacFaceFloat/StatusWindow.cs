@@ -27,6 +27,20 @@ namespace MacFace.FloatApp
 		private MemoryStatistics memStats;
 
 		private Bitmap cpuGraph;
+        private Label label1;
+        private Label lblFree;
+        private Label label3;
+        private Label label4;
+        private Label label5;
+        private Label lblCommited;
+        private Label lblSysCache;
+        private Label lblSystem;
+        private Label label2;
+        private Label label6;
+        private Label label7;
+        private Label lblCPUUser;
+        private Label lblCPUSystem;
+        private Label lblCPUIdle;
 		private Bitmap memoryGraph;
 
 		public StatusWindow(CPUStatistics cpuStats, MemoryStatistics memStats)
@@ -118,7 +132,15 @@ namespace MacFace.FloatApp
 				g.FillPolygon(new SolidBrush(Color.FromArgb(50, 255, 0, 0)), sysGraph);
 			}
 
-			g.Dispose();
+            if (cpuStats.Count > 0)
+            {
+                CPUUsage u = cpuStats[0];
+                lblCPUUser.Text = u.User.ToString("###\\%");
+                lblCPUSystem.Text = u.System.ToString("###\\%");
+                lblCPUIdle.Text = u.Idle.ToString("###\\%");
+            }
+
+            g.Dispose();
 		}
 
 		private void drawMemoryGraph()
@@ -159,8 +181,7 @@ namespace MacFace.FloatApp
 				int w = bw;
 				int h = 0;
 
-				UInt64 kernelTotal = usage.KernelNonPaged + usage.KernelPaged + usage.DriverTotal + usage.SystemCodeTotal;
-				h = (int)((kernelTotal) * rate);
+				h = (int)((usage.KernelTotal) * rate);
 				y -= h;
 				g.FillRectangle(kernelBrush, x, y, w, h);
 
@@ -168,7 +189,7 @@ namespace MacFace.FloatApp
 				y -= h;
 				g.FillRectangle(systemCacheBrush, x, y, w, h);
 
-                h = (int)((usage.Committed - kernelTotal) * rate);
+                h = (int)((usage.Committed - usage.KernelTotal) * rate);
 				y -= h;
 				g.FillRectangle(commitedBrush, x, y, w, h);
 
@@ -197,7 +218,16 @@ namespace MacFace.FloatApp
 			borderPen.DashStyle = DashStyle.Dash;
 			g.DrawLine(borderPen, 0, fh-border, fw, fh-border);
 
-			g.Dispose();
+            g.Dispose();
+
+            if (memStats.Count > 0)
+            {
+                MemoryUsage u = memStats[0];
+                lblFree.Text = (u.Available / (1048576.0)).ToString("######.0MB");
+                lblCommited.Text = (u.Committed / (1048576.0)).ToString("######.0MB");
+                lblSysCache.Text = (u.SystemCache / (1048576.0)).ToString("######.0MB");
+                lblSystem.Text = (u.KernelTotal / (1048576.0)).ToString("######.0MB");
+            }
 		}
 
 		#region Windows フォーム デザイナで生成されたコード 
@@ -207,48 +237,222 @@ namespace MacFace.FloatApp
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(StatusWindow));
-			this.memoryGraphPicBox = new System.Windows.Forms.PictureBox();
-			this.cpuGraphPicBox = new System.Windows.Forms.PictureBox();
-			this.SuspendLayout();
-			// 
-			// memoryGraphPicBox
-			// 
-			this.memoryGraphPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-				| System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.memoryGraphPicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.memoryGraphPicBox.Location = new System.Drawing.Point(7, 8);
-			this.memoryGraphPicBox.Name = "memoryGraphPicBox";
-			this.memoryGraphPicBox.Size = new System.Drawing.Size(300, 100);
-			this.memoryGraphPicBox.TabIndex = 0;
-			this.memoryGraphPicBox.TabStop = false;
-			// 
-			// cpuGraphPicBox
-			// 
-			this.cpuGraphPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-				| System.Windows.Forms.AnchorStyles.Right)));
-			this.cpuGraphPicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.cpuGraphPicBox.Location = new System.Drawing.Point(7, 116);
-			this.cpuGraphPicBox.Name = "cpuGraphPicBox";
-			this.cpuGraphPicBox.Size = new System.Drawing.Size(300, 100);
-			this.cpuGraphPicBox.TabIndex = 1;
-			this.cpuGraphPicBox.TabStop = false;
-			// 
-			// StatusWindow
-			// 
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
-			this.ClientSize = new System.Drawing.Size(314, 223);
-			this.Controls.Add(this.cpuGraphPicBox);
-			this.Controls.Add(this.memoryGraphPicBox);
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.MaximizeBox = false;
-			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(322, 250);
-			this.Name = "StatusWindow";
-			this.Text = "ステータス";
-			this.SizeChanged += new System.EventHandler(this.StatusWindow_SizeChanged);
-			this.ResumeLayout(false);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StatusWindow));
+            this.memoryGraphPicBox = new System.Windows.Forms.PictureBox();
+            this.cpuGraphPicBox = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblFree = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lblCommited = new System.Windows.Forms.Label();
+            this.lblSysCache = new System.Windows.Forms.Label();
+            this.lblSystem = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblCPUUser = new System.Windows.Forms.Label();
+            this.lblCPUSystem = new System.Windows.Forms.Label();
+            this.lblCPUIdle = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.memoryGraphPicBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cpuGraphPicBox)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // memoryGraphPicBox
+            // 
+            this.memoryGraphPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.memoryGraphPicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.memoryGraphPicBox.Location = new System.Drawing.Point(7, 8);
+            this.memoryGraphPicBox.Name = "memoryGraphPicBox";
+            this.memoryGraphPicBox.Size = new System.Drawing.Size(300, 100);
+            this.memoryGraphPicBox.TabIndex = 0;
+            this.memoryGraphPicBox.TabStop = false;
+            // 
+            // cpuGraphPicBox
+            // 
+            this.cpuGraphPicBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.cpuGraphPicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.cpuGraphPicBox.Location = new System.Drawing.Point(7, 116);
+            this.cpuGraphPicBox.Name = "cpuGraphPicBox";
+            this.cpuGraphPicBox.Size = new System.Drawing.Size(300, 100);
+            this.cpuGraphPicBox.TabIndex = 1;
+            this.cpuGraphPicBox.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(313, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(28, 12);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Free";
+            // 
+            // lblFree
+            // 
+            this.lblFree.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblFree.Location = new System.Drawing.Point(393, 12);
+            this.lblFree.Name = "lblFree";
+            this.lblFree.Size = new System.Drawing.Size(62, 12);
+            this.lblFree.TabIndex = 3;
+            this.lblFree.Text = "00000.0MB";
+            this.lblFree.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(313, 32);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(56, 12);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Commited";
+            // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(313, 52);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(79, 12);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "System Cache";
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(313, 72);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(43, 12);
+            this.label5.TabIndex = 2;
+            this.label5.Text = "System";
+            // 
+            // lblCommited
+            // 
+            this.lblCommited.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCommited.Location = new System.Drawing.Point(393, 32);
+            this.lblCommited.Name = "lblCommited";
+            this.lblCommited.Size = new System.Drawing.Size(62, 12);
+            this.lblCommited.TabIndex = 3;
+            this.lblCommited.Text = "00000.0MB";
+            this.lblCommited.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblSysCache
+            // 
+            this.lblSysCache.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSysCache.Location = new System.Drawing.Point(393, 52);
+            this.lblSysCache.Name = "lblSysCache";
+            this.lblSysCache.Size = new System.Drawing.Size(62, 12);
+            this.lblSysCache.TabIndex = 3;
+            this.lblSysCache.Text = "00000.0MB";
+            this.lblSysCache.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblSystem
+            // 
+            this.lblSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSystem.Location = new System.Drawing.Point(393, 72);
+            this.lblSystem.Name = "lblSystem";
+            this.lblSystem.Size = new System.Drawing.Size(62, 12);
+            this.lblSystem.TabIndex = 3;
+            this.lblSystem.Text = "00000.0MB";
+            this.lblSystem.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(313, 116);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(29, 12);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "User";
+            // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(313, 136);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 12);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "System";
+            // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(313, 157);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(23, 12);
+            this.label7.TabIndex = 6;
+            this.label7.Text = "Idle";
+            // 
+            // lblCPUUser
+            // 
+            this.lblCPUUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCPUUser.Location = new System.Drawing.Point(395, 116);
+            this.lblCPUUser.Name = "lblCPUUser";
+            this.lblCPUUser.Size = new System.Drawing.Size(62, 12);
+            this.lblCPUUser.TabIndex = 7;
+            this.lblCPUUser.Text = "100%";
+            this.lblCPUUser.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblCPUSystem
+            // 
+            this.lblCPUSystem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCPUSystem.Location = new System.Drawing.Point(395, 136);
+            this.lblCPUSystem.Name = "lblCPUSystem";
+            this.lblCPUSystem.Size = new System.Drawing.Size(62, 12);
+            this.lblCPUSystem.TabIndex = 8;
+            this.lblCPUSystem.Text = "100%";
+            this.lblCPUSystem.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // lblCPUIdle
+            // 
+            this.lblCPUIdle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCPUIdle.Location = new System.Drawing.Point(395, 157);
+            this.lblCPUIdle.Name = "lblCPUIdle";
+            this.lblCPUIdle.Size = new System.Drawing.Size(62, 12);
+            this.lblCPUIdle.TabIndex = 9;
+            this.lblCPUIdle.Text = "100%";
+            this.lblCPUIdle.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // StatusWindow
+            // 
+            this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
+            this.ClientSize = new System.Drawing.Size(460, 223);
+            this.Controls.Add(this.lblCPUIdle);
+            this.Controls.Add(this.lblCPUSystem);
+            this.Controls.Add(this.lblCPUUser);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.lblSystem);
+            this.Controls.Add(this.lblSysCache);
+            this.Controls.Add(this.lblCommited);
+            this.Controls.Add(this.lblFree);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.cpuGraphPicBox);
+            this.Controls.Add(this.memoryGraphPicBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(476, 260);
+            this.Name = "StatusWindow";
+            this.Text = "ステータス";
+            this.SizeChanged += new System.EventHandler(this.StatusWindow_SizeChanged);
+            this.Load += new System.EventHandler(this.StatusWindow_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.memoryGraphPicBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.cpuGraphPicBox)).EndInit();
+            this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion
@@ -262,5 +466,10 @@ namespace MacFace.FloatApp
 			cpuGraphPicBox.Image = cpuGraph;
 			memoryGraphPicBox.Image = memoryGraph;
 		}
+
+        private void StatusWindow_Load(object sender, EventArgs e)
+        {
+
+        }
 	}
 }

@@ -64,7 +64,12 @@ namespace MacFace
 			get { return systemCache; }
 		}
 
-		public UInt64 KernelPaged
+        public UInt64 KernelTotal
+        {
+            get { return KernelNonPaged + KernelPaged + DriverTotal + SystemCodeTotal; }
+        }
+
+        public UInt64 KernelPaged
 		{
 			get { return kernelPaged; }
 		}
