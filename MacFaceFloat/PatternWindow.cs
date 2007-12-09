@@ -35,7 +35,7 @@ namespace MacFace.FloatApp
 
 		void InitializeComponent()
 		{
-			this.AutoScale = false;
+			this.AutoScaleMode = AutoScaleMode.None;
 			this.ClientSize = new System.Drawing.Size(128, 128);
 			this.ControlBox = false;
 			this.FormBorderStyle = FormBorderStyle.None;
