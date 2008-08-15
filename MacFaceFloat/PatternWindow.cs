@@ -84,7 +84,18 @@ namespace MacFace.FloatApp
 			base.Refresh();
 		}
 
-		protected override CreateParams	CreateParams
+
+        public Boolean
+        TransparentMouseMessage
+        {
+            set
+            {
+                base.TransparentMouseMessage = value;
+                this.TopMost = value;
+            }
+        }
+        
+        protected override CreateParams	CreateParams
 		{
 			get
 			{
