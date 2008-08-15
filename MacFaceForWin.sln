@@ -1,5 +1,5 @@
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacFaceLibrary", "MacFaceLibrary\MacFaceLibrary.csproj", "{23267F41-38FE-41F6-BF08-2D8940A1E024}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacFaceFloat", "MacFaceFloat\MacFaceFloat.csproj", "{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}"
