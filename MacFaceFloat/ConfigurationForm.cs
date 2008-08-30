@@ -36,6 +36,12 @@ namespace MacFace.FloatApp
 		private System.Windows.Forms.TrackBar trackBarPatternSize;
         private LinkLabel linkWebSite;
         private Label label1;
+        private Label label3;
+        private Label label4;
+        private Label lblAuthor;
+        private Label lblVersion;
+        private Label label9;
+        private Label lblTitle;
 		private System.ComponentModel.IContainer components;
 
 		public event ConfigChangedEvent ConfigChanged;
@@ -90,6 +96,12 @@ namespace MacFace.FloatApp
             this.trackBarPatternSize = new System.Windows.Forms.TrackBar();
             this.linkWebSite = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lblAuthor = new System.Windows.Forms.Label();
+            this.lblVersion = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.lblTitle = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOpacity)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -115,9 +127,9 @@ namespace MacFace.FloatApp
             this.checkMouseMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.checkMouseMessage.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.checkMouseMessage.Location = new System.Drawing.Point(198, 255);
+            this.checkMouseMessage.Location = new System.Drawing.Point(214, 255);
             this.checkMouseMessage.Name = "checkMouseMessage";
-            this.checkMouseMessage.Size = new System.Drawing.Size(284, 16);
+            this.checkMouseMessage.Size = new System.Drawing.Size(268, 16);
             this.checkMouseMessage.TabIndex = 6;
             this.checkMouseMessage.Text = "マウスの動作を背面のウィンドウへ伝える(&T)";
             this.checkMouseMessage.Click += new System.EventHandler(this.checkMouseMessage_Click);
@@ -141,7 +153,7 @@ namespace MacFace.FloatApp
             this.listViewFaces.Location = new System.Drawing.Point(12, 12);
             this.listViewFaces.MultiSelect = false;
             this.listViewFaces.Name = "listViewFaces";
-            this.listViewFaces.Size = new System.Drawing.Size(178, 325);
+            this.listViewFaces.Size = new System.Drawing.Size(196, 325);
             this.listViewFaces.TabIndex = 12;
             this.listViewFaces.UseCompatibleStateImageBehavior = false;
             this.listViewFaces.SelectedIndexChanged += new System.EventHandler(this.listViewFaces_SelectedIndexChanged);
@@ -155,9 +167,9 @@ namespace MacFace.FloatApp
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.trackBarOpacity);
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.groupBox1.Location = new System.Drawing.Point(198, 123);
+            this.groupBox1.Location = new System.Drawing.Point(214, 123);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(284, 60);
+            this.groupBox1.Size = new System.Drawing.Size(268, 60);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "透明度";
@@ -165,7 +177,7 @@ namespace MacFace.FloatApp
             // label5
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label5.Location = new System.Drawing.Point(228, 24);
+            this.label5.Location = new System.Drawing.Point(212, 24);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(48, 11);
             this.label5.TabIndex = 12;
@@ -189,7 +201,7 @@ namespace MacFace.FloatApp
             this.trackBarOpacity.Maximum = 100;
             this.trackBarOpacity.Minimum = 5;
             this.trackBarOpacity.Name = "trackBarOpacity";
-            this.trackBarOpacity.Size = new System.Drawing.Size(176, 45);
+            this.trackBarOpacity.Size = new System.Drawing.Size(160, 45);
             this.trackBarOpacity.TabIndex = 9;
             this.trackBarOpacity.TickFrequency = 10;
             this.trackBarOpacity.Value = 100;
@@ -203,9 +215,9 @@ namespace MacFace.FloatApp
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.trackBarPatternSize);
             this.groupBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.groupBox2.Location = new System.Drawing.Point(198, 189);
+            this.groupBox2.Location = new System.Drawing.Point(214, 189);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(284, 60);
+            this.groupBox2.Size = new System.Drawing.Size(268, 60);
             this.groupBox2.TabIndex = 20;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "パターンの大きさ";
@@ -213,7 +225,7 @@ namespace MacFace.FloatApp
             // label7
             // 
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label7.Location = new System.Drawing.Point(236, 24);
+            this.label7.Location = new System.Drawing.Point(220, 24);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(40, 11);
             this.label7.TabIndex = 21;
@@ -237,7 +249,7 @@ namespace MacFace.FloatApp
             this.trackBarPatternSize.Maximum = 100;
             this.trackBarPatternSize.Minimum = 10;
             this.trackBarPatternSize.Name = "trackBarPatternSize";
-            this.trackBarPatternSize.Size = new System.Drawing.Size(176, 45);
+            this.trackBarPatternSize.Size = new System.Drawing.Size(160, 45);
             this.trackBarPatternSize.TabIndex = 19;
             this.trackBarPatternSize.TickFrequency = 10;
             this.trackBarPatternSize.Value = 100;
@@ -247,24 +259,82 @@ namespace MacFace.FloatApp
             // 
             this.linkWebSite.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.linkWebSite.Location = new System.Drawing.Point(265, 12);
+            this.linkWebSite.AutoSize = true;
+            this.linkWebSite.Location = new System.Drawing.Point(283, 66);
             this.linkWebSite.Name = "linkWebSite";
-            this.linkWebSite.Size = new System.Drawing.Size(217, 16);
+            this.linkWebSite.Size = new System.Drawing.Size(0, 12);
             this.linkWebSite.TabIndex = 14;
             this.linkWebSite.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkWebSite_LinkClicked);
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(196, 12);
+            this.label1.Location = new System.Drawing.Point(214, 66);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 17);
             this.label1.TabIndex = 15;
             this.label1.Text = "ウェブサイト:";
             // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(214, 32);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(63, 17);
+            this.label3.TabIndex = 22;
+            this.label3.Text = "製作者:";
+            // 
+            // label4
+            // 
+            this.label4.Location = new System.Drawing.Point(214, 49);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(63, 17);
+            this.label4.TabIndex = 22;
+            this.label4.Text = "バージョン:";
+            // 
+            // lblAuthor
+            // 
+            this.lblAuthor.AutoSize = true;
+            this.lblAuthor.Location = new System.Drawing.Point(283, 32);
+            this.lblAuthor.Name = "lblAuthor";
+            this.lblAuthor.Size = new System.Drawing.Size(17, 12);
+            this.lblAuthor.TabIndex = 23;
+            this.lblAuthor.Text = "--";
+            // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Location = new System.Drawing.Point(283, 49);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(17, 12);
+            this.lblVersion.TabIndex = 24;
+            this.lblVersion.Text = "--";
+            // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(214, 15);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(63, 17);
+            this.label9.TabIndex = 22;
+            this.label9.Text = "名称:";
+            // 
+            // lblTitle
+            // 
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Location = new System.Drawing.Point(283, 15);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(17, 12);
+            this.lblTitle.TabIndex = 23;
+            this.lblTitle.Text = "--";
+            // 
             // ConfigurationForm
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
             this.ClientSize = new System.Drawing.Size(494, 349);
+            this.Controls.Add(this.lblVersion);
+            this.Controls.Add(this.lblTitle);
+            this.Controls.Add(this.lblAuthor);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
@@ -287,6 +357,7 @@ namespace MacFace.FloatApp
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPatternSize)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
 		}
 		#endregion
@@ -397,14 +468,20 @@ namespace MacFace.FloatApp
 			if (listViewFaces.SelectedItems.Count != 0) 
 			{
 				ListViewItem item = listViewFaces.SelectedItems[0];
-				linkWebSite.Text = item.SubItems[4].Text;
+                lblTitle.Text = item.Text;
+                lblAuthor.Text = item.SubItems[2].Text;
+                lblVersion.Text = item.SubItems[3].Text;
+                linkWebSite.Text = item.SubItems[4].Text;
 
-				_config.FaceDefPath = item.SubItems[1].Text;
+                _config.FaceDefPath = item.SubItems[1].Text;
 				ConfigChanged();
-			}
+            }
 			else 
 			{
-				linkWebSite.Text = "";
+                lblTitle.Text = "";
+                lblAuthor.Text = "";
+                lblVersion.Text = "";
+                linkWebSite.Text = "";
 			} 
 		}
 
