@@ -219,7 +219,8 @@ namespace MacFace.FloatApp
 				openStatusWindow();
 			}
 
-			updateTimer.Start();
+            updateTimer.Interval = 100 * config.UpdateSpeed;
+            updateTimer.Start();
 
 			Microsoft.Win32.SystemEvents.SessionEnding += new Microsoft.Win32.SessionEndingEventHandler(SystemEvents_SessionEnding);
 			Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
@@ -427,7 +428,9 @@ namespace MacFace.FloatApp
 				patternWindow.TransparentMouseMessage = config.TransparentMouseMessage;
 				patternWindow.Refresh();
 			}
-		}
+
+            updateTimer.Interval = 100 * config.UpdateSpeed;
+        }
 
 		private void patternWindow_Closed(object sender, EventArgs e)
 		{

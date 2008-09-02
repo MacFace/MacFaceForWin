@@ -36,11 +36,15 @@ namespace MacFace.FloatApp
 		[Category("パターンウインドウ"), Description("透明度0-100の中で指定します。")]
 		public Int32 Opacity = 100;
 
-		[AutoConfigure("form.faceform.patternsize")]
-		[Category("パターンウインドウ"), Description("パターンの大きさ10-100の中で指定します。")]
-		public Int32 PatternSize = 100;
+        [AutoConfigure("form.faceform.patternsize")]
+        [Category("パターンウインドウ"), Description("パターンの大きさ10-100の中で指定します。")]
+        public Int32 PatternSize = 100;
 
-		[AutoConfigure("form.faceform.transparentmousemessage")]
+        [AutoConfigure("form.faceform.updatespeed")]
+        [Category("パターンウインドウ"), Description("更新速度1-10の中で指定します。")]
+        public Int32 UpdateSpeed = 1;
+
+        [AutoConfigure("form.faceform.transparentmousemessage")]
 		[Category("パターンウインドウ"), Description("マウスメッセージを透過させるかどうかを指定します。")]
 		public bool TransparentMouseMessage;
 
