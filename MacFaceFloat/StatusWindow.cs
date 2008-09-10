@@ -428,6 +428,7 @@ namespace MacFace.FloatApp
             // 
             // label8
             // 
+            this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(313, 8);
             this.label8.Name = "label8";
@@ -437,6 +438,7 @@ namespace MacFace.FloatApp
             // 
             // lblTotal
             // 
+            this.lblTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTotal.Location = new System.Drawing.Point(393, 9);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(62, 12);
@@ -472,8 +474,8 @@ namespace MacFace.FloatApp
             this.MinimumSize = new System.Drawing.Size(476, 260);
             this.Name = "StatusWindow";
             this.Text = "ステータス";
-            this.SizeChanged += new System.EventHandler(this.StatusWindow_SizeChanged);
             this.Load += new System.EventHandler(this.StatusWindow_Load);
+            this.SizeChanged += new System.EventHandler(this.StatusWindow_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.memoryGraphPicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cpuGraphPicBox)).EndInit();
             this.ResumeLayout(false);

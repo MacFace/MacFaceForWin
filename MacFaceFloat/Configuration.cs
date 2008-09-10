@@ -42,7 +42,7 @@ namespace MacFace.FloatApp
 
         [AutoConfigure("form.faceform.updatespeed")]
         [Category("パターンウインドウ"), Description("更新速度1-10の中で指定します。")]
-        public Int32 UpdateSpeed = 1;
+        public Int32 UpdateSpeed = 10;
 
         [AutoConfigure("form.faceform.transparentmousemessage")]
 		[Category("パターンウインドウ"), Description("マウスメッセージを透過させるかどうかを指定します。")]
