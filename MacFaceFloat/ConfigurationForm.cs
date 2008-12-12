@@ -108,10 +108,10 @@ namespace MacFace.FloatApp
             this.label9 = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.trackBarUpdateSpeed = new System.Windows.Forms.TrackBar();
-            this.label12 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarOpacity)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -351,6 +351,15 @@ namespace MacFace.FloatApp
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "çXêVä‘äu";
             // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(105, 49);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(38, 11);
+            this.label12.TabIndex = 2;
+            this.label12.Text = "0.5ïb";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // label11
             // 
             this.label11.Location = new System.Drawing.Point(6, 49);
@@ -379,15 +388,6 @@ namespace MacFace.FloatApp
             this.trackBarUpdateSpeed.TabIndex = 0;
             this.trackBarUpdateSpeed.Value = 10;
             this.trackBarUpdateSpeed.ValueChanged += new System.EventHandler(this.trackBarUpdateSpeed_ValueChanged);
-            // 
-            // label12
-            // 
-            this.label12.Location = new System.Drawing.Point(129, 49);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(38, 11);
-            this.label12.TabIndex = 2;
-            this.label12.Text = "0.5ïb";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // ConfigurationForm
             // 

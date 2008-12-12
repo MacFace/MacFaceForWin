@@ -153,7 +153,18 @@ namespace MacFace.FloatApp
 			int fh = memoryGraph.Height;
 
             ulong totalMemory = (ulong)memStats.TotalVisibleMemorySize * 1024;
-			double rate = (double)fh / (totalMemory * 1.5);
+            double rate;
+
+			MemoryUsage latestUsage = memStats.Latest;
+            if (latestUsage.Used + latestUsage.Available > totalMemory * 1.5)
+            {
+                rate = (double)fh / (totalMemory * 3.0);// (double)memStats.CommitLimit;
+            }
+            else
+            {
+                rate = (double)fh / (totalMemory * 1.5);
+            }
+
             int border = (int)(totalMemory * rate);
 
 			g.FillRectangle(new SolidBrush(Color.White), 0, 0, fw, fh);
