@@ -12,6 +12,8 @@ using System.Drawing;
 using System.Data;
 using System.IO;
 using System.Reflection;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace MacFace.FloatApp
 {
@@ -40,7 +42,9 @@ namespace MacFace.FloatApp
 		private MenuItem menuItemToggleStatusWindow;
 		private MacFace.FaceDef curFaceDef;
 
-		[STAThread]
+        private IOptimusMini optimusMini;
+
+        [STAThread]
 		public static void Main(string[] args)
 		{
             Application.EnableVisualStyles();
@@ -125,10 +129,17 @@ namespace MacFace.FloatApp
 				SetupStatisticsForWindowsXP();
 			}
 
+            //IOptimusMini.OnKeyDownCallbackDelegate oKD = new IOptimusMini.OnKeyDownCallbackDelegate(OnKeyDownCallbackHandler);
+            //IOptimusMini.OnDeviceStateChangedCallbackDelegate oDSC = new IOptimusMini.OnDeviceStateChangedCallbackDelegate(OnDeviceStateChangedCallbackHandler);
+            //IOptimusMini.RegisterEventHandler(oKD, oDSC);
+
             patternWindow = null;
             statusWindow = null;
 
             InitializeComponent();
+
+            optimusMini = new IOptimusMini();
+            optimusMini.DisplayOn();
 
             CountProcessorUsage(null, null);
 
@@ -137,6 +148,16 @@ namespace MacFace.FloatApp
 			updateTimer.Interval = 1000;
 			updateTimer.Tick += new EventHandler(this.CountProcessorUsage);
 		}
+
+        void OnKeyDownCallbackHandler(int key)
+        {
+            Console.Write("Keydown {0}\n", key);
+        }
+
+        void OnDeviceStateChangedCallbackHandler(int state)
+        {
+            //useOptimusMini = (state > 0);
+        }
 
 		void InitializeComponent() 
 		{
@@ -230,9 +251,9 @@ namespace MacFace.FloatApp
 		void Application_ApplicationExit(object sender, EventArgs e)
 		{
 			notifyIcon.Visible = false;
-
 			config.Save();
-		}
+            optimusMini.Dispose();
+        }
 
 		public bool LoadFaceDefine(string path)
 		{
@@ -300,29 +321,29 @@ namespace MacFace.FloatApp
 			pageio_count -= pageio_count / 50 + 1;
 			if (pageio_count < 0) pageio_count = 0;
 
+			int pattern = cpuUsage.Active / 10;
+			pattern += memUsage.Pageout / 15;
+			pattern += memUsage.Pagein / 30;
+			if (pattern > 10) pattern = 10;
+
+			FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
+
+			UInt64 avilable = (UInt64)memStats.TotalVisibleMemorySize * 1024 - memUsage.Used;
+            if (pageio_count > 100) 
+			{
+				suite = FaceDef.PatternSuite.MemoryInsufficient;
+			}
+            else if (avilable < 0) 
+			{
+				suite = FaceDef.PatternSuite.MemoryDecline;
+			}
+
+			int markers = FaceDef.MarkerNone;
+			if (memUsage.Pagein > 0) markers += FaceDef.MarkerPageIn;
+			if (memUsage.Pageout > 0) markers += FaceDef.MarkerPageOut;
+
 			if (patternWindow != null) 
 			{
-				int pattern = cpuUsage.Active / 10;
-				pattern += memUsage.Pageout / 15;
-				pattern += memUsage.Pagein / 30;
-				if (pattern > 10) pattern = 10;
-
-				FaceDef.PatternSuite suite = FaceDef.PatternSuite.Normal;
-
-				UInt64 avilable = (UInt64)memStats.TotalVisibleMemorySize * 1024 - memUsage.Used;
-                if (pageio_count > 100) 
-				{
-					suite = FaceDef.PatternSuite.MemoryInsufficient;
-				}
-                else if (avilable < 0) 
-				{
-					suite = FaceDef.PatternSuite.MemoryDecline;
-				}
-
-				int markers = FaceDef.MarkerNone;
-				if (memUsage.Pagein > 0) markers += FaceDef.MarkerPageIn;
-				if (memUsage.Pageout > 0) markers += FaceDef.MarkerPageOut;
-
 				patternWindow.UpdatePattern(suite, pattern, markers);
 			}
 
@@ -330,6 +351,17 @@ namespace MacFace.FloatApp
 			{
 				statusWindow.UpdateGraph();
 			}
+
+            if (optimusMini.IsAlive && curFaceDef != null)
+            {
+                Bitmap image = new Bitmap(96, 96);
+                Graphics g = Graphics.FromImage(image);
+                g.FillRectangle(new SolidBrush(Color.White), 0, 0, image.Width, image.Height);
+                curFaceDef.DrawPatternImage(g, suite, pattern, markers, 96F / 128F);
+                g.Dispose();
+
+                optimusMini.ShowPicture(1, image);
+            }
 		}
 
 		public void openPatternWindow()
@@ -411,17 +443,17 @@ namespace MacFace.FloatApp
 
 		private void configForm_ConfigChanged()
 		{
-			if (patternWindow.FaceDef.Path != config.FaceDefPath) 
-			{
-				bool result = LoadFaceDefine(config.FaceDefPath);
-				// パターン変更に失敗したら設定を元に戻す
-				if (!result) 
-				{
-					config.FaceDefPath = patternWindow.FaceDef.Path;
-				}
-			}
+            if (curFaceDef.Path != config.FaceDefPath)
+            {
+                bool result = LoadFaceDefine(config.FaceDefPath);
+                // パターン変更に失敗したら設定を元に戻す
+                if (!result)
+                {
+                    config.FaceDefPath = patternWindow.FaceDef.Path;
+                }
+            }
 
-			if (patternWindow != null) 
+            if (patternWindow != null) 
 			{
 				patternWindow.Opacity = (float)config.Opacity / 100;
 				patternWindow.PatternSize = (float)config.PatternSize / 100;
