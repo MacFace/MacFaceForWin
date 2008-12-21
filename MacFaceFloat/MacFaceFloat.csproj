@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -254,13 +254,14 @@
     <Content Include="kikiki-rin.mcface\mouth-smile.tiff" />
     <Content Include="kikiki-rin.mcface\note.tiff" />
     <Content Include="kikiki-rin.mcface\shock.tiff" />
-    <Content Include="OptimusMini.dll" />
+    <Content Include="OptimusMini.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>"$(ProjectDir)PreBuild_GenerateAssemblyInfoVersionPart.cmd" &gt; "$(ProjectDir)AssemblyInfoVersionPart.cs"</PreBuildEvent>
     <PostBuildEvent>xcopy /Y /I "$(ProjectDir)default.mcface" "$(TargetDir)default.mcface"
-copy "$(ProjectDir)OptimusMini.dll" "$(TargetDir)OptimusMini.dll"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
