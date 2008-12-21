@@ -129,16 +129,17 @@ namespace MacFace.FloatApp
 				SetupStatisticsForWindowsXP();
 			}
 
-            //IOptimusMini.OnKeyDownCallbackDelegate oKD = new IOptimusMini.OnKeyDownCallbackDelegate(OnKeyDownCallbackHandler);
-            //IOptimusMini.OnDeviceStateChangedCallbackDelegate oDSC = new IOptimusMini.OnDeviceStateChangedCallbackDelegate(OnDeviceStateChangedCallbackHandler);
-            //IOptimusMini.RegisterEventHandler(oKD, oDSC);
+            //OptimusMini.OnKeyDownCallbackDelegate oKD = new OptimusMini.OnKeyDownCallbackDelegate(OnKeyDownCallbackHandler);
+            //OptimusMini.OnDeviceStateChangedCallbackDelegate oDSC = new OptimusMini.OnDeviceStateChangedCallbackDelegate(OnDeviceStateChangedCallbackHandler);
+            //OptimusMini.RegisterEventHandler(oKD, oDSC);
 
             patternWindow = null;
             statusWindow = null;
 
             InitializeComponent();
 
-            optimusMini = new IOptimusMini();
+            // x64 環境で 32bit な OptimusMini.dll を読み込もうとすると当然エラーとなるので何もしないクラスにしておく
+		    optimusMini = (IntPtr.Size == 4 ? (IOptimusMini)new OptimusMini() : new OptimusMiniMock());
             optimusMini.DisplayOn();
 
             CountProcessorUsage(null, null);

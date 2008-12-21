@@ -6,9 +6,58 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
 /// <summary>
-/// Class1 の概要の説明です
+/// IOptimusMini インターフェース
 /// </summary>
-class IOptimusMini :IDisposable
+internal interface IOptimusMini : IDisposable
+{
+    void Dispose();
+    bool IsAlive { get; }
+    OptimusMini.BrightnessLevel Brightness { set; }
+    void DisplayOn();
+    void DisplayOff();
+    void ShowPicture(int num, Bitmap image);
+}
+
+/// <summary>
+/// 何もしない IOptimusMini を実装するクラス
+/// </summary>
+class OptimusMiniMock : IOptimusMini
+{
+    void IDisposable.Dispose()
+    {
+    }
+
+    public bool IsAlive
+    {
+        get { return false; }
+    }
+
+    public OptimusMini.BrightnessLevel Brightness
+    {
+        set { }
+    }
+
+    public void DisplayOn()
+    {
+    }
+
+    public void DisplayOff()
+    {
+    }
+
+    public void ShowPicture(int num, Bitmap image)
+    {
+    }
+
+    void IOptimusMini.Dispose()
+    {
+    }
+}
+
+/// <summary>
+/// OptimusMini への操作を実装するクラス
+/// </summary>
+class OptimusMini : IOptimusMini
 {
     protected class Driver
     {
@@ -45,7 +94,7 @@ class IOptimusMini :IDisposable
         public static extern int RegisterEventHandler(OnKeyDownCallbackDelegate dk, OnDeviceStateChangedCallbackDelegate ds);
     }
 
-    public IOptimusMini()
+    public OptimusMini()
     {
         Driver.Init();
     }
