@@ -4,6 +4,7 @@ using System.Threading;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 /// <summary>
 /// IOptimusMini インターフェース
@@ -96,13 +97,30 @@ class OptimusMini : IOptimusMini
 
     public OptimusMini()
     {
+        SystemEvents.PowerModeChanged += this.OnPowerModeChanged;
         Driver.Init();
     }
 
     public void Dispose()
     {
+        SystemEvents.PowerModeChanged -= this.OnPowerModeChanged;
         DisplayOff();
         Driver.Close();
+    }
+
+    void OnPowerModeChanged(Object sender, PowerModeChangedEventArgs e)
+    {
+        switch (e.Mode)
+        {
+            case PowerModes.Suspend:
+                DisplayOff();
+                Driver.Close();
+                break;
+            case PowerModes.Resume:
+                Driver.Init();
+                DisplayOn();
+                break;
+        }
     }
 
     public enum BrightnessLevel
