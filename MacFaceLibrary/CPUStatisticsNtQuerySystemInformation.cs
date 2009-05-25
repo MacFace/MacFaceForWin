@@ -1,3 +1,4 @@
+// $Id$
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -10,9 +11,9 @@ namespace MacFace
 	public class CPUStatisticsNtQuerySystemInformation : CPUStatistics
 	{
 			
-		UInt64 idleTimePrev = 0;
-		UInt64 kernelTimePrev = 0;
-		UInt64 userTimePrev = 0;
+		Int64 idleTimePrev = 0;
+		Int64 kernelTimePrev = 0;
+		Int64 userTimePrev = 0;
 
 		public CPUStatisticsNtQuerySystemInformation(int historySize) : base(historySize)
 		{
@@ -21,29 +22,29 @@ namespace MacFace
 
 		protected override CPUUsage NextValue()
 		{
-			UInt64 idleTime;
-			UInt64 kernelTime;
-			UInt64 userTime;
+			Int64 idleTime;
+			Int64 kernelTime;
+			Int64 userTime;
 
-			NtKernel.SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION sysProcessorPerfInfo = NtKernel.QuerySystemProcessorPerformanceInfomation();
+			NtKernel.SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION sysProcessorPerfInfo = NtKernel.QuerySystemProcessorPerformanceInfomation(1)[0];
 			
-			idleTime = (UInt64)sysProcessorPerfInfo.IdleTime;
-			kernelTime = (UInt64)sysProcessorPerfInfo.KernelTime;
-			userTime = (UInt64)sysProcessorPerfInfo.UserTime;
+			idleTime = sysProcessorPerfInfo.IdleTime;
+			kernelTime = sysProcessorPerfInfo.KernelTime - idleTime;
+			userTime = sysProcessorPerfInfo.UserTime;
 				
-			Int32 idleTimeDiff = (Int32)(idleTime - idleTimePrev);
-			Int32 userTimeDiff = (Int32)(userTime - userTimePrev);
-			Int32 kernelTimeDiff = (Int32)(kernelTime - kernelTimePrev);
-			Int32 systemTimeDiff = (Int32)(userTimeDiff + kernelTimeDiff);
+			Int64 idleTimeDiff = idleTime - idleTimePrev;
+            Int64 userTimeDiff = userTime - userTimePrev;
+            Int64 kernelTimeDiff = kernelTime - kernelTimePrev;
+            Int64 totalTimeDiff = idleTimeDiff + userTimeDiff + kernelTimeDiff;
 
 			idleTimePrev = idleTime;
 			kernelTimePrev = kernelTime;
 			userTimePrev = userTime;
 
 			return new CPUUsage(
-				(Int32)(100 - ((Double)idleTimeDiff / userTimePrev) * 100),
-				(Int32)(100 - ((Double)idleTimeDiff / kernelTimePrev) * 100),
-				(Int32)(((Double)idleTimeDiff / (systemTimeDiff)) * 100)
+				(Int32)(((Double)userTimeDiff / totalTimeDiff) * 100),
+				(Int32)(((Double)kernelTimeDiff / totalTimeDiff) * 100),
+				(Int32)(((Double)idleTimeDiff / totalTimeDiff) * 100)
 			);
 		}
 	}

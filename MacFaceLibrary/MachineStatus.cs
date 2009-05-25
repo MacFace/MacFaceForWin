@@ -1,14 +1,15 @@
-﻿using System;
+﻿// $Id$
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace MacFace
 {
-    class MachineStatus
+    public class MachineStatus
     {
         protected static MachineStatus sharedMachineStatus;
 
-        protected Byte numberProcessors;
+        protected Byte processorCount;
 
         public static MachineStatus LocalMachineStatus()
         {
@@ -22,16 +23,20 @@ namespace MacFace
         protected MachineStatus()
         {
             NtKernel.SYSTEM_BASIC_INFORMATION info = NtKernel.QuerySystemBasicInformation();
-            numberProcessors = info.NumberProcessors;
+            processorCount = info.NumberProcessors;
         }
 
-        public int NumberProcessors
+        public int ProcessorCount
         {
             get
             {
-                return numberProcessors;
+                return processorCount;
             }
         }
 
+        public NtKernel.SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[] ProcessorPerformances()
+        {
+            return NtKernel.QuerySystemProcessorPerformanceInfomation(processorCount);
+        }
     }
 }

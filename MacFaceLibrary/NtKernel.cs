@@ -1,47 +1,58 @@
-﻿using System;
+﻿// $Id$
+using System;
 using System.Runtime.InteropServices;
 
-class NtKernel {
+public class NtKernel {
 
-    unsafe public static SYSTEM_BASIC_INFORMATION QuerySystemBasicInformation()
+    public static SYSTEM_BASIC_INFORMATION QuerySystemBasicInformation()
     {
-        SYSTEM_BASIC_INFORMATION info = new SYSTEM_BASIC_INFORMATION();
-        UInt32 len = (UInt32)Marshal.SizeOf(typeof(SYSTEM_BASIC_INFORMATION));
+        int len = Marshal.SizeOf(typeof(SYSTEM_BASIC_INFORMATION));
+        IntPtr ptr = Marshal.AllocCoTaskMem(len);
         UInt32 outLen;
 
         NtQuerySystemInformation(
-            SYSTEM_INFORMATION_CLASS.SystemBasicInformation, &info, len, out outLen
+            SYSTEM_INFORMATION_CLASS.SystemBasicInformation, ptr, (UInt32)len, out outLen
         );
-        return info;
+
+        return (SYSTEM_BASIC_INFORMATION)Marshal.PtrToStructure(ptr, typeof(SYSTEM_BASIC_INFORMATION));
     }
 
-    unsafe public static SYSTEM_PERFORMANCE_INFORMATION QuerySystemPerformanceInformation()
+    public static SYSTEM_PERFORMANCE_INFORMATION QuerySystemPerformanceInformation()
     {
-        SYSTEM_PERFORMANCE_INFORMATION info = new SYSTEM_PERFORMANCE_INFORMATION();
-        UInt32 len = (UInt32)Marshal.SizeOf(typeof(SYSTEM_PERFORMANCE_INFORMATION));
+        int len = Marshal.SizeOf(typeof(SYSTEM_PERFORMANCE_INFORMATION));
+        IntPtr ptr = Marshal.AllocCoTaskMem(len);
         UInt32 outLen;
 
         NtQuerySystemInformation(
-            SYSTEM_INFORMATION_CLASS.SystemPerformanceInformation, &info, len, out outLen
+            SYSTEM_INFORMATION_CLASS.SystemPerformanceInformation, ptr, (UInt32)len, out outLen
         );
-        return info;
+
+        return (SYSTEM_PERFORMANCE_INFORMATION)Marshal.PtrToStructure(ptr, typeof(SYSTEM_PERFORMANCE_INFORMATION));
     }
 
-    unsafe public static SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION QuerySystemProcessorPerformanceInfomation()
+    public static SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[] QuerySystemProcessorPerformanceInfomation(int processorCount)
     {
-        SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION info = new SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION();
-        UInt32 len = (UInt32)(Marshal.SizeOf(typeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION)));
+        int len = Marshal.SizeOf(typeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION)) * processorCount;
+        IntPtr ptr = Marshal.AllocCoTaskMem(len);
         UInt32 outLen;
+
         NtQuerySystemInformation(
-            SYSTEM_INFORMATION_CLASS.SystemProcessorPerformanceInformation, &info, len, out outLen
+            SYSTEM_INFORMATION_CLASS.SystemProcessorPerformanceInformation, ptr, (UInt32)len, out outLen
         );
-        return info;
+
+        SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[] list = new SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[processorCount];
+        for (int i = 0; i < processorCount; i++) {
+            IntPtr p = new IntPtr(ptr.ToInt32() + Marshal.SizeOf(typeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION)) * i);
+            list[i] = (SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION)Marshal.PtrToStructure(p, typeof(SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION));
+        }
+    
+        return list;
     }
 
     [DllImport("ntdll.dll")]
-    unsafe protected extern static UInt32 NtQuerySystemInformation(
+    protected extern static UInt32 NtQuerySystemInformation(
         SYSTEM_INFORMATION_CLASS SystemInformationClass,
-        void* SystemInformation,
+        IntPtr SystemInformation,
         UInt32 SystemInformationLength,
         out UInt32 ReturnLength
     );
@@ -62,16 +73,16 @@ class NtKernel {
     [StructLayout(LayoutKind.Sequential)]
     public struct SYSTEM_BASIC_INFORMATION
     {
-        public UInt64 Unknown;
-        public UInt64 MaximumIncrement;
-        public UInt64 PhysicalPageSize;
-        public UInt64 NumberOfPhysicalPages;
-        public UInt64 LowestPhysicalPage;
-        public UInt64 HighestPhysicalPage;
-        public UInt64 AllocationGranularity;
-        public UInt64 LowestUserAddress;
-        public UInt64 HighestUserAddress;
-        public UInt64 ActiveProcessors;
+        public UInt32 Unknown;
+        public UInt32 MaximumIncrement;
+        public UInt32 PhysicalPageSize;
+        public UInt32 NumberOfPhysicalPages;
+        public UInt32 LowestPhysicalPage;
+        public UInt32 HighestPhysicalPage;
+        public UInt32 AllocationGranularity;
+        public UInt32 LowestUserAddress;
+        public UInt32 HighestUserAddress;
+        public UInt32 ActiveProcessors;
         public Byte NumberProcessors;
     }
 

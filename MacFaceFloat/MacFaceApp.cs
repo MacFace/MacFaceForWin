@@ -47,69 +47,19 @@ namespace MacFace.FloatApp
         [STAThread]
 		public static void Main(string[] args)
 		{
+            //NtKernel.SYSTEM_BASIC_INFORMATION info = NtKernel.QuerySystemBasicInformation();
+            //NtKernel.SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[] list =
+            //    NtKernel.QuerySystemProcessorPerformanceInfomation((int)info.ActiveProcessors);
+            //MachineStatus status = MachineStatus.LocalMachineStatus();
+            //int c = status.ProcessorCount;
+            //NtKernel.SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION[] list = status.ProcessorPerformances();
+
             Application.EnableVisualStyles();
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 			MacFaceApp app = new MacFaceApp();
 			app.StartApplication();
 		}
 
-		/// <summary>
-		/// Windows 2000 はパフォーマンスモニタがダメならそれぞれAPIでがんばる
-		/// </summary>
-		public void SetupStatisticsForWindows2000()
-		{
-//			cpuStats = new CPUStatistics(81);
-//			memStats = new MemoryStatistics(81);
-//
-//			try 
-//			{
-//				// 試しにカウンタを実行してみる
-//				cpuStats.Update();
-//				memStats.Update();
-//			} 
-//			catch (System.ComponentModel.Win32Exception) 
-//			{
-//				// ダメだったのでパフォーマンスカウンタを使わない方法へ
-//				cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
-//				memStats = new MemoryStatisticsGlobalMemoryStatusEx(61);
-//			}
-//			catch (System.InvalidOperationException) 
-//			{
-//				// ダメだったのでパフォーマンスカウンタを使わない方法へ
-//				cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
-//				memStats = new MemoryStatisticsGlobalMemoryStatusEx(61);
-//			}
-
-			cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
-			memStats = new MemoryStatisticsNtQuerySystemInformation(61);
-		}
-
-		public void SetupStatisticsForWindowsXP()
-		{
-//			cpuStats = new CPUStatistics(81);
-//			memStats = new MemoryStatistics(81);
-//			try 
-//			{
-//				// 試しにカウンタを実行してみる
-//				cpuStats.Update();
-//				memStats.Update();
-//			} 
-//			catch (System.ComponentModel.Win32Exception) 
-//			{
-//				// ダメだったのでパフォーマンスカウンタを使わない方法へ
-//				cpuStats = new CPUStatisticsGetSystemTime(61);
-//				memStats = new MemoryStatisticsNtQuerySystemInformation(61);
-//			}
-//			catch (System.InvalidOperationException) 
-//			{
-//				// ダメだったのでパフォーマンスカウンタを使わない方法へ
-//				cpuStats = new CPUStatisticsGetSystemTime(61);
-//				memStats = new MemoryStatisticsPSAPI(61);
-//			}
-
-			cpuStats = new CPUStatisticsGetSystemTime(61);
-			memStats = new MemoryStatisticsNtQuerySystemInformation(61);
-		}
 
 		public MacFaceApp()
 		{
@@ -118,20 +68,8 @@ namespace MacFace.FloatApp
 			
 			pageio_count = 0;
 
-			// OS ごとに取得する方法を変更する
-			if (Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor == 0)
-			{
-				SetupStatisticsForWindows2000();
-			}
-			else
-			{
-				// XP / 2003 / Vista
-				SetupStatisticsForWindowsXP();
-			}
-
-            //OptimusMini.OnKeyDownCallbackDelegate oKD = new OptimusMini.OnKeyDownCallbackDelegate(OnKeyDownCallbackHandler);
-            //OptimusMini.OnDeviceStateChangedCallbackDelegate oDSC = new OptimusMini.OnDeviceStateChangedCallbackDelegate(OnDeviceStateChangedCallbackHandler);
-            //OptimusMini.RegisterEventHandler(oKD, oDSC);
+            cpuStats = new CPUStatisticsNtQuerySystemInformation(61);
+            memStats = new MemoryStatisticsNtQuerySystemInformation(61);
 
             patternWindow = null;
             statusWindow = null;
@@ -141,6 +79,10 @@ namespace MacFace.FloatApp
             // x64 環境で 32bit な OptimusMini.dll を読み込もうとすると当然エラーとなるので何もしないクラスにしておく
 		    optimusMini = (IntPtr.Size == 4 ? (IOptimusMini)new OptimusMini() : new OptimusMiniMock());
             optimusMini.DisplayOn();
+
+            //OptimusMini.OnKeyDownCallbackDelegate oKD = new OptimusMini.OnKeyDownCallbackDelegate(OnKeyDownCallbackHandler);
+            //OptimusMini.OnDeviceStateChangedCallbackDelegate oDSC = new OptimusMini.OnDeviceStateChangedCallbackDelegate(OnDeviceStateChangedCallbackHandler);
+            //OptimusMini.RegisterEventHandler(oKD, oDSC);
 
             CountProcessorUsage(null, null);
 
