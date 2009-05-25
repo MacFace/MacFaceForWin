@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using Microsoft.Win32;
 
 /// <summary>
@@ -11,7 +10,7 @@ using Microsoft.Win32;
 /// </summary>
 internal interface IOptimusMini : IDisposable
 {
-    void Dispose();
+//    void Dispose();
     bool IsAlive { get; }
     OptimusMini.BrightnessLevel Brightness { set; }
     void DisplayOn();
@@ -50,9 +49,9 @@ class OptimusMiniMock : IOptimusMini
     {
     }
 
-    void IOptimusMini.Dispose()
-    {
-    }
+    //void IOptimusMini.Dispose()
+    //{
+    //}
 }
 
 /// <summary>

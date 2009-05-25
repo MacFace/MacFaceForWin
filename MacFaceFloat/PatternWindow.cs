@@ -85,7 +85,7 @@ namespace MacFace.FloatApp
 		}
 
 
-        public Boolean
+        new public Boolean
         TransparentMouseMessage
         {
             set
