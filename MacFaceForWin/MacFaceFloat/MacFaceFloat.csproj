@@ -1,0 +1,286 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{60DE0E19-7B98-41E8-8001-A8C7A75AF08E}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>App.ico</ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>MacFace</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>MacFace.FloatApp</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <ManifestCertificateThumbprint>E46F330F309E5BC6AACA4EF63E14D6767E580ABC</ManifestCertificateThumbprint>
+    <ManifestKeyFile>MacFaceFloat_TemporaryKey.pfx</ManifestKeyFile>
+    <GenerateManifests>true</GenerateManifests>
+    <SignManifests>true</SignManifests>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>C:\Users\Tomoyo\Documents\Work\SvnWork\MacFaceForWin\Publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://www.misuzilla.org/~mayuki/dist/macface/clickonce/</InstallUrl>
+    <SupportUrl>http://www.fprog.org/projects/MacFaceForWin/</SupportUrl>
+    <ProductName>MacFace for Windows</ProductName>
+    <PublisherName>MacFace</PublisherName>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>index.html</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
+    <ApplicationRevision>113</ApplicationRevision>
+    <ApplicationVersion>1.0.0.113</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <BaseAddress>285212672</BaseAddress>
+    <Optimize>true</Optimize>
+    <FileAlignment>4096</FileAlignment>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>System.Drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>System.Windows.Forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+    <ProjectReference Include="..\MacFaceLibrary\MacFaceLibrary.csproj">
+      <Name>MacFaceLibrary</Name>
+      <Project>{23267F41-38FE-41F6-BF08-2D8940A1E024}</Project>
+      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AlphaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ApplicationVersionStringAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AppSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfoVersionPart.cs" />
+    <Compile Include="AutoConfigurator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Configuration.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConfigurationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InfoWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OptimusMini.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MacFaceApp.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PatternWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StatusWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <EmbeddedResource Include="AlphaForm.resx">
+      <DependentUpon>AlphaForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="App.ico" />
+    <EmbeddedResource Include="ConfigurationForm.resx">
+      <DependentUpon>ConfigurationForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InfoWindow.resx">
+      <DependentUpon>InfoWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StatusWindow.resx">
+      <DependentUpon>StatusWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="default.mcface\faceDef.plist" />
+    <Content Include="kikiki-rin.mcface\faceDef.plist" />
+    <None Include="MacFaceFloat_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="default.mcface\brow-down.tiff" />
+    <Content Include="default.mcface\brow-normal.tiff" />
+    <Content Include="default.mcface\brow-up.tiff" />
+    <Content Include="default.mcface\eye-arrow.tiff" />
+    <Content Include="default.mcface\eye-circle.tiff" />
+    <Content Include="default.mcface\eye-close.tiff" />
+    <Content Include="default.mcface\eye-line.tiff" />
+    <Content Include="default.mcface\eye-normal.tiff" />
+    <Content Include="default.mcface\eye-smile.tiff" />
+    <Content Include="default.mcface\eye-spiral.tiff" />
+    <Content Include="default.mcface\face-base.tiff" />
+    <Content Include="default.mcface\mouth-circle.tiff" />
+    <Content Include="default.mcface\mouth-close.tiff" />
+    <Content Include="default.mcface\mouth-laugh.tiff" />
+    <Content Include="default.mcface\mouth-open.tiff" />
+    <Content Include="default.mcface\mouth-smile.tiff" />
+    <Content Include="default.mcface\note.tiff" />
+    <Content Include="default.mcface\shock.tiff" />
+    <Content Include="default.mcface\sweat.tiff" />
+    <Content Include="kikiki-rin.mcface\angery-mark.tiff" />
+    <Content Include="kikiki-rin.mcface\brow-hill.tiff" />
+    <Content Include="kikiki-rin.mcface\brow-normal.tiff" />
+    <Content Include="kikiki-rin.mcface\brow-up.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-angery.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-arrow.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-circle.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-close.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-close2.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-line.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-normal.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-smile.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-spiral.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-thin.tiff" />
+    <Content Include="kikiki-rin.mcface\eye-vbar.tiff" />
+    <Content Include="kikiki-rin.mcface\face-base.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-circle.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-close.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-laugh.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-open.tiff" />
+    <Content Include="kikiki-rin.mcface\mouth-smile.tiff" />
+    <Content Include="kikiki-rin.mcface\note.tiff" />
+    <Content Include="kikiki-rin.mcface\shock.tiff" />
+    <Content Include="OptimusMini.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)PreBuild_GenerateAssemblyInfoVersionPart.cmd" &gt; "$(ProjectDir)AssemblyInfoVersionPart.cs"</PreBuildEvent>
+    <PostBuildEvent>xcopy /Y /I "$(ProjectDir)default.mcface" "$(TargetDir)default.mcface"
+</PostBuildEvent>
+  </PropertyGroup>
+</Project>
